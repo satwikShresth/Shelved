@@ -19,7 +19,7 @@ cat $ENV_JSON_PATH
 
 
 if [ ${ENV} = "DEV" ]; then 
-  deno fmt --watch &
+  deno task format &
   deno task dev
 else
   deno task start
