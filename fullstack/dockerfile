@@ -10,8 +10,7 @@ COPY ./deno.* /fullstack/
 COPY ./entrypoint.sh /fullstack/
 RUN chmod +x /fullstack/entrypoint.sh
 
-ARG ENV=dev
-
+# ARG ENV=dev
 #for when the complexity increases
 # COPY ./run-${ENV}.sh /fullstack/run-script.sh
 # RUN chmod +x /fullstack/run-script.sh

@@ -32,11 +32,13 @@ services:
     build:
       context: ./fullstack
       dockerfile: dockerfile
-      args:
-        ENV: dev
+      # args:
+      #   ENV: dev
     container_name: shelved
     env_file:
       - .env
+    environment:
+      - ENV=DEV
     volumes:
       - ./fullstack/app:/fullstack/app
     depends_on:
