@@ -6,7 +6,6 @@ const app = express();
 const port = 3000;
 const hostname = '0.0.0.0';
 
-console.log(env);
 const Pool = pg.Pool;
 const pool = new Pool(env);
 
