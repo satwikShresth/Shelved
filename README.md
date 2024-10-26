@@ -5,8 +5,8 @@ Log all of your media, in one place
 This application is a full-stack setup using Deno, Postgres, and Adminer, all configured through Docker Compose. It allows for efficient development and database management in a containerized environment. This README will guide you through setting up, running, and configuring the application, as well as explain the future improvements planned for the production setup.
 
 ## Prerequisites
-- Docker and Docker Compose installed on your system.
-- Deno installed locally if you want to run the application outside of Docker.
+- [Docker](https://docs.docker.com/get-started/get-docker/) installed on your system.
+- [Deno](https://deno.com/) installed locally if you want to run the application outside of Docker.
 
 ## Getting Started
 
