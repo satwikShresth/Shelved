@@ -29,10 +29,12 @@ services:
         target: /var/www/html/index.php
 
   fullstack:
-    build: ./fullstack
+    build:
+      context: ./fullstack
+      dockerfile: dockerfile
+      args:
+        ENV: dev
     container_name: shelved
-    environment:
-      - ENV=DEV
     env_file:
       - .env
     volumes:
@@ -41,7 +43,6 @@ services:
       - db
     ports:
       - "3000:3000"
-    entrypoint: ["/fullstack/entrypoint.sh"]
 
 configs:
   adminer-index.php:

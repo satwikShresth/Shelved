@@ -12,13 +12,7 @@ cat <<EOF > $ENV_JSON_PATH
 }
 EOF
 
-# Execute the original command
-exec "$@"
-
-cat $ENV_JSON_PATH
-
-
-if [ ${ENV} = "DEV" ]; then 
+if [ "${ENV}" = "DEV" ]; then 
   deno task format &
   deno task dev
 else
