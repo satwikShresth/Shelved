@@ -1,0 +1,20 @@
+{
+   "imports": {
+      "express": "npm:express@^4.21.1",
+      "pg": "npm:pg@^8.13.1"
+   },
+   "fmt": {
+      "useTabs": false,
+      "lineWidth": 80,
+      "indentWidth": 3,
+      "semiColons": true,
+      "singleQuote": true,
+      "proseWrap": "preserve",
+      "include": ["src/"],
+      "exclude": ["src/static"]
+   },
+   "tasks": {
+      "dev": "deno run --allow-net --allow-read --allow-env --watch app/main.js",
+      "start": "deno run --allow-net --allow-read --allow-env  app/main.js"
+   }
+}

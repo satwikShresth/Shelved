@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:latest
+    env_file:
+      - .env
+    environment:
+      - PGDATA=${PGDATA}
+      - POSTGRES_SERVER=${POSTGRES_SERVER}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - ./setup.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  adminer:
+    image: adminer
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - db
+    environment:
+      - ADMINER_DESIGN=${ADMINER_DESIGN}
+      - POSTGRES_SERVER=${POSTGRES_SERVER}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "8080:8080"
+
+  fullstack:
+    build: ./fullstack
+    container_name: shelved
+    environment:
+      - POSTGRES_SERVER=${POSTGRES_SERVER}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - ENV=DEV
+    env_file:
+      - .env
+    volumes:
+      - ./fullstack/app:/fullstack/app
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    entrypoint: ["/fullstack/entrypoint.sh"]
