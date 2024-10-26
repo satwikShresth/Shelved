@@ -80,48 +80,61 @@ We plan to implement a production configuration that includes:
 ## LSP settings
 
 These are my lsp settings, you can pick and choose some and add them accordingly
+
+You can just copy it and add it to the [deno.json](./fullstack/deno.json)
 Refer to this [Deno LSP](https://docs.deno.com/runtime/getting_started/setup_your_environment/#editors-and-ides)
 
 ```json
 {
-    settings = {
-      deno = {
-        enable = true,
-        config = 'deno.json',
-        suggest = {
-          imports = {
-            autoDiscover = true,
-            hosts = {
-              ['https://deno.land'] = true,
-            },
-          },
-          autoImports = true,
-          completeFunctionCalls = true,
-          names = true,
-          paths = true,
-        },
-        codeLens = {
-          implementations = true,
-          references = true,
-          referencesAllFunctions = true,
-          test = true,
-          testArgs = { '--allow-all', '--no-check' },
-        },
-        inlayHints = {
-          enumMemberValues = { enabled = true },
-          functionLikeReturnTypes = { enabled = true },
-          parameterNames = { enabled = 'all', suppressWhenArgumentMatchesName = false },
-          parameterTypes = { enabled = true },
-          propertyDeclarationTypes = { enabled = true },
-          variableTypes = { enabled = true, suppressWhenTypeMatchesName = false },
-        },
-        lint = true,
-        future = true,
-        testing = {
-          args = { '--allow-all', '--no-check' },
-        },
+  "lsp": {
+    "compilerOptions": {
+      "enable": true,
+      "codeLens": {
+        "implementations": true,
+        "references": true,
+        "referencesAllFunctions": true,
+        "test": true
       },
-    },
-    root_dir = require('lspconfig').util.root_pattern('deno.json', 'deno.jsonc'),
+      "suggest": {
+        "imports": {
+          "autoDiscover": true,
+          "hosts": {
+            "https://deno.land": true
+          }
+        },
+        "autoImports": true,
+        "completeFunctionCalls": true,
+        "names": true,
+        "paths": true
+      },
+      "inlayHints": {
+        "enumMemberValues": {
+          "enabled": true
+        },
+        "functionLikeReturnTypes": {
+          "enabled": true
+        },
+        "parameterNames": {
+          "enabled": "all",
+          "suppressWhenArgumentMatchesName": false
+        },
+        "parameterTypes": {
+          "enabled": true
+        },
+        "propertyDeclarationTypes": {
+          "enabled": true
+        },
+        "variableTypes": {
+          "enabled": true,
+          "suppressWhenTypeMatchesName": false
+        }
+      },
+      "lint": true,
+      "future": true,
+      "testing": {
+        "args": ["--allow-all", "--no-check"]
+      }
+    }
+  }
 }
 ```
