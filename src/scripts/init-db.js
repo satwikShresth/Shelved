@@ -1,8 +1,7 @@
 import pg from 'pg';
 import env from '../env.json' with { type: 'json' };
 
-const Pool = pg.Pool;
-const pool = new Pool(env);
+const pool = new pg.Pool(env);
 
 function initializeUsersTable() {
   pool.connect().then(client => {

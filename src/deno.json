@@ -8,7 +8,7 @@
    "fmt": {
       "useTabs": false,
       "lineWidth": 100,
-      "indentWidth": 3,
+      "indentWidth": 4,
       "semiColons": true,
       "singleQuote": true,
       "proseWrap": "preserve",

@@ -9,55 +9,146 @@ const router = Router();
 
 // Make sure we have username and password in the fields
 const validateLogin = (req, res, next) => {
-   if (
-      !req.body.hasOwnProperty('username') ||
-      !req.body.hasOwnProperty('password')
-   ) {
-      return res.sendStatus(400);
-   }
-   next();
+    if (
+        !req.body ||
+        !req.body.hasOwnProperty('username') ||
+        !req.body.hasOwnProperty('password')
+    ) {
+        return res.sendStatus(400);
+    }
+    next();
 };
 
 router.use(validateLogin);
 
-function randomHex() {
-   const bytes = new Uint8Array(32);
-   crypto.getRandomValues(bytes);
-   return Array.from(bytes)
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join('');
-}
+// Randomly generated "token"
+const makeToken = () => {
+    const bytes = new Uint8Array(32);
+    crypto.getRandomValues(bytes);
+    return Array.from(bytes)
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('');
+};
 
-router.post('/create', async (req, res) => {
-   const { body } = req;
-   const { username, password } = body;
+const cookieOptions = {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
+};
 
-   // TODO check username doesn't already exist
-   // TODO validate username/password meet requirements
+const validateUserCreation = async (req, res, next) => {
+    const { body } = req;
+    const { username, _ } = body;
 
-   let hash;
-   try {
-      hash = await bcrypt.hash(password);
-   } catch (error) {
-      console.log('HASH FAILED', error);
-      return res.sendStatus(500);
-   }
+    let result;
+    try {
+        result = await pool.query(
+            'SELECT username FROM users WHERE username = $1',
+            [username],
+        );
+    } catch (error) {
+        console.log('SELECT FAILED', error);
+        return res.sendStatus(500);
+    }
 
-   try {
-      await pool.query(
-         'INSERT INTO users (username, password) VALUES ($1, $2)',
-         [
+    if (result.rows.length > 0) {
+        return res.status(409).json({ error: 'Username already exists' });
+    }
+    next();
+};
+
+router.post('/create', [validateUserCreation], async (req, res) => {
+    const { body } = req;
+    const { username, password } = body;
+
+    let hash;
+    try {
+        hash = await bcrypt.hash(password);
+    } catch (error) {
+        console.log('HASH FAILED', error);
+        return res.sendStatus(500);
+    }
+
+    try {
+        await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', [
             username,
             hash,
-         ],
-      );
-   } catch (error) {
-      console.log('INSERT FAILED', error);
-      return res.sendStatus(500);
-   }
+        ]);
+    } catch (error) {
+        console.log('INSERT FAILED', error);
+        return res.sendStatus(500);
+    }
 
-   // TODO automatically log people in when they create account, because why not?
-   return res.status(200).send();
+    // TODO automatically log people in when they create account, because why not?
+    return res.status(200).send();
+});
+
+router.post('/login', async (req, res) => {
+    const { body } = req;
+    const { username, password } = body;
+
+    let usersResult;
+    try {
+        usersResult = await pool.query(
+            'SELECT id, password FROM users WHERE username = $1',
+            [username],
+        );
+    } catch (error) {
+        console.log('SELECT FAILED', error);
+        return res.sendStatus(500);
+    }
+
+    // username doesn't exist
+    if (usersResult.rows.length === 0) {
+        return res.sendStatus(400);
+    }
+    const hash = usersResult.rows[0].password;
+    const user_id = usersResult.rows[0].id;
+
+    let verifyResult;
+    try {
+        verifyResult = await bcrypt.compare(password, hash);
+    } catch (error) {
+        console.log('VERIFY FAILED', error);
+        return res.sendStatus(500); // TODO
+    }
+
+    // password didn't match
+    if (!verifyResult) {
+        console.log("Credentials didn't match");
+        return res.sendStatus(400);
+    }
+
+    let sessionsResult;
+    try {
+        sessionsResult = await pool.query(
+            'SELECT session_token, user_id FROM sessions WHERE user_id = $1',
+            [user_id],
+        );
+    } catch (error) {
+        console.log('SELECT FAILED', error);
+        return res.sendStatus(500);
+    }
+
+    let token;
+    if (sessionsResult.rows.length !== 0) {
+        console.log(sessionsResult.rows);
+        token = sessionsResult.rows[0].session_token;
+        return res.cookie('token', token, cookieOptions).send();
+    } else {
+        token = makeToken();
+    }
+
+    try {
+        await pool.query(
+            'INSERT INTO sessions (session_token, user_id) VALUES ($1, $2)',
+            [token, user_id],
+        );
+    } catch (error) {
+        console.log('INSERT FAILED', error);
+        return res.sendStatus(500);
+    }
+    return res.cookie('token', token, cookieOptions).send(); // TODO
 });
 
 export const authRouter = router;
