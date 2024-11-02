@@ -55,31 +55,35 @@ const validateUserCreation = async (req, res, next) => {
     next();
 };
 
-router.post('/create', [validateUsernamePassword, validateUserCreation], async (req, res) => {
-    const { body } = req;
-    const { username, password } = body;
+router.post(
+    '/create',
+    [validateUsernamePassword, validateUserCreation],
+    async (req, res) => {
+        const { body } = req;
+        const { username, password } = body;
 
-    let hash;
-    try {
-        hash = await bcrypt.hash(password);
-    } catch (error) {
-        console.log('HASH FAILED', error);
-        return res.sendStatus(500);
-    }
+        let hash;
+        try {
+            hash = await bcrypt.hash(password);
+        } catch (error) {
+            console.log('HASH FAILED', error);
+            return res.sendStatus(500);
+        }
 
-    try {
-        await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', [
-            username,
-            hash,
-        ]);
-    } catch (error) {
-        console.log('INSERT FAILED', error);
-        return res.sendStatus(500);
-    }
+        try {
+            await pool.query(
+                'INSERT INTO users (username, password) VALUES ($1, $2)',
+                [username, hash],
+            );
+        } catch (error) {
+            console.log('INSERT FAILED', error);
+            return res.sendStatus(500);
+        }
 
-    // TODO automatically log people in when they create account, because why not?
-    return res.status(200).send();
-});
+        // TODO automatically log people in when they create account, because why not?
+        return res.status(200).send();
+    },
+);
 
 router.post('/login', [validateUsernamePassword], async (req, res) => {
     const { body } = req;
@@ -149,7 +153,7 @@ router.post('/login', [validateUsernamePassword], async (req, res) => {
     return res.cookie('token', token, cookieOptions).send(); // TODO
 });
 
-router.post('/logout', async (req, res) => {
+router.post('/logout', (req, res) => {
     const { token } = req.cookies;
 
     if (token === undefined) {
@@ -157,32 +161,60 @@ router.post('/logout', async (req, res) => {
         return res.sendStatus(400);
     }
 
-    let sessionsResult;
-    try {
-        sessionsResult = await pool.query(
-            'SELECT session_token, user_id FROM sessions WHERE session_token = $1',
-            [token],
-        );
-    } catch (error) {
-        console.log('SELECT FAILED', error);
-        return res.sendStatus(500);
-    }
+    pool.query(
+        'SELECT session_token, user_id FROM sessions WHERE session_token = $1',
+        [token],
+        (selectError, sessionsResult) => {
+            if (selectError) {
+                console.log('SELECT FAILED', selectError);
+                return res.sendStatus(500);
+            }
 
-    if (sessionsResult.rows.length === 0) {
-        console.log("Token doesn't exist");
-        return res.sendStatus(400);
-    }
+            if (sessionsResult.rows.length === 0) {
+                console.log("Token doesn't exist");
+                return res.sendStatus(400);
+            }
 
-    try {
-        await pool.query(
-            'DELETE FROM sessions WHERE session_token = $1',
-            [token],
-        );
-    } catch (error) {
-        console.log('DELETE FAILED', error);
-        return res.sendStatus(500);
-    }
-    return res.clearCookie('token', cookieOptions).send();
+            pool.query(
+                'DELETE FROM sessions WHERE session_token = $1',
+                [token],
+                (deleteError) => {
+                    if (deleteError) {
+                        console.log('DELETE FAILED', deleteError);
+                        return res.sendStatus(500);
+                    }
+                    return res.clearCookie('token', cookieOptions).send();
+                },
+            );
+        },
+    );
 });
 
+/* middleware; check if login token in token storage, if not, 403 response */
+const authorize = (req, res, next) => {
+    const { token } = req.cookies;
+
+    if (token === undefined) {
+        return res.sendStatus(403);
+    }
+
+    pool.query(
+        'SELECT session_token, user_id FROM sessions WHERE session_token = $1',
+        [token],
+        (error, sessionsResult) => {
+            if (error) {
+                console.log('SELECT FAILED', error);
+                return res.sendStatus(500);
+            }
+
+            if (sessionsResult.rows.length === 0) {
+                return res.sendStatus(403);
+            } else {
+                res.locals.user_id = sessionsResult.rows[0].user_id;
+            }
+            next();
+        },
+    );
+};
 export const authRouter = router;
+export const authMiddleware = authorize;

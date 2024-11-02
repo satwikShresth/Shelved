@@ -2,7 +2,7 @@ import express from 'express';
 import pg from 'pg';
 import env from '../env.json' with { type: 'json' };
 import cookieParser from 'cookie-parser';
-import { authRouter } from './auth.js';
+import { authMiddleware, authRouter } from './auth.js';
 
 const app = express();
 app.use(express.json());
@@ -28,6 +28,10 @@ app.use('/auth', authRouter);
 
 app.get('/', (_, res) => {
     res.send('Hello from Deno with Express!');
+});
+
+app.get('/whoami', [authMiddleware], (req, res) => {
+    res.send(`Hello user: ${res.locals.user_id}`);
 });
 
 app.listen(port, hostname, () => {
