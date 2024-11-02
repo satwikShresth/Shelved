@@ -72,6 +72,31 @@ Additionally, `env.json` is used to define connection details for the applicatio
 
 Note that `env.json` will automatically populated by the `entrypoint.sh` script if running with docker. So there is no need to set variables in that case.
 
+## Authentication
+
+We are using cookie based authentication. Use the following curl commands as reference when working with auth:
+
+```
+# create an account
+curl -X POST -H 'Content-Type:application/json' -d '{"username": "abcde", "password": "apassword"}' http://localhost:3000/create
+
+
+# log in with correct password
+# should receive cookie with different token from before in response headers
+curl -v -X POST -H 'Content-Type:application/json' -d '{"username": "abcde", "password": "apassword"}' http://localhost:3000/login
+
+
+# change REPLACE to equal a valid token cookie you received from the server when logging in
+# copy the whole cookie, e.g. if you received the header
+# Set-Cookie: token=bdb07b7844a7e63a321e0fb618ec3871a1421b3cbf37f1ae2906ff75e4084b17; Path=/; HttpOnly; Secure; SameSite=Strict
+# your command should be
+# curl --cookie "token=bdb07b7844a7e63a321e0fb618ec3871a1421b3cbf37f1ae2906ff75e4084b17; Path=/; HttpOnly; Secure; SameSite=Strict" http://localhost:3000/private
+curl --cookie "REPLACE" http://localhost:3000/whoami
+
+# log out
+curl --cookie "REPLACE" -X POST http://localhost:3000/logout
+```
+
 ## Accessing the Application
 - **Adminer**: Access via `http://localhost:8080` to manage the database easily through the UI.
 - **Deno App**: Access the application at `http://localhost:3000`.
