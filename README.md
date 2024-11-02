@@ -52,6 +52,11 @@ To start all services, use:
 docker-compose up --build
 ```
 - This command will build the Docker images and start the services as defined in the `docker-compose.yml` file.
+
+Since we really only care about the output of the core app most of the time:
+```bash
+docker-compose up --build --attach shelved
+```
   
 To stop all services:
 ```bash
@@ -64,6 +69,33 @@ The `.env` file contains necessary environment variables for the application and
 - `ADMINER_DESIGN` for customizing Adminer's appearance.
 
 Additionally, `env.json` is used to define connection details for the application, such as database host, port, user, and password. Ensure these match your Docker settings.
+
+Note that `env.json` will automatically populated by the `entrypoint.sh` script if running with docker. So there is no need to set variables in that case.
+
+## Authentication
+
+We are using cookie based authentication. Use the following curl commands as reference when working with auth:
+
+```
+# create an account
+curl -X POST -H 'Content-Type:application/json' -d '{"username": "abcde", "password": "apassword"}' http://localhost:3000/create
+
+
+# log in with correct password
+# should receive cookie with different token from before in response headers
+curl -v -X POST -H 'Content-Type:application/json' -d '{"username": "abcde", "password": "apassword"}' http://localhost:3000/login
+
+
+# change REPLACE to equal a valid token cookie you received from the server when logging in
+# copy the whole cookie, e.g. if you received the header
+# Set-Cookie: token=bdb07b7844a7e63a321e0fb618ec3871a1421b3cbf37f1ae2906ff75e4084b17; Path=/; HttpOnly; Secure; SameSite=Strict
+# your command should be
+# curl --cookie "token=bdb07b7844a7e63a321e0fb618ec3871a1421b3cbf37f1ae2906ff75e4084b17; Path=/; HttpOnly; Secure; SameSite=Strict" http://localhost:3000/private
+curl --cookie "REPLACE" http://localhost:3000/whoami
+
+# log out
+curl --cookie "REPLACE" -X POST http://localhost:3000/logout
+```
 
 ## Accessing the Application
 - **Adminer**: Access via `http://localhost:8080` to manage the database easily through the UI.
@@ -81,7 +113,7 @@ We plan to implement a production configuration that includes:
 
 These are my lsp settings, you can pick and choose some and add them accordingly
 
-You can just copy it and add it to the [deno.json](./fullstack/deno.json)
+You can just copy it and add it to the [deno.json](./src/deno.json)
 Refer to this [Deno LSP](https://docs.deno.com/runtime/getting_started/setup_your_environment/#editors-and-ides)
 
 ```json

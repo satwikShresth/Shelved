@@ -1,0 +1,22 @@
+FROM denoland/deno:alpine
+
+WORKDIR /src
+
+COPY ./app /src/app
+
+COPY ./deno.* /src/
+
+COPY ./scripts /src/scripts
+
+
+COPY ./entrypoint.sh /src/
+RUN chmod +x /src/entrypoint.sh
+
+# ARG ENV=dev
+#for when the complexity increases
+# COPY ./run-${ENV}.sh /src/run-script.sh
+# RUN chmod +x /src/run-script.sh
+
+EXPOSE 3000
+
+ENTRYPOINT ["/src/entrypoint.sh"]

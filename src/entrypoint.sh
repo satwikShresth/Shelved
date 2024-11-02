@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ENV_JSON_PATH="/fullstack/env.json"
+ENV_JSON_PATH="/src/env.json"
 
 cat <<EOF > $ENV_JSON_PATH
 {
@@ -13,8 +13,10 @@ cat <<EOF > $ENV_JSON_PATH
 EOF
 
 if [ "${ENV}" = "DEV" ]; then 
+  deno task database
   deno task format &
   deno task dev
 else
+  deno task database
   deno task start
 fi
