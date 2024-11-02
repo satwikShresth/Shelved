@@ -28,9 +28,9 @@ services:
       - source: adminer-index.php
         target: /var/www/html/index.php
 
-  fullstack:
+  shelved:
     build:
-      context: ./fullstack
+      context: ./src
       dockerfile: dockerfile
       # args:
       #   ENV: dev
@@ -40,7 +40,7 @@ services:
     environment:
       - ENV=DEV
     volumes:
-      - ./fullstack/app:/fullstack/app
+      - ./src/app:/src/app
     depends_on:
       - db
     ports:

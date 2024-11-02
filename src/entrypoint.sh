@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ENV_JSON_PATH="/fullstack/env.json"
+ENV_JSON_PATH="/src/env.json"
 
 cat <<EOF > $ENV_JSON_PATH
 {

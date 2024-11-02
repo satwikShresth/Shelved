@@ -81,7 +81,7 @@ We plan to implement a production configuration that includes:
 
 These are my lsp settings, you can pick and choose some and add them accordingly
 
-You can just copy it and add it to the [deno.json](./fullstack/deno.json)
+You can just copy it and add it to the [deno.json](./src/deno.json)
 Refer to this [Deno LSP](https://docs.deno.com/runtime/getting_started/setup_your_environment/#editors-and-ides)
 
 ```json
