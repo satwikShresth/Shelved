@@ -6,6 +6,8 @@ COPY ./app /src/app
 
 COPY ./deno.* /src/
 
+COPY ./scripts /src/scripts
+
 
 COPY ./entrypoint.sh /src/
 RUN chmod +x /src/entrypoint.sh
