@@ -1,11 +1,13 @@
 {
    "imports": {
+      "bcrypt": "https://deno.land/x/bcrypt@v0.4.1/mod.ts",
+      "cookie-parser": "npm:cookie-parser@^1.4.7",
       "express": "npm:express@^4.21.1",
       "pg": "npm:pg@^8.13.1"
    },
    "fmt": {
       "useTabs": false,
-      "lineWidth": 80,
+      "lineWidth": 100,
       "indentWidth": 3,
       "semiColons": true,
       "singleQuote": true,
@@ -18,5 +20,6 @@
       "format": "deno fmt --watch app",
       "start": "deno run --allow-net --allow-read --allow-env  app/main.js",
       "database": "deno run --allow-env --allow-net scripts/init-db.js"
-   }
+   },
+   "nodeModulesDir": "auto"
 }

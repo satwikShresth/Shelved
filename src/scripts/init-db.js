@@ -10,10 +10,9 @@ function initializeUsersTable() {
       // Create users table if it doesn't exist
       client.query(`
         CREATE TABLE IF NOT EXISTS users (
-          id INTEGER PRIMARY KEY,
+          id SERIAL PRIMARY KEY,
           username VARCHAR,
-          password VARCHAR(255) NOT NULL,
-          created_at TIMESTAMP
+          password VARCHAR(255) NOT NULL
         )
       `);
 
@@ -33,7 +32,7 @@ function initializeSessionsTable() {
       client.query(`
         CREATE TABLE IF NOT EXISTS sessions (
           session_token VARCHAR(255) PRIMARY KEY,
-          user_id INTEGER NOT NULL,
+          user_id INTEGER NOT NULL
         )
       `);
       console.log("Sessions table initialized successfully");
