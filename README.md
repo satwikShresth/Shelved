@@ -76,7 +76,7 @@ Note that `env.json` will automatically populated by the `entrypoint.sh` script 
 
 We are using cookie based authentication. Use the following curl commands as reference when working with auth:
 
-```
+```sh
 # create an account
 curl -X POST -H 'Content-Type:application/json' -d '{"username": "abcde", "password": "apassword"}' http://localhost:3000/create
 
