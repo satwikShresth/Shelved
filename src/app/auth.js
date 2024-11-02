@@ -8,7 +8,7 @@ const pool = new pg.Pool(env);
 const router = Router();
 
 // Make sure we have username and password in the fields
-const validateLogin = (req, res, next) => {
+const validateUsernamePassword = (req, res, next) => {
     if (
         !req.body ||
         !req.body.hasOwnProperty('username') ||
@@ -18,8 +18,6 @@ const validateLogin = (req, res, next) => {
     }
     next();
 };
-
-router.use(validateLogin);
 
 // Randomly generated "token"
 const makeToken = () => {
@@ -57,7 +55,7 @@ const validateUserCreation = async (req, res, next) => {
     next();
 };
 
-router.post('/create', [validateUserCreation], async (req, res) => {
+router.post('/create', [validateUsernamePassword, validateUserCreation], async (req, res) => {
     const { body } = req;
     const { username, password } = body;
 
@@ -83,7 +81,7 @@ router.post('/create', [validateUserCreation], async (req, res) => {
     return res.status(200).send();
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', [validateUsernamePassword], async (req, res) => {
     const { body } = req;
     const { username, password } = body;
 
@@ -149,6 +147,42 @@ router.post('/login', async (req, res) => {
         return res.sendStatus(500);
     }
     return res.cookie('token', token, cookieOptions).send(); // TODO
+});
+
+router.post('/logout', async (req, res) => {
+    const { token } = req.cookies;
+
+    if (token === undefined) {
+        console.log('Already logged out');
+        return res.sendStatus(400);
+    }
+
+    let sessionsResult;
+    try {
+        sessionsResult = await pool.query(
+            'SELECT session_token, user_id FROM sessions WHERE session_token = $1',
+            [token],
+        );
+    } catch (error) {
+        console.log('SELECT FAILED', error);
+        return res.sendStatus(500);
+    }
+
+    if (sessionsResult.rows.length === 0) {
+        console.log("Token doesn't exist");
+        return res.sendStatus(400);
+    }
+
+    try {
+        await pool.query(
+            'DELETE FROM sessions WHERE session_token = $1',
+            [token],
+        );
+    } catch (error) {
+        console.log('DELETE FAILED', error);
+        return res.sendStatus(500);
+    }
+    return res.clearCookie('token', cookieOptions).send();
 });
 
 export const authRouter = router;
