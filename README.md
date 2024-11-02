@@ -52,6 +52,11 @@ To start all services, use:
 docker-compose up --build
 ```
 - This command will build the Docker images and start the services as defined in the `docker-compose.yml` file.
+
+Since we really only care about the output of the core app most of the time:
+```bash
+docker-compose up --build --attach shelved
+```
   
 To stop all services:
 ```bash
@@ -64,6 +69,8 @@ The `.env` file contains necessary environment variables for the application and
 - `ADMINER_DESIGN` for customizing Adminer's appearance.
 
 Additionally, `env.json` is used to define connection details for the application, such as database host, port, user, and password. Ensure these match your Docker settings.
+
+Note that `env.json` will automatically populated by the `entrypoint.sh` script if running with docker. So there is no need to set variables in that case.
 
 ## Accessing the Application
 - **Adminer**: Access via `http://localhost:8080` to manage the database easily through the UI.
