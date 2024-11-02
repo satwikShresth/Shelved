@@ -27,8 +27,28 @@ function initializeUsersTable() {
   });
 }
 
+function initializeSessionsTable() {
+  pool.connect().then(client => {
+    try {
+      client.query(`
+        CREATE TABLE IF NOT EXISTS sessions (
+          session_token VARCHAR(255) PRIMARY KEY,
+          user_id INTEGER NOT NULL,
+        )
+      `);
+      console.log("Sessions table initialized successfully");
+    } catch (error) {
+      console.error("Error initializing sessions table:", error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  });
+}
+
 function main() {
   initializeUsersTable();
+  initializeSessionsTable();
 }
 
 main();
