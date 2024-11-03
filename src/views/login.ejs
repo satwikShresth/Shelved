@@ -98,23 +98,24 @@
         document.getElementById("loginForm").addEventListener("submit", async function(event) {
             event.preventDefault();
 
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-
             try {
                 const response = await fetch("/auth/login", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify({
+                            username : document.getElementById("username").value,
+                            password : document.getElementById("password").value
+                        })
                 });
 
                 if (response.ok) {
                     console.log("Login successful");
-                    window.location.href = "/homepage"; // Redirect to homepage on success
+                    window.location.href = "/homepage";
                 } else {
-                    console.log("Login failed");
+                    const errorData = await response.json();
+                    console.log("Login failed:", errorData);
                     alert("Login failed. Please check your credentials.");
                 }
             } catch (error) {

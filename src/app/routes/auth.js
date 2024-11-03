@@ -1,9 +1,13 @@
-// deno-lint-ignore-file no-prototype-builtins
 import { Router } from "express";
 import * as bcrypt from "bcrypt";
-import db from "../db/knex.js";
+import db from "db";
 
 const router = Router();
+
+router.use((req, res, next) => {
+  req.needAuthentication = false;
+  next();
+});
 
 const validateUsernamePassword = (req, res, next) => {
   if (
@@ -22,7 +26,6 @@ const cookieOptions = {
   sameSite: "strict",
 };
 
-// Middleware to check if username already exists
 const validateUserCreation = async (req, res, next) => {
   const { username } = req.body;
 
@@ -38,7 +41,6 @@ const validateUserCreation = async (req, res, next) => {
   }
 };
 
-// Create user route
 router.post(
   "/create",
   [validateUsernamePassword, validateUserCreation],
@@ -46,8 +48,6 @@ router.post(
     const { username, password } = req.body;
 
     try {
-      // Ensure password is treated as a string
-      // Hash the password
       const hashedPassword = await bcrypt.hash(password);
       console.log(await hashedPassword);
 
@@ -71,18 +71,17 @@ router.post("/login", [validateUsernamePassword], async (req, res) => {
       .first();
 
     if (!user) {
-      return res.sendStatus(400); // User not found
+      return res.sendStatus(400);
     }
 
-    const isPasswordCorrect = await bcrypt.verify(user.password, password);
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
-      return res.sendStatus(400); // Incorrect password
+      return res.sendStatus(400);
     }
 
     const user_id = user.id;
     const now = new Date();
 
-    // Check for an existing valid session
     let session = await db("sessions")
       .select("session_token", "expires_at")
       .where({ user_id })
@@ -106,7 +105,6 @@ router.post("/login", [validateUsernamePassword], async (req, res) => {
       token = insertResult[0].session_token;
     }
 
-    // Set cookie with the session token
     res
       .cookie("token", token, cookieOptions)
       .send({ message: "Login successful" });
@@ -116,7 +114,6 @@ router.post("/login", [validateUsernamePassword], async (req, res) => {
   }
 });
 
-// Logout route
 router.post("/logout", async (req, res) => {
   const { token } = req.cookies;
 
@@ -136,46 +133,4 @@ router.post("/logout", async (req, res) => {
   }
 });
 
-// Authorization middleware
-const authorize = async (req, res, next) => {
-  const { token } = req.cookies;
-
-  if (!token) {
-    return res.sendStatus(403);
-  }
-
-  try {
-    const session = await db("sessions")
-      .select("user_id", "expires_at")
-      .where({ session_token: token })
-      .first();
-
-    if (!session) {
-      return res.sendStatus(403);
-    }
-
-    const now = new Date();
-    if (new Date(session.expires_at) <= now) {
-      await db("sessions").where({ session_token: token }).del();
-      return res.clearCookie("token", cookieOptions).sendStatus(403);
-    }
-
-    const user = await db("users")
-      .select("username")
-      .where({ id: session.user_id })
-      .first();
-
-    if (!user) {
-      return res.sendStatus(403); // No user found
-    }
-
-    res.locals.username = user.username;
-    next();
-  } catch (error) {
-    console.log("AUTHORIZATION FAILED", error);
-    res.sendStatus(500);
-  }
-};
-
-export const authRouter = router;
-export const authMiddleware = authorize;
+export default router;

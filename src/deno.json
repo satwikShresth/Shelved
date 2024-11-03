@@ -6,6 +6,8 @@
       "express": "npm:express@^4.21.1",
       "knex": "npm:knex@^3.1.0",
       "pg": "npm:pg@^8.13.1",
+      "path":"jsr:@std/path",
+      "db":"./db/knex.js"
    },
    "fmt": {
       "useTabs": false,
