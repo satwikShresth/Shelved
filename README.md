@@ -105,7 +105,13 @@ curl --cookie "REPLACE" http://localhost:3000/whoami
 curl --cookie "REPLACE" -X POST http://localhost:3000/logout
 ```
 
-## Migrations and Seeding
+## Database
+
+### Schema
+
+- Schema is available for inspection as Database Markup Language [schema.dbml](./database/schema.dbml)
+
+![Schema Diagram](./database/schema.png)
 
 ### Migrations
 

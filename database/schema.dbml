@@ -1,0 +1,120 @@
+Enum rating_enum {
+  shite
+  meh
+  decent
+  good
+  outstanding
+}
+
+Enum shelf_status_enum {
+  consumed
+  consuming
+  to_consume
+}
+
+Enum visibility_enum {
+  public
+  friends
+  private
+}
+
+
+Table users {
+  id integer [primary key]
+  username varchar
+  password VARCHAR(255) [not null]
+  created_at timestamp
+  Indexes {
+    (username) [unique]
+  }
+}
+
+Table content {
+  id SERIAL [pk, increment]
+  external_id VARCHAR(255) [not null]
+  source_id INT [not null]
+  created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+  updated_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    (source_id, external_id) [unique]
+  }
+}
+
+Table reviews {
+  id SERIAL [pk, increment]
+  user_id INT [not null]
+  content_id INT [not null]
+  title varchar
+  body VARCHAR(256)
+  rating rating_enum [not null]
+  created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    (user_id, content_id) [unique] 
+  }
+}
+
+Table shelf {
+  id SERIAL [pk, increment]
+  user_id INT [not null]
+  visibility visibility_enum [not null]
+  created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+  Indexes {
+    (user_id) [unique]
+  }
+}
+
+Table shelf_content {
+  shelf_id INT [pk]
+  content_id INT [not null]
+  status shelf_status_enum [not null]
+  created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    (shelf_id, content_id) [unique]
+  }
+}
+
+Table followings {
+  user_id integer
+  followed_user_id integer
+  created_at timestamp
+
+  Indexes {
+    (user_id, followed_user_id) [unique]
+  }
+}
+
+Table sessions {
+  id SERIAL [pk, increment]
+  user_id INT [not null]
+  session_token uuid [unique, not null]
+  expires_at TIMESTAMP [not null]
+  created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+}
+
+Table db_source {
+  id SERIAL [pk, increment]
+  name varchar(255) [not null]
+  api_key varchar(255)
+  created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+}
+
+Ref:users.id < reviews.user_id [delete: cascade]
+
+Ref:content.id < reviews.content_id [delete: cascade]
+
+Ref:users.id < shelf.user_id [delete: cascade]
+
+Ref:shelf.id < shelf_content.shelf_id [delete: cascade]
+
+Ref:content.id < shelf_content.content_id [delete: cascade]
+
+Ref: users.id < followings.user_id [delete: cascade]
+
+Ref: users.id < followings.followed_user_id [delete: cascade]
+
+Ref:db_source.id < content.source_id [delete: cascade]
+
+Ref:users.id < sessions.user_id [delete: cascade]
