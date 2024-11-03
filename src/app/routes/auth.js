@@ -126,4 +126,4 @@ router.post("/logout", async (req, res) => {
   }
 });
 
-export default router;
+export default { router: router, base: "/auth", needsAuthentication: false };

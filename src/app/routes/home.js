@@ -10,4 +10,4 @@ router.get("/whoami", (_req, res) => {
   res.send(`Hello user: ${res.locals.username}`);
 });
 
-export default router;
+export default { router: router, base: "/", needsAuthentication: true };

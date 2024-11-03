@@ -1,7 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import authMiddleware from "./middlewares/auth.js";
-import routerConfigs from "./routerConfigs.js";
 import { join } from "path";
 
 const port = 3000;
@@ -42,19 +41,20 @@ try {
   for await (const entry of Deno.readDir(routesDir)) {
     if (entry.isFile && entry.name.endsWith(".js")) {
       const modulePath = join(routesDir, entry.name);
-      const { default: router } = await import(modulePath);
+      const {
+        default: { router, base = "/", needsAuthentication = true },
+      } = await import(modulePath);
 
       if (router && typeof router === "function") {
-        const routerConfig = routerConfigs[entry.name] || {};
         app.use(
-          routerConfig.base || "/",
-          setNeedAuthentication(routerConfig.needsAuthentication || false),
+          base,
+          setNeedAuthentication(needsAuthentication),
           authMiddlewareWrap,
           router,
         );
 
         console.log(
-          `Loaded ${entry.name}:\n  - Base: ${routerConfig.base || "/"}\n  - needsAuthentication: ${routerConfig.needsAuthentication || false}`,
+          `Loaded ${entry.name}:\n  - Base: ${base}\n  - needsAuthentication: ${needsAuthentication}`,
         );
       } else {
         console.warn(`No default export found in ${entry.name}`);

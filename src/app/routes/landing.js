@@ -14,4 +14,4 @@ router.get("/signup", (_req, res) => {
   res.render("signup");
 });
 
-export default router;
+export default { router: router, base: "/", needsAuthentication: false };
