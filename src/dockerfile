@@ -5,8 +5,10 @@ WORKDIR /src
 COPY ./app /src/app
 
 COPY ./deno.* /src/
+COPY ./*.js /src/
 
-COPY ./scripts /src/scripts
+COPY ./db /src/db
+COPY ./views /src/views
 
 
 COPY ./entrypoint.sh /src/

@@ -1,14 +1,18 @@
 {
    "imports": {
+      "@std/path": "jsr:@std/path@^1.0.8",
       "bcrypt": "https://deno.land/x/bcrypt@v0.4.1/mod.ts",
       "cookie-parser": "npm:cookie-parser@^1.4.7",
+      "ejs": "npm:ejs@^3.1.10",
       "express": "npm:express@^4.21.1",
-      "pg": "npm:pg@^8.13.1"
+      "knex": "npm:knex@^3.1.0",
+      "pg": "npm:pg@^8.13.1",
+      "swagger-jsdoc": "npm:swagger-jsdoc@^6.2.8",
+      "swagger-ui-express": "npm:swagger-ui-express@^5.0.1"
    },
    "fmt": {
       "useTabs": false,
-      "lineWidth": 100,
-      "indentWidth": 4,
+      "indentWidth": 3,
       "semiColons": true,
       "singleQuote": true,
       "proseWrap": "preserve",
@@ -16,10 +20,13 @@
       "exclude": ["src/static"]
    },
    "tasks": {
-      "dev": "deno run --allow-net --allow-read --allow-env --watch app/main.js",
+      "dev": "deno run -A --watch app/main.js",
       "format": "deno fmt --watch app",
       "start": "deno run --allow-net --allow-read --allow-env  app/main.js",
-      "database": "deno run --allow-env --allow-net scripts/init-db.js"
+      "migrate": "deno run --env-file=../.env -A  npm:knex --knexfile db/knexfile.js --knexpath db migrate:latest",
+      "make_migration": "deno run -A  npm:knex --knexfile db/knexfile.js --knexpath db migrate:make ",
+      "seed_make": "deno run -A  npm:knex --knexfile db/knexfile.js --knexpath db seed:make ",
+      "seed": "deno run --env-file=../.env -A  npm:knex --knexfile db/knexfile.js --knexpath db seed:run ",
    },
    "nodeModulesDir": "auto"
 }

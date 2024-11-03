@@ -46,6 +46,7 @@ services:
       - ENV=DEV
     volumes:
       - ./src/app:/src/app
+      - ./src/views:/src/views
     depends_on:
       db:
         condition: service_healthy
