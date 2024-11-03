@@ -12,11 +12,10 @@ cat <<EOF > $ENV_JSON_PATH
 }
 EOF
 
-if [ "${ENV}" = "DEV" ]; then 
-  deno task database
-  deno task format &
+if [ "${ENV}" = "development" ]; then 
+  deno install --allow-scripts
   deno task dev
 else
-  deno task database
+  deno install --allow-scripts
   deno task start
 fi

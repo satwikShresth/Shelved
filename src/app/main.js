@@ -1,39 +1,70 @@
-import express from 'express';
-import pg from 'pg';
-import env from '../env.json' with { type: 'json' };
-import cookieParser from 'cookie-parser';
-import { authMiddleware, authRouter } from './auth.js';
+import express from "express";
+import cookieParser from "cookie-parser";
+import authMiddleware from "./middlewares/auth.js";
+import routerConfigs from "./routerConfigs.js";
+import { join } from "path";
+
+const port = 3000;
+const hostname = "0.0.0.0";
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(authRouter);
 
-const port = 3000;
-const hostname = '0.0.0.0';
+const authMiddlewareWrap = (req, res, next) => {
+  if (req.needAuthentication) {
+    const originalSendStatus = res.sendStatus;
 
-const pool = new pg.Pool(env);
+    res.sendStatus = (statusCode) => {
+      if (statusCode === 403) {
+        return res.redirect("/");
+      }
+      return originalSendStatus.call(res, statusCode);
+    };
 
-pool
-    .connect()
-    .then(function () {
-        console.log(`Connected to database ${env.database}`);
-    })
-    .catch(function (error) {
-        console.error(`Error connecting to database: ${error.message}`);
-        return error;
-    });
+    authMiddleware(req, res, next);
+  } else {
+    next();
+  }
+};
 
-app.use('/auth', authRouter);
+const setNeedAuthentication = (needsAuthentication) => (req, _res, next) => {
+  req.needAuthentication = needsAuthentication;
+  next();
+};
 
-app.get('/', (_, res) => {
-    res.send('Hello from Deno with Express!');
-});
+app.set("view engine", "ejs");
+app.set("views", "./views");
 
-app.get('/whoami', [authMiddleware], (req, res) => {
-    res.send(`Hello user: ${res.locals.user_id}`);
-});
+const routesDir = join(Deno.cwd(), "app", "routes");
+
+try {
+  for await (const entry of Deno.readDir(routesDir)) {
+    if (entry.isFile && entry.name.endsWith(".js")) {
+      const modulePath = join(routesDir, entry.name);
+      const { default: router } = await import(modulePath);
+
+      if (router && typeof router === "function") {
+        const routerConfig = routerConfigs[entry.name] || {};
+        app.use(
+          routerConfig.base || "/",
+          setNeedAuthentication(routerConfig.needsAuthentication || false),
+          authMiddlewareWrap,
+          router,
+        );
+
+        console.log(
+          `Loaded ${entry.name}:\n  - Base: ${routerConfig.base || "/"}\n  - needsAuthentication: ${routerConfig.needsAuthentication || false}`,
+        );
+      } else {
+        console.warn(`No default export found in ${entry.name}`);
+      }
+    }
+  }
+} catch (error) {
+  console.error("Error loading routers:", error);
+}
 
 app.listen(port, hostname, () => {
-    console.log(`Listening at: http://${hostname}:${port}`);
+  console.log(`Listening at: http://${hostname}:${port}`);
 });

@@ -2,11 +2,15 @@ FROM denoland/deno:alpine
 
 WORKDIR /src
 
+RUN apk add --no-cache libstdc++
+
 COPY ./app /src/app
 
 COPY ./deno.* /src/
+COPY ./*.js /src/
 
-COPY ./scripts /src/scripts
+COPY ./db /src/db
+COPY ./views /src/views
 
 
 COPY ./entrypoint.sh /src/

@@ -43,9 +43,11 @@ services:
     env_file:
       - .env
     environment:
-      - ENV=DEV
+      - ENV=development
     volumes:
       - ./src/app:/src/app
+      - ./src/views:/src/views
+      - ./src/db:/src/db
     depends_on:
       db:
         condition: service_healthy
