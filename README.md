@@ -97,6 +97,53 @@ curl --cookie "REPLACE" http://localhost:3000/whoami
 curl --cookie "REPLACE" -X POST http://localhost:3000/logout
 ```
 
+## Migrations and Seeding
+
+### Migrations
+
+Using Knex, you can manage database migrations directly through Deno tasks. Migrations allow you to define database schema changes and apply them consistently across environments.
+
+- **Run Migrations**:
+  ```bash
+  deno task migrate
+  ```
+  This command applies the latest migrations to your database.
+
+- **Create a New Migration**:
+  ```bash
+  deno task make_migration <migration_name>
+  ```
+  Replace `<migration_name>` with a descriptive name for your migration. This will generate a new migration file in the designated migrations folder, which you can edit to define specific schema changes.
+
+- **Development Migrations**:
+  ```bash
+  deno task migrate_dev
+  ```
+  Runs migrations in a local development environment.
+
+### Seeding
+
+Seeding populates your database with initial data, which is especially useful for testing and development.
+
+- **Run Seeds**:
+  ```bash
+  deno task seed
+  ```
+  This command will run the seed files and insert data into your database as defined.
+
+- **Create a New Seed File**:
+  ```bash
+  deno task seed_make <seed_name>
+  ```
+  Replace `<seed_name>` with a descriptive name for your seed file. This will generate a new seed file in the seeds directory, which you can customize to insert specific records.
+
+- **Development Seeding**:
+  ```bash
+  deno task seed_dev
+  ```
+  Executes seeds for the development database, enabling you to reset or pre-populate data in a local environment.
+
+
 ## Accessing the Application
 - **Adminer**: Access via `http://localhost:8080` to manage the database easily through the UI.
 - **Deno App**: Access the application at `http://localhost:3000`.

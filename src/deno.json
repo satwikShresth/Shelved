@@ -24,7 +24,7 @@
       "start": "deno run --allow-net --allow-read --allow-env  app/main.js",
       "migrate": "deno run --env-file=../.env -A  npm:knex --env local --knexfile db/knexfile.js --knexpath db migrate:latest",
       "make_migration": "deno run -A  npm:knex --env local --knexfile db/knexfile.js --knexpath db migrate:make ",
-      "seed_make": "deno run -A  npm:knex --env local --knexfile db/knexfile.js --knexpath db seed:make ",
+      "make_seed": "deno run -A  npm:knex --env local --knexfile db/knexfile.js --knexpath db seed:make ",
       "seed": "deno run --env-file=../.env -A  npm:knex --env local --knexfile db/knexfile.js --knexpath db seed:run ",
       "migrate_dev": "deno run --env-file=../.env -A  npm:knex --knexfile db/knexfile.js --knexpath db migrate:latest",
       "seed_dev": "deno run --env-file=../.env -A  npm:knex --knexfile db/knexfile.js --knexpath db seed:run ",
