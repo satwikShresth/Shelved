@@ -29,7 +29,7 @@ const authMiddleware = async (req, res, next) => {
       .first();
 
     if (!user) {
-      return res.sendStatus(403); // No user found
+      return res.sendStatus(403);
     }
 
     res.locals.username = user.username;

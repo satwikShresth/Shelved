@@ -49,8 +49,6 @@ router.post(
 
     try {
       const hashedPassword = await bcrypt.hash(password);
-      console.log(await hashedPassword);
-
       await db("users").insert({ username, password: await hashedPassword });
       res.status(201).send({ message: "User created successfully" });
     } catch (error) {
