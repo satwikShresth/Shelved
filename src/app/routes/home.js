@@ -2,11 +2,6 @@ import express from "express";
 
 const router = express.Router();
 
-router.use((req, _res, next) => {
-  req.needAuthentication = true;
-  next();
-});
-
 router.get("/homepage", (_req, res) => {
   res.render("homepage", { username: res.locals.username });
 });
