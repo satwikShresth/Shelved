@@ -1,1 +1,82 @@
+/* General Body Styles */
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #121212; /* Dark background */
+  color: #ffffff; /* Light text color for contrast */
+}
 
+/* Search Page Container */
+.search-page {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  width: 80%;
+  max-width: 600px;
+}
+
+/* Search Form Styles */
+#searchForm {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+#searchInput {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #444444;
+  border-radius: 4px 0 0 4px;
+  background-color: #333333;
+  color: #ffffff;
+}
+
+#searchForm button {
+  padding: 10px;
+  border: none;
+  background-color: #ff6600;
+  color: white;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+}
+
+#searchForm button:hover {
+  background-color: #e65c00;
+}
+
+/* Results Container Styles */
+#resultsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Result Card Styles */
+.result-card {
+  background-color: #2e2e2e;
+  padding: 10px;
+  border-radius: 8px;
+  width: 200px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+.result-card img {
+  max-width: 100%;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.result-card h3 {
+  margin: 10px 0;
+  color: #ff6600;
+}
+
+.result-card p {
+  color: #cccccc;
+}
