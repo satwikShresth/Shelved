@@ -4,11 +4,6 @@ import db from "db";
 
 const router = Router();
 
-router.use((req, res, next) => {
-  req.needAuthentication = false;
-  next();
-});
-
 const validateUsernamePassword = (req, res, next) => {
   if (
     !req.body ||
