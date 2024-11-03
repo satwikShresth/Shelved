@@ -1,5 +1,5 @@
-import config from "./knexfile.js";
+import knex from "knex";
 
-const db = knex(config.config);
+const config = await import("./knexfile.js");
 
-module.exports = db;
+export default knex(config[Deno.env.get("ENV") || "local"]);
