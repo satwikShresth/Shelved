@@ -1,16 +1,20 @@
 # Shelved
+
 Log all of your media, in one place
 
 ## Overview
+
 This application is a full-stack setup using Deno, Postgres, and Adminer, all configured through Docker Compose. It allows for efficient development and database management in a containerized environment. This README will guide you through setting up, running, and configuring the application, as well as explain the future improvements planned for the production setup.
 
 ## Prerequisites
+
 - [Docker](https://docs.docker.com/get-started/get-docker/) installed on your system.
 - [Deno](https://deno.com/) installed locally if you want to run the application outside of Docker.
 
 ## Getting Started
 
 ### Deno Commands
+
 1. **Development Mode**:
    ```bash
    deno task format & #runs fromatter in the background
@@ -25,11 +29,13 @@ This application is a full-stack setup using Deno, Postgres, and Adminer, all co
    - Runs the application in production mode. This version is optimized and doesn’t include hot-reloading.
 
 ### Permissions Explained
+
    - `--allow-net`: Grants network access to the application.
    - `--allow-read`: Allows file reading for accessing configurations.
    - `--allow-env`: Enables access to environment variables needed for configuration management.
 
 ### Docker Compose Setup
+
 The project includes a Docker Compose configuration file (`docker-compose.yml`) that sets up:
 1. **Database (Postgres)**
    - **Port**: `5432`
@@ -47,6 +53,7 @@ The project includes a Docker Compose configuration file (`docker-compose.yml`) 
    - Communicates with the Postgres database using environment variables defined in `.env`.
 
 ### Running the Environment
+
 To start all services, use:
 ```bash
 docker-compose up --build
@@ -64,6 +71,7 @@ docker-compose down
 ```
 
 ## Environment Variables
+
 The `.env` file contains necessary environment variables for the application and database:
 - `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, etc.
 - `ADMINER_DESIGN` for customizing Adminer's appearance.
@@ -145,11 +153,13 @@ Seeding populates your database with initial data, which is especially useful fo
 
 
 ## Accessing the Application
+
 - **Adminer**: Access via `http://localhost:8080` to manage the database easily through the UI.
 - **Deno App**: Access the application at `http://localhost:3000`.
 - **Postgres Server**: Access the application at `http://localhost:5432`
 
 ## Future Improvements
+
 We plan to implement a production configuration that includes:
 - A dedicated Dockerfile for production builds with optimized settings.
 - Security improvements such as environment-specific variables and secret management.
