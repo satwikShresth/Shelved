@@ -39,8 +39,6 @@ app.set("views", "./views");
 const routesDir = join(Deno.cwd(), "app", "routes");
 
 try {
-  console.log("Loaded routers:");
-
   for await (const entry of Deno.readDir(routesDir)) {
     if (entry.isFile && entry.name.endsWith(".js")) {
       const modulePath = join(routesDir, entry.name);
@@ -48,7 +46,6 @@ try {
 
       if (router && typeof router === "function") {
         const routerConfig = routerConfigs[entry.name] || {};
-
         app.use(
           routerConfig.base || "/",
           setNeedAuthentication(routerConfig.needsAuthentication || false),
@@ -57,7 +54,7 @@ try {
         );
 
         console.log(
-          `    Loaded ${entry.name} with base path ${routerConfig.base || "/"}`,
+          `Loaded ${entry.name}:\n  - Base: ${routerConfig.base || "/"}\n  - needsAuthentication: ${routerConfig.needsAuthentication || false}`,
         );
       } else {
         console.warn(`No default export found in ${entry.name}`);

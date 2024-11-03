@@ -1,6 +1,10 @@
 export default {
   "auth.js": {
     base: "/auth",
+    needsAuthentication: false,
+  },
+  "landing.js": {
+    needsAuthentication: false,
   },
   "home.js": {
     needsAuthentication: true,
