@@ -2,11 +2,6 @@ import express from "express";
 
 const router = express.Router();
 
-router.use((req, _res, next) => {
-  req.needAuthentication = false;
-  next();
-});
-
 router.get("/", (_req, res) => {
   res.redirect("/login");
 });
