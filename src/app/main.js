@@ -42,15 +42,15 @@ try {
     if (entry.isFile && entry.name.endsWith(".js")) {
       const modulePath = join(routesDir, entry.name);
       const {
-        default: { router, base = "/", needsAuthentication = true },
+        default: { getRouter, base = "/", needsAuthentication = true },
       } = await import(modulePath);
 
-      if (router && typeof router === "function") {
+      if (getRouter && typeof getRouter === "function") {
         app.use(
           base,
           setNeedAuthentication(needsAuthentication),
           authMiddlewareWrap,
-          router,
+          getRouter(),
         );
 
         console.log(
