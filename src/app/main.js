@@ -1,6 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import authMiddleware from "./middlewares/auth.js";
+import { authMiddleware } from "./middlewares/auth.js";
 import { join } from "path";
 
 const port = 3000;
@@ -9,23 +9,6 @@ const hostname = "0.0.0.0";
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-
-const authMiddlewareWrap = (req, res, next) => {
-  if (req.needAuthentication) {
-    const originalSendStatus = res.sendStatus;
-
-    res.sendStatus = (statusCode) => {
-      if (statusCode === 403) {
-        return res.redirect("/");
-      }
-      return originalSendStatus.call(res, statusCode);
-    };
-
-    authMiddleware(req, res, next);
-  } else {
-    next();
-  }
-};
 
 const setNeedAuthentication = (needsAuthentication) => (req, _res, next) => {
   req.needAuthentication = needsAuthentication;
@@ -49,7 +32,7 @@ try {
         app.use(
           base,
           setNeedAuthentication(needsAuthentication),
-          authMiddlewareWrap,
+          authMiddleware,
           getRouter(),
         );
 

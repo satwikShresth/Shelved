@@ -1,20 +1,15 @@
 import { Router } from "express";
 import * as bcrypt from "bcrypt";
-import db from "db";
+import { createUser, getUserByUsername } from "crud/user.js";
+import { checkSession, createSession, deleteSession } from "crud/session.js";
+import {
+  validateSessionToken,
+  validateUserCreation,
+  validateUsernamePassword,
+} from "middlewares/auth.js";
 
 const getAuthRouter = () => {
   const router = Router();
-
-  const validateUsernamePassword = (req, res, next) => {
-    if (
-      !req.body ||
-      !req.body.hasOwnProperty("username") ||
-      !req.body.hasOwnProperty("password")
-    ) {
-      return res.sendStatus(400);
-    }
-    next();
-  };
 
   const cookieOptions = {
     httpOnly: true,
@@ -22,108 +17,74 @@ const getAuthRouter = () => {
     sameSite: "strict",
   };
 
-  const validateUserCreation = async (req, res, next) => {
-    const { username } = req.body;
-
-    try {
-      const result = await db("users").select("username").where({ username });
-      if (result.length > 0) {
-        return res.status(409).json({ error: "Username already exists" });
-      }
-      next();
-    } catch (error) {
-      console.log("SELECT FAILED", error);
-      return res.sendStatus(500);
-    }
-  };
-
   router.post(
     "/create",
     [validateUsernamePassword, validateUserCreation],
     async (req, res) => {
       const { username, password } = req.body;
+      const result = await createUser(username, password);
 
-      try {
-        const hashedPassword = await bcrypt.hash(password);
-        await db("users").insert({ username, password: await hashedPassword });
-        res.status(201).send({ message: "User created successfully" });
-      } catch (error) {
-        console.log("INSERT FAILED", error);
-        return res.sendStatus(500);
-      }
+      res.status(result.success ? 201 : 500).send({ message: result.message });
     },
   );
 
   router.post("/login", [validateUsernamePassword], async (req, res) => {
     const { username, password } = req.body;
 
-    try {
-      const user = await db("users")
-        .select("id", "password")
-        .where({ username })
-        .first();
+    const userResult = await getUserByUsername(username);
 
-      if (!user) {
-        return res.sendStatus(400);
-      }
-
-      const isPasswordCorrect = await bcrypt.compare(password, user.password);
-      if (!isPasswordCorrect) {
-        return res.sendStatus(400);
-      }
-
-      const user_id = user.id;
-      const now = new Date();
-
-      let session = await db("sessions")
-        .select("session_token", "expires_at")
-        .where({ user_id })
-        .first();
-
-      let token;
-      if (session && new Date(session.expires_at) > now) {
-        token = session.session_token; // Use existing token if valid
-      } else {
-        // Create a new session token if expired or not found
-        const expiresAt = new Date();
-        expiresAt.setDate(expiresAt.getDate() + 7);
-
-        const insertResult = await db("sessions")
-          .insert({
-            user_id,
-            expires_at: expiresAt,
-          })
-          .returning("session_token");
-
-        token = insertResult[0].session_token;
-      }
-
-      res
-        .cookie("token", token, cookieOptions)
-        .send({ message: "Login successful" });
-    } catch (error) {
-      console.log("LOGIN FAILED", error);
-      res.sendStatus(500);
+    if (!userResult.success) {
+      return res.status(400).send({ message: userResult.error });
     }
+
+    if (!userResult.exists) {
+      return res.status(409).json({ message: "Username does not exists" });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      userResult.user.password,
+    );
+    if (!isPasswordCorrect) {
+      return res.status(400).send({ message: "Invalid credentials" });
+    }
+
+    const user_id = userResult.user.id;
+    const now = new Date();
+
+    const sessionResult = await checkSession(user_id);
+
+    let token;
+
+    if (
+      sessionResult.success &&
+      new Date(sessionResult.session.expires_at) > now
+    ) {
+      token = sessionResult.session.session_token;
+    } else {
+      const createSessionResult = await createSession(user_id);
+      if (!createSessionResult.success) {
+        return res.status(500).send({ message: createSessionResult.error });
+      }
+      token = createSessionResult.token;
+    }
+
+    res
+      .cookie("token", token, cookieOptions)
+      .send({ message: "Login successful" });
   });
 
-  router.post("/logout", async (req, res) => {
+  router.post("/logout", [validateSessionToken], async (req, res) => {
     const { token } = req.cookies;
 
-    if (!token) {
-      console.log("Already logged out");
-      return res.sendStatus(400);
+    const deleteResult = await deleteSession(token);
+
+    if (!deleteResult.success) {
+      const status = deleteResult.error === "Session not found" ? 404 : 500;
+      return res.status(status).json({ error: deleteResult.error });
     }
 
-    try {
-      await db("sessions").where({ session_token: token }).del();
-      res
-        .clearCookie("token", cookieOptions)
-        .send({ message: "Logout successful" });
-    } catch (error) {
-      console.log("LOGOUT FAILED", error);
-      res.sendStatus(500);
-    }
+    res.clearCookie("token", cookieOptions).send({ message: "Logged out" });
   });
 
   return router;

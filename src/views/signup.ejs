@@ -104,7 +104,8 @@
             const password = document.getElementById("password").value;
 
             try {
-                const response = await fetch("/auth/create", {
+                // First, attempt to sign up
+                const signupResponse = await fetch("/auth/create", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -112,9 +113,25 @@
                     body: JSON.stringify({ username, password })
                 });
 
-                if (response.ok) {
+                if (signupResponse.ok) {
                     console.log("Sign up successful");
-                    window.location.href = "/homepage";
+
+                    // If signup is successful, attempt to log in
+                    const loginResponse = await fetch("/auth/login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    if (loginResponse.ok) {
+                        console.log("Login successful");
+                        window.location.href = "/homepage";
+                    } else {
+                        console.log("Login failed");
+                        alert("Login failed after signup. Please try logging in manually.");
+                    }
                 } else {
                     console.log("Sign up failed");
                     alert("Sign up failed. Please try again.");
