@@ -109,10 +109,12 @@
                             password : document.getElementById("password").value
                         })
                 });
+                console.log(response)
+                console.log(response.message)
 
                 if (response.ok) {
                     console.log("Login successful");
-                    window.location.href = "/homepage";
+                    window.location.href = "/protected/homepage";
                 } else {
                     const errorData = await response.json();
                     console.log("Login failed:", errorData);

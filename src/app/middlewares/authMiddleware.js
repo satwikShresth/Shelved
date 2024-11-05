@@ -2,52 +2,47 @@ import { getSessionByToken } from "crud/session.js";
 import { getUserById, getUserByUsername } from "crud/user.js";
 
 export const authMiddleware = async (req, res, next) => {
-  if (req.needAuthentication) {
-    const { token } = req.cookies;
+  const { token } = req.cookies;
 
-    if (!token) {
-      return res.status(403).render("error", {
-        status: 403,
-        error: "Forbidden",
-        message: "Authentication token missing",
-      });
-    }
-
-    const sessionResult = await getSessionByToken(token);
-    if (!sessionResult.success) {
-      return res.status(403).render("error", {
-        status: 403,
-        error: "Forbidden",
-        message: sessionResult.error || "Invalid session",
-      });
-    }
-
-    const { session } = sessionResult;
-    const now = new Date();
-
-    if (new Date(session.expires_at) <= now) {
-      await deleteSession(token);
-      return res
-        .clearCookie("token", cookieOptions)
-        .status(403)
-        .render("error", {
-          status: 403,
-          error: "Forbidden",
-          message: "Session expired",
-        });
-    }
-
-    const userResult = await getUserById(session.user_id);
-    if (!userResult.success) {
-      return res.status(403).render("error", {
-        status: 403,
-        error: "Forbidden",
-        message: userResult.error || "User not found",
-      });
-    }
-
-    res.locals.username = userResult.user.username;
+  if (!token) {
+    return res.status(403).render("error", {
+      status: 403,
+      error: "Forbidden",
+      message: "Authentication token missing",
+    });
   }
+
+  const sessionResult = await getSessionByToken(token);
+  if (!sessionResult.success) {
+    return res.status(403).render("error", {
+      status: 403,
+      error: "Forbidden",
+      message: sessionResult.error || "Invalid session",
+    });
+  }
+
+  const { session } = sessionResult;
+  const now = new Date();
+
+  if (new Date(session.expires_at) <= now) {
+    await deleteSession(token);
+    return res.clearCookie("token", cookieOptions).status(403).render("error", {
+      status: 403,
+      error: "Forbidden",
+      message: "Session expired",
+    });
+  }
+
+  const userResult = await getUserById(session.user_id);
+  if (!userResult.success) {
+    return res.status(403).render("error", {
+      status: 403,
+      error: "Forbidden",
+      message: userResult.error || "User not found",
+    });
+  }
+
+  res.locals.username = userResult.user.username;
   next();
 };
 

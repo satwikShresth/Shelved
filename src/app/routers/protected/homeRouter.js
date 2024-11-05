@@ -12,7 +12,6 @@ const getHomeRouter = () => {
       })
       .catch((error) => {
         console.error("Error fetching trending data:", error.message);
-        res.status(500).json({ error: "Failed to fetch trending data" });
       });
 
     res.render("homepage", {
