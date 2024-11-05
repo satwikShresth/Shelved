@@ -1,8 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import { authMiddleware } from "./middlewares/authMiddleware.js";
-import swaggerUI from "swagger-ui-express";
-import swaggerDoc from "./swagger.js";
 import { join } from "path";
 
 const port = 3000;
@@ -57,11 +55,14 @@ async function initRoute(dir, base = "/api") {
 }
 
 initRoute(routesDir)
-  .then(() => {
+  .then(async () => {
     if (Deno.env.get("ENV") == "development") {
+      const swaggerUI = await import("swagger-ui-express");
+      const swaggerDoc = await import("./swagger.js");
       app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
     }
-
+  })
+  .then(() => {
     app.listen(port, hostname, () => {
       console.log(`Listening at: http://${hostname}:${port}`);
     });
