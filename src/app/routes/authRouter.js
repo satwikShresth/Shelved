@@ -6,7 +6,7 @@ import {
   validateSessionToken,
   validateUserCreation,
   validateUsernamePassword,
-} from "middlewares/auth.js";
+} from "middlewares/authMiddleware.js";
 
 const getAuthRouter = () => {
   const router = Router();

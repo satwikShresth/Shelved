@@ -63,16 +63,34 @@ export const validateSessionToken = (req, res, next) => {
 };
 
 export const validateUsernamePassword = (req, res, next) => {
-  if (
-    !req.body ||
-    !req.body.hasOwnProperty("username") ||
-    !req.body.hasOwnProperty("password")
-  ) {
-    return res.sendStatus(400);
+  const { username, password } = req.body || {};
+
+  if (typeof username !== "string" || username.trim() === "") {
+    return res
+      .status(400)
+      .json({ error: "Username is required and must be a non-empty string" });
   }
+
+  if (typeof password !== "string" || password.trim() === "") {
+    return res
+      .status(400)
+      .json({ error: "Password is required and must be a non-empty string" });
+  }
+
+  if (username.length < 3 || username.length > 50) {
+    return res
+      .status(400)
+      .json({ error: "Username must be between 3 and 20 characters" });
+  }
+
+  if (password.length < 4) {
+    return res
+      .status(400)
+      .json({ error: "Password must be at least 4 characters" });
+  }
+
   next();
 };
-
 export const validateUserCreation = async (req, res, next) => {
   const { username } = req.body;
 

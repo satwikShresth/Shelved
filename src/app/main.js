@@ -1,6 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import { authMiddleware } from "./middlewares/auth.js";
+import { authMiddleware } from "./middlewares/authMiddleware.js";
 import { join } from "path";
 
 const port = 3000;
