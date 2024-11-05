@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { authMiddleware } from "./middlewares/authMiddleware.js";
 import { join } from "path";
+import swagger from "./swagger.js";
 
 const port = 3000;
 const hostname = "0.0.0.0";
@@ -58,7 +59,8 @@ initRoute(routesDir)
   .then(async () => {
     if (Deno.env.get("ENV") == "development") {
       const swaggerUI = await import("swagger-ui-express");
-      const swaggerDoc = await import("./swagger.js");
+      const { default: swaggerDoc } = await import("./swagger.js");
+      console.log(swaggerDoc);
       app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
     }
   })
