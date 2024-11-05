@@ -16,6 +16,5 @@ const getHomeRouter = () => {
 
 export default {
   getRouter: getHomeRouter,
-  base: "/",
   needsAuthentication: true,
 };

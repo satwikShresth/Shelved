@@ -92,6 +92,5 @@ const getAuthRouter = () => {
 
 export default {
   getRouter: getAuthRouter,
-  base: "/auth",
   needsAuthentication: false,
 };

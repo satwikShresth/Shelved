@@ -32,6 +32,5 @@ const getTmdbRouter = () => {
 
 export default {
   getRouter: getTmdbRouter,
-  base: "/services/",
   needsAuthentication: false,
 };

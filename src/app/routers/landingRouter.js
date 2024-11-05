@@ -20,6 +20,5 @@ const getLandingRouter = () => {
 
 export default {
   getRouter: getLandingRouter,
-  base: "/",
   needsAuthentication: false,
 };

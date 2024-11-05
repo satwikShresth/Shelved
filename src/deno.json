@@ -12,6 +12,9 @@
       "crud/":"./app/crud/",
       "middlewares/":"./app/middlewares/",
       "services/":"./app/services/",
+      "routers/":"./app/routers/",
+      "swagger-autogen": "npm:swagger-autogen@^2.23.7",
+      "swagger-ui-express": "npm:swagger-ui-express@^5.0.1",
    },
    "fmt": {
       "useTabs": false,
@@ -24,6 +27,7 @@
    },
    "tasks": {
       "dev": "deno -A --watch app/main.js",
+      "make_docs": "deno -A app/swagger.js",
       "format": "deno fmt --watch app",
       "start": "deno run --allow-net --allow-read --allow-env  app/main.js",
       "migrate": "deno run --env-file=../.env -A  npm:knex --env local --knexfile db/knexfile.js --knexpath db migrate:latest",

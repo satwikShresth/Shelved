@@ -14,6 +14,7 @@ EOF
 
 if [ "${ENV}" = "development" ]; then 
   deno install --allow-scripts
+  deno task make_docs
   deno task dev
 else
   deno install --allow-scripts
