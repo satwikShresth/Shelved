@@ -21,7 +21,7 @@ app.set("views", "./views");
 
 const routesDir = join(Deno.cwd(), "app", "routers");
 
-async function initRoute(dir, base = "/api") {
+async function initRoute(dir, base = "/") {
   for await (const entry of Deno.readDir(dir)) {
     const entryPath = join(dir, entry.name);
 
@@ -60,7 +60,6 @@ initRoute(routesDir)
     if (Deno.env.get("ENV") == "development") {
       const swaggerUI = await import("swagger-ui-express");
       const { default: swaggerDoc } = await import("./swagger.js");
-      console.log(swaggerDoc);
       app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
     }
   })

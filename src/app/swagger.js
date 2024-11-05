@@ -3,11 +3,11 @@ import { join } from "path";
 
 const doc = {
   info: {
-    title: "My API",
-    description: "Description",
+    title: "Shelved API Refernce",
+    description: "All the api exists here",
   },
   host: "localhost:3000",
-  basePath: "/api",
+  basePath: "/",
   schemes: ["http"],
 };
 
