@@ -1,7 +1,7 @@
 import * as bcrypt from "bcrypt";
 import db from "db";
 
-export async function createUser(username, password) {
+export const createUser = async (username, password) => {
   try {
     const hashedPassword = await bcrypt.hash(password);
     await db("users").insert({ username, password: hashedPassword });
@@ -10,9 +10,9 @@ export async function createUser(username, password) {
     console.error("Crud Error:", error);
     return { success: false, message: "Failed to create user" };
   }
-}
+};
 
-export async function getUserByUsername(username) {
+export const getUserByUsername = async (username) => {
   try {
     const user = await db("users")
       .select("id", "password", "username") // Add any other fields as needed
@@ -26,8 +26,9 @@ export async function getUserByUsername(username) {
     console.error("Crud Error:", error);
     return { success: false, error: "Database error", details: error.message };
   }
-}
-export async function getUserById(user_id) {
+};
+
+export const getUserById = async (user_id) => {
   try {
     const user = await db("users")
       .select("username")
@@ -41,4 +42,4 @@ export async function getUserById(user_id) {
     console.error("Crud Error:", error);
     return { success: false, error: "Database error", details: error.message };
   }
-}
+};

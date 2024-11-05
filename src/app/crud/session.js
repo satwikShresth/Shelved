@@ -1,6 +1,6 @@
 import db from "db";
 
-export async function checkSession(user_id) {
+export const checkSession = async (user_id) => {
   try {
     const session = await db("sessions")
       .select("session_token", "expires_at")
@@ -13,9 +13,9 @@ export async function checkSession(user_id) {
     console.error("Error checking session:", error);
     return { success: false, error: "Database error" };
   }
-}
+};
 
-export async function createSession(user_id) {
+export const createSession = async (user_id) => {
   try {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
@@ -30,9 +30,9 @@ export async function createSession(user_id) {
     console.error("Error creating session:", error);
     return { success: false, error: "Database error" };
   }
-}
+};
 
-export async function getSessionByToken(token) {
+export const getSessionByToken = async (token) => {
   try {
     const session = await db("sessions")
       .select("user_id", "expires_at")
@@ -45,9 +45,9 @@ export async function getSessionByToken(token) {
     console.error("Database Error in getSessionByToken:", error);
     return { success: false, error: "Database error while retrieving session" };
   }
-}
+};
 
-export async function deleteSession(token) {
+export const deleteSession = async (token) => {
   try {
     await db("sessions").where({ session_token: token }).del();
     return { success: true };
@@ -55,4 +55,4 @@ export async function deleteSession(token) {
     console.error("Database Error in deleteSession:", error);
     return { success: false, error: "Database error while deleting session" };
   }
-}
+};

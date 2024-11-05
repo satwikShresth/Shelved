@@ -1,5 +1,6 @@
 {
    "imports": {
+      "axios": "npm:axios@^1.7.7",
       "bcrypt": "https://deno.land/x/bcrypt@v0.3.0/mod.ts",
       "cookie-parser": "npm:cookie-parser@^1.4.7",
       "ejs": "npm:ejs@^3.1.10",
@@ -10,6 +11,7 @@
       "db":"./db/knex.js",
       "crud/":"./app/crud/",
       "middlewares/":"./app/middlewares/",
+      "services/":"./app/services/",
    },
    "fmt": {
       "useTabs": false,
