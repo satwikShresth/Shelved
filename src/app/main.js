@@ -1,9 +1,9 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import { authMiddleware } from "./middlewares/authMiddleware.js";
-import { join } from "path";
 import swaggerUI from "swagger-ui-express";
-import swaggerFile from "./swagger.json" with { type: "json" };
+import swaggerDoc from "./swagger.js";
+import { join } from "path";
 
 const port = 3000;
 const hostname = "0.0.0.0";
@@ -22,12 +22,12 @@ app.set("views", "./views");
 
 const routesDir = join(Deno.cwd(), "app", "routers");
 
-async function loadRoutes(dir, base = "/api") {
+async function initRoute(dir, base = "/api") {
   for await (const entry of Deno.readDir(dir)) {
     const entryPath = join(dir, entry.name);
 
     if (entry.isDirectory) {
-      await loadRoutes(entryPath, `${base}/${entry.name}`);
+      await initRoute(entryPath, `${base}/${entry.name}`);
     } else if (entry.isFile && entry.name.endsWith(".js")) {
       const modulePath = join(dir, entry.name);
       try {
@@ -56,15 +56,16 @@ async function loadRoutes(dir, base = "/api") {
   }
 }
 
-try {
-  loadRoutes(routesDir);
-} catch (error) {
-  console.error("Error loading routers:", error);
-}
+initRoute(routesDir)
+  .then(() => {
+    if (Deno.env.get("ENV") == "development") {
+      app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
+    }
 
-if (Deno.env.get("ENV") == "development")
-  app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerFile));
-
-app.listen(port, hostname, () => {
-  console.log(`Listening at: http://${hostname}:${port}`);
-});
+    app.listen(port, hostname, () => {
+      console.log(`Listening at: http://${hostname}:${port}`);
+    });
+  })
+  .catch((error) => {
+    console.error("Error loading routers:", error);
+  });
