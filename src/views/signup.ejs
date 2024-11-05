@@ -105,7 +105,7 @@
 
             try {
                 // First, attempt to sign up
-                const signupResponse = await fetch("/auth/create", {
+                const signupResponse = await fetch("/api/auth/create", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -116,8 +116,7 @@
                 if (signupResponse.ok) {
                     console.log("Sign up successful");
 
-                    // If signup is successful, attempt to log in
-                    const loginResponse = await fetch("/auth/login", {
+                    const loginResponse = await fetch("/api/auth/login", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"

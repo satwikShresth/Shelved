@@ -21,12 +21,15 @@ app.set("views", "./views");
 
 const routesDir = join(Deno.cwd(), "app", "routers");
 
-async function initRoute(dir, base = "") {
+async function initRoute(dir, base = "/") {
   for await (const entry of Deno.readDir(dir)) {
     const entryPath = join(dir, entry.name);
 
     if (entry.isDirectory) {
-      await initRoute(entryPath, `${base}/${entry.name}`);
+      await initRoute(
+        entryPath,
+        base === "/" ? `${base}${entry.name}` : `${base}/${entry.name}`,
+      );
     } else if (entry.isFile && entry.name.endsWith(".js")) {
       const modulePath = join(dir, entry.name);
       try {
