@@ -80,52 +80,23 @@
 <body>
     <%- include('navbar', { username: username }) %>
 
-
-
     <div class="content">
         <h1>Welcome, <span><%= username %></span>!</h1>
-        <div class="container" id="mediaContainer">
+        <div class="container">
+            <% if (trendingData && trendingData.length > 0) { %>
+                <% trendingData.forEach(media => { %>
+                    <div class="media-item">
+                        <img src="https://image.tmdb.org/t/p/w500<%= media.poster_path %>" alt="<%= media.name || media.title %> Poster" class="poster" />
+                        <div class="content">
+                            <p class="title"><%= media.name || media.title %></p>
+                            <p class="overview"><%= media.overview ? media.overview.substring(0, 100) + '...' : 'No overview available.' %></p>
+                            <p class="rating">Rating: <%= media.vote_average ? media.vote_average : 'N/A' %>/10</p>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } %>
         </div>
     </div>
-
-    <script>
-        async function fetchTrendingMedia() {
-            try {
-                const response = await fetch('/api/services/trending?media_type=all&range=week');
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-
-                if (data && data.length > 0) {
-                    const container = document.getElementById('mediaContainer');
-                    container.innerHTML = '';  // Clear previous content
-
-                    data.forEach(media => {
-                        const mediaItem = document.createElement('div');
-                        mediaItem.classList.add('media-item');
-                        mediaItem.innerHTML = `
-                            <img src="https://image.tmdb.org/t/p/w500${media.poster_path}" alt="${media.name || media.title} Poster" class="poster" />
-                            <div class="content">
-                                <p class="title">${media.name || media.title}</p>
-                                <p class="overview">${media.overview ? media.overview.substring(0, 100) + '...' : 'No overview available.'}</p>
-                                <p class="rating">Rating: ${media.vote_average ? media.vote_average : 'N/A'}/10</p>
-                            </div>
-                        `;
-                        container.appendChild(mediaItem);
-                    });
-                } else {
-                    console.error("No trending media found");
-                }
-            } catch (error) {
-                console.error("Error fetching trending media:", error.message);
-            }
-        }
-
-        fetchTrendingMedia();
-    </script>
 </body>
 </html>
 
