@@ -21,7 +21,7 @@ app.set("views", "./views");
 
 const routesDir = join(Deno.cwd(), "app", "routers");
 
-async function initRoute(dir, base = "/") {
+async function initRoute(dir, base = "") {
   for await (const entry of Deno.readDir(dir)) {
     const entryPath = join(dir, entry.name);
 
