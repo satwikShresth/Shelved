@@ -22,14 +22,25 @@ async function swaggerDoc(dir, base = "/") {
       await swaggerDoc(entryPath, `${base}/${entry.name}`);
     } else if (entry.isFile && entry.name.endsWith(".js")) {
       const modulePath = join(dir, entry.name);
-      const baseTags = base.split("/").filter(Boolean) || ["Base"];
-      const tags = baseTags.length ? baseTags : ["Base"];
+      const baseTags = base
+        .split("/")
+        .filter(Boolean)
+        .map((value) => {
+          if (value === "p") {
+            return "Protected";
+          }
+          return value.charAt(0).toUpperCase() + value.slice(1);
+          return;
+        });
 
+      const tags = baseTags.length ? baseTags : ["Base"];
       const tempDoc = { ...doc, paths: {} };
+
       const swaggerData = await swaggerAutogen({
         disableLogs: true,
         writeOutputFile: false,
       })("./swagger.json", [modulePath], doc);
+
       if (swaggerData?.data?.paths) {
         const prefixedPaths = {};
         for (const [routePath, routeInfo] of Object.entries(

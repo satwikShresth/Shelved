@@ -12,11 +12,6 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-const addNeedsAuthentication = (needsAuthentication) => (req, res, next) => {
-  req.needsAuthentication = needsAuthentication;
-  next();
-};
-
 const authWrapper = (needsAuthentication) => (req, res, next) => {
   if (needsAuthentication) {
     authMiddleware(req, res, next);
@@ -35,9 +30,10 @@ async function loadRoutes(dir, base = "/") {
     const entryPath = join(dir, entry.name);
 
     if (entry.isDirectory) {
-      const newBase =
-        base === "/" ? `${base}${entry.name}` : `${base}/${entry.name}`;
-      await loadRoutes(entryPath, newBase);
+      await loadRoutes(
+        entryPath,
+        base === "/" ? `${base}${entry.name}` : `${base}/${entry.name}`,
+      );
     } else if (entry.isFile && entry.name.endsWith(".js")) {
       const modulePath = join(dir, entry.name);
       try {
@@ -46,16 +42,10 @@ async function loadRoutes(dir, base = "/") {
         } = await import(modulePath);
 
         if (getRouter && typeof getRouter === "function") {
-          const mountPath = `${base}${routeBase}`.replace(/\/+/g, "/");
-
-          await app.use(
-            mountPath,
-            authWrapper(needsAuthentication),
-            getRouter(),
-          );
+          await app.use(base, authWrapper(needsAuthentication), getRouter());
 
           console.log(
-            `Loaded ${entry.name}:\n  - Base: ${mountPath}\n  - needsAuthentication: ${needsAuthentication}`,
+            `Loaded ${entry.name}:\n  - Base: ${base}\n  - needsAuthentication: ${needsAuthentication}`,
           );
         } else {
           console.warn(`No default export found in ${entry.name}`);
