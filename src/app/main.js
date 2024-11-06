@@ -1,9 +1,14 @@
 import express from "express";
-import cookieParser from "cookie-parser";
-import { authMiddleware } from "./middlewares/authMiddleware.js";
-import { join } from "path";
-import swaggerUI from "swagger-ui-express";
 import swaggerDocs from "./swagger.js";
+import cookieParser from "cookie-parser";
+import swaggerUI from "swagger-ui-express";
+import {
+  authMiddleware,
+  validateSessionToken,
+} from "./middlewares/authMiddleware.js";
+import { join } from "path";
+import { walk } from "walk";
+import { getRouteDetails } from "./utils/common.js";
 
 const port = 3000;
 const hostname = "0.0.0.0";
@@ -14,7 +19,7 @@ app.use(cookieParser());
 
 const authWrapper = (needsAuthentication) => (req, res, next) => {
   if (needsAuthentication) {
-    authMiddleware(req, res, next);
+    validateSessionToken(req, res, () => authMiddleware(req, res, next));
   } else {
     next();
   }
@@ -25,46 +30,26 @@ app.set("views", "./views");
 
 const routesDir = join(Deno.cwd(), "app", "routers");
 
-async function loadRoutes(dir, base = "/") {
-  for await (const entry of Deno.readDir(dir)) {
-    const entryPath = join(dir, entry.name);
-
-    if (entry.isDirectory) {
-      await loadRoutes(
-        entryPath,
-        base === "/" ? `${base}${entry.name}` : `${base}/${entry.name}`,
-      );
-    } else if (entry.isFile && entry.name.endsWith(".js")) {
-      const modulePath = join(dir, entry.name);
-      try {
-        const {
-          default: { getRouter, routeBase = "/", needsAuthentication = true },
-        } = await import(modulePath);
-
-        if (getRouter && typeof getRouter === "function") {
-          await app.use(base, authWrapper(needsAuthentication), getRouter());
-
-          console.log(
-            `Loaded ${entry.name}:\n  - Base: ${base}\n  - needsAuthentication: ${needsAuthentication}`,
-          );
-        } else {
-          console.warn(`No default export found in ${entry.name}`);
-        }
-      } catch (error) {
-        console.error(`Error loading router in ${entry.name}:`, error);
-      }
-    }
-  }
-}
-
 try {
-  await loadRoutes(routesDir);
+  const arrayData = await getRouteDetails();
+
+  for (const { path, base, filename } of arrayData) {
+    const module = await import(path);
+    const { getRouter, needsAuthentication = true } = module.default;
+
+    app.use(base, authWrapper(needsAuthentication), getRouter());
+
+    console.log(
+      `Loaded ${filename}:\n  - Base: ${base}\n  - needsAuthentication: ${needsAuthentication}`,
+    );
+  }
 } catch (error) {
-  console.error("Error loading routers:", error);
+  console.error(`Failed to load route from ${path}: ${error}`);
 }
 
-if (Deno.env.get("ENV") == "development")
+if (Deno.env.get("ENV") === "development") {
   app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+}
 
 app.listen(port, hostname, () => {
   console.log(`Listening at: http://${hostname}:${port}`);

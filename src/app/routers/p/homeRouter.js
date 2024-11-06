@@ -8,7 +8,7 @@ const getHomeRouter = () => {
     const trendingData = await tmdbService
       .getTrending({ range: "week", mediaType: "all" })
       .then((data) => {
-        return data.results.slice(0, 5);
+        return data.results;
       })
       .catch((error) => {
         console.error("Error fetching trending data:", error.message);

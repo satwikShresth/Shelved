@@ -1,6 +1,7 @@
 {
    "imports": {
       "axios": "npm:axios@^1.7.7",
+      "walk":"jsr:@std/fs/walk",
       "bcrypt": "https://deno.land/x/bcrypt@v0.3.0/mod.ts",
       "cookie-parser": "npm:cookie-parser@^1.4.7",
       "ejs": "npm:ejs@^3.1.10",
@@ -13,6 +14,7 @@
       "middlewares/":"./app/middlewares/",
       "services/":"./app/services/",
       "routers/":"./app/routers/",
+      "utils/":"./app/utils/",
       "swagger-autogen": "npm:swagger-autogen@^2.23.7",
       "swagger-ui-express": "npm:swagger-ui-express@^5.0.1",
    },

@@ -1,7 +1,7 @@
 import { getSessionByToken } from "crud/session.js";
 import { getUserById, getUserByUsername } from "crud/user.js";
 
-export const authMiddleware = async (req, res, next) => {
+export const validateSessionToken = async (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
@@ -33,6 +33,21 @@ export const authMiddleware = async (req, res, next) => {
     });
   }
 
+  req.session = session;
+  next();
+};
+
+export const authMiddleware = async (req, res, next) => {
+  const { session } = req;
+
+  if (!session) {
+    return res.status(403).render("error", {
+      status: 403,
+      error: "Forbidden",
+      message: "Session not validated",
+    });
+  }
+
   const userResult = await getUserById(session.user_id);
   if (!userResult.success) {
     return res.status(403).render("error", {
@@ -43,17 +58,6 @@ export const authMiddleware = async (req, res, next) => {
   }
 
   res.locals.username = userResult.user.username;
-  next();
-};
-
-export const validateSessionToken = (req, res, next) => {
-  const { token } = req.cookies;
-  if (!token) {
-    return res.status(400).json({
-      error: "Bad Request",
-      message: "No session token found",
-    });
-  }
   next();
 };
 
