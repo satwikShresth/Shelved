@@ -5,9 +5,7 @@ import swaggerUI from "swagger-ui-express";
 import {
   authMiddleware,
   validateSessionToken,
-} from "./middlewares/authMiddleware.js";
-import { join } from "path";
-import { walk } from "walk";
+} from "middlewares/authMiddleware.js";
 import { getRouteDetails } from "utils/common.js";
 
 const port = 3000;
@@ -27,8 +25,6 @@ const authWrapper = (needsAuthentication) => (req, res, next) => {
 
 app.set("view engine", "ejs");
 app.set("views", "./views");
-
-const routesDir = join(Deno.cwd(), "app", "routers");
 
 try {
   const arrayData = await getRouteDetails();

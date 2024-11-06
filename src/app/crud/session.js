@@ -56,3 +56,21 @@ export const deleteSession = async (token) => {
     return { success: false, error: "Database error while deleting session" };
   }
 };
+
+export const retrieveSession = async (token) => {
+  if (!token) return { success: false, error: "Authentication token missing" };
+
+  const sessionResult = await getSessionByToken(token);
+  if (!sessionResult.success)
+    return { success: false, error: sessionResult.error || "Invalid session" };
+
+  const { session } = sessionResult;
+  const now = new Date();
+
+  if (new Date(session.expires_at) <= now) {
+    await deleteSession(token);
+    return { success: false, error: "Session expired" };
+  }
+
+  return { success: true, session };
+};

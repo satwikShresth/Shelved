@@ -1,5 +1,4 @@
 import swaggerAutogen from "swagger-autogen";
-import { join } from "path";
 import { getRouteDetails } from "utils/common.js";
 
 const doc = {
@@ -12,14 +11,13 @@ const doc = {
   schemes: ["http"],
 };
 
-const routesDir = join(Deno.cwd(), "app", "routers");
-let allPaths = {};
+const allPaths = {};
 
 async function swaggerDoc() {
   try {
     const arrayData = await getRouteDetails();
 
-    for (const { path, base, filename } of arrayData) {
+    for (const { path, base } of arrayData) {
       const baseTags = base
         .split("/")
         .filter(Boolean)
@@ -31,7 +29,6 @@ async function swaggerDoc() {
         });
 
       const tags = baseTags.length ? baseTags : ["Base"];
-      const tempDoc = { ...doc, paths: {} };
 
       const swaggerData = await swaggerAutogen({
         disableLogs: true,

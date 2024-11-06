@@ -1,26 +1,11 @@
 import { Router } from "express";
-import { getSessionByToken } from "crud/session.js";
+import { retrieveSession } from "crud/session.js";
 
 export const checkTokenAndRedirect = async (req, res, next) => {
   const { token } = req.cookies;
+  const sessionResult = await retrieveSession(token);
 
-  if (!token) {
-    return next();
-  }
-
-  const sessionResult = await getSessionByToken(token);
-  if (!sessionResult.success) {
-    return next();
-  }
-
-  const { session } = sessionResult;
-  const now = new Date();
-
-  if (new Date(session.expires_at) <= now) {
-    await deleteSession(token);
-    res.clearCookie("token", cookieOptions);
-    return next();
-  }
+  if (!sessionResult.success) return next();
 
   return res.redirect("/p/homepage");
 };

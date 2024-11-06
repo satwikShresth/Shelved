@@ -1,39 +1,23 @@
-import { getSessionByToken } from "crud/session.js";
+import { retrieveSession } from "crud/session.js";
 import { getUserById, getUserByUsername } from "crud/user.js";
+
+const clearTokenAndRenderError = (res, message) => {
+  res.clearCookie("token", cookieOptions).status(403).render("error", {
+    status: 403,
+    error: "Forbidden",
+    message,
+  });
+};
 
 export const validateSessionToken = async (req, res, next) => {
   const { token } = req.cookies;
+  const sessionResult = await retrieveSession(token);
 
-  if (!token) {
-    return res.status(403).render("error", {
-      status: 403,
-      error: "Forbidden",
-      message: "Authentication token missing",
-    });
-  }
-
-  const sessionResult = await getSessionByToken(token);
   if (!sessionResult.success) {
-    return res.status(403).render("error", {
-      status: 403,
-      error: "Forbidden",
-      message: sessionResult.error || "Invalid session",
-    });
+    return clearTokenAndRenderError(res, sessionResult.error);
   }
 
-  const { session } = sessionResult;
-  const now = new Date();
-
-  if (new Date(session.expires_at) <= now) {
-    await deleteSession(token);
-    return res.clearCookie("token", cookieOptions).status(403).render("error", {
-      status: 403,
-      error: "Forbidden",
-      message: "Session expired",
-    });
-  }
-
-  req.session = session;
+  req.session = sessionResult.session;
   next();
 };
 
@@ -41,20 +25,12 @@ export const authMiddleware = async (req, res, next) => {
   const { session } = req;
 
   if (!session) {
-    return res.status(403).render("error", {
-      status: 403,
-      error: "Forbidden",
-      message: "Session not validated",
-    });
+    return clearTokenAndRenderError(res, "Session not validated");
   }
 
   const userResult = await getUserById(session.user_id);
   if (!userResult.success) {
-    return res.status(403).render("error", {
-      status: 403,
-      error: "Forbidden",
-      message: userResult.error || "User not found",
-    });
+    return clearTokenAndRenderError(res, userResult.error || "User not found");
   }
 
   res.locals.username = userResult.user.username;
@@ -90,6 +66,7 @@ export const validateUsernamePassword = (req, res, next) => {
 
   next();
 };
+
 export const validateUserCreation = async (req, res, next) => {
   const { username } = req.body;
 
