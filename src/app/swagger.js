@@ -1,5 +1,6 @@
 import swaggerAutogen from "swagger-autogen";
 import { join } from "path";
+import { getRouteDetails } from "utils/common.js";
 
 const doc = {
   info: {
@@ -14,14 +15,11 @@ const doc = {
 const routesDir = join(Deno.cwd(), "app", "routers");
 let allPaths = {};
 
-async function swaggerDoc(dir, base = "/") {
-  for await (const entry of Deno.readDir(dir)) {
-    const entryPath = join(dir, entry.name);
+async function swaggerDoc() {
+  try {
+    const arrayData = await getRouteDetails();
 
-    if (entry.isDirectory) {
-      await swaggerDoc(entryPath, `${base}/${entry.name}`);
-    } else if (entry.isFile && entry.name.endsWith(".js")) {
-      const modulePath = join(dir, entry.name);
+    for (const { path, base, filename } of arrayData) {
       const baseTags = base
         .split("/")
         .filter(Boolean)
@@ -30,7 +28,6 @@ async function swaggerDoc(dir, base = "/") {
             return "Protected";
           }
           return value.charAt(0).toUpperCase() + value.slice(1);
-          return;
         });
 
       const tags = baseTags.length ? baseTags : ["Base"];
@@ -39,7 +36,7 @@ async function swaggerDoc(dir, base = "/") {
       const swaggerData = await swaggerAutogen({
         disableLogs: true,
         writeOutputFile: false,
-      })("./swagger.json", [modulePath], doc);
+      })("./swagger.json", [path], doc);
 
       if (swaggerData?.data?.paths) {
         const prefixedPaths = {};
@@ -56,10 +53,12 @@ async function swaggerDoc(dir, base = "/") {
         Object.assign(allPaths, prefixedPaths);
       }
     }
+  } catch (error) {
+    console.error(`Failed to load route: ${error}`);
   }
 }
 
-export default await swaggerDoc(routesDir)
+export default await swaggerDoc()
   .then(() => {
     return { swagger: "2.0", ...doc, paths: allPaths };
   })

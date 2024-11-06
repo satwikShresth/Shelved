@@ -8,7 +8,7 @@ import {
 } from "./middlewares/authMiddleware.js";
 import { join } from "path";
 import { walk } from "walk";
-import { getRouteDetails } from "./utils/common.js";
+import { getRouteDetails } from "utils/common.js";
 
 const port = 3000;
 const hostname = "0.0.0.0";
