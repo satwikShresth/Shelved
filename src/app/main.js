@@ -30,17 +30,21 @@ try {
   const arrayData = await getRouteDetails();
 
   for (const { path, base, filename } of arrayData) {
-    const module = await import(path);
-    const { getRouter, needsAuthentication = true } = module.default;
+    try {
+      const module = await import(path);
+      const { getRouter, needsAuthentication = true } = module.default;
 
-    app.use(base, authWrapper(needsAuthentication), getRouter());
+      app.use(base, authWrapper(needsAuthentication), getRouter());
 
-    console.log(
-      `Loaded ${filename}:\n  - Base: ${base}\n  - needsAuthentication: ${needsAuthentication}`,
-    );
+      console.log(
+        `Loaded ${filename}:\n  - Base: ${base}\n  - needsAuthentication: ${needsAuthentication}`,
+      );
+    } catch (error) {
+      console.error(`Failed to load route from ${path}: ${error}`);
+    }
   }
 } catch (error) {
-  console.error(`Failed to load route from ${path}: ${error}`);
+  console.error(`Failed to load routes: ${error}`);
 }
 
 if (Deno.env.get("ENV") === "development") {

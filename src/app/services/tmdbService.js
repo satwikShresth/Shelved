@@ -20,8 +20,13 @@ class TMDBService {
       });
       return response.data;
     } catch (error) {
-      console.error(`Error fetching data: ${error.message}`);
-      throw error;
+      console.error(`Error fetching data from ${url}:`);
+      console.error(`    Status: ${error.response?.status || "N/A"}`);
+      console.error(
+        `    Details: ${error.response?.data.status_message || error.message}`,
+      );
+
+      throw new Error("Failed to fetch data.");
     }
   }
 
