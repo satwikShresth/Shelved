@@ -6,16 +6,11 @@ import {
   validateSessionToken,
   validateUserCreation,
   validateUsernamePassword,
+  cookieOptions,
 } from "middlewares/authMiddleware.js";
 
 const getAuthRouter = () => {
   const router = Router();
-
-  const cookieOptions = {
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
-  };
 
   router.post(
     "/create",

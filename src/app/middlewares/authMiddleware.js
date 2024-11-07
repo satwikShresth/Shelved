@@ -1,6 +1,12 @@
 import { retrieveSession } from "crud/session.js";
 import { getUserById, getUserByUsername } from "crud/user.js";
 
+export const cookieOptions = {
+  httpOnly: true,
+  secure: true,
+  sameSite: "strict",
+};
+
 const clearTokenAndRenderError = (res, message) => {
   res.clearCookie("token", cookieOptions).status(403).render("error", {
     status: 403,
