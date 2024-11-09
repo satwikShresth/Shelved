@@ -9,13 +9,13 @@ class TMDBService {
     this.defaultLanguage = "en-US";
   }
 
-  async fetchData(url, queryParams = {}) {
+  async fetchData(url) {
     try {
       const response = await axios.get(url, {
-        params: {
-          api_key: this.apiKey,
-          language: this.defaultLanguage,
-          ...queryParams,
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${this.apiKey}`,
         },
       });
       return response.data;
@@ -31,16 +31,16 @@ class TMDBService {
   }
 
   getTrending({
-    range = "day",
+    range = "week",
     mediaType = "all",
     language = this.defaultLanguage,
   } = {}) {
     validateMediaType(mediaType);
     validateRange(range);
 
-    const endpoint = `${this.baseUrl}trending/${mediaType}/${range}`;
+    const endpoint = `${this.baseUrl}trending/${mediaType}/${range}?language=${language}`;
     console.log(endpoint);
-    return this.fetchData(endpoint, { language });
+    return this.fetchData(endpoint);
   }
 }
 
