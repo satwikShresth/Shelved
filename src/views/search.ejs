@@ -114,36 +114,34 @@
   </div>
 
   <script>
-    document
-      .getElementById("searchForm")
-      .addEventListener("submit", async function (event) {
-        event.preventDefault();
+    document.getElementById("searchForm").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Not let the form submit in the usual way
 
         const query = document.getElementById("searchInput").value;
-        const category = document.getElementById("searchCategory").value;
-        const endpoint = category === "movies" ? "/api/movies/search" : "/api/books/search";
+        const category = document.getElementById("searchCategory").value; // Check if we're looking for movies or books
+        const endpoint = category === "movies" ? "/api/movies/search" : "/api/books/search"; // Choose the endpoint
 
         try {
-          const response = await fetch(`${endpoint}?query=${query}`);
-          const results = await response.json();
+            const response = await fetch(`${endpoint}?query=${query}`); // Fetch the data from the right API
+            const results = await response.json();
 
-          const resultsContainer = document.getElementById("resultsContainer");
-          resultsContainer.innerHTML = "";
+            const resultsContainer = document.getElementById("resultsContainer");
+            resultsContainer.innerHTML = "";
 
-          results.forEach((item) => {
-            const card = document.createElement("div");
-            card.className = "result-card";
-            card.innerHTML = `
-            <img src="${item.poster}" alt="${item.name}" />
-            <h3>${item.name}</h3>
-            <p>${item.author}</p>
-          `;
-            resultsContainer.appendChild(card);
-          });
+            results.forEach((item) => {
+                const card = document.createElement("div"); // Create a new div for each result
+                card.className = "result-card";
+                card.innerHTML = `
+                <img src="${item.poster}" alt="${item.name}" />
+                <h3>${item.name}</h3>
+                <p>${item.author}</p>
+                `; // Fill the div with content
+                resultsContainer.appendChild(card); // Add the new div to the results container
+            });
         } catch (error) {
-          console.error("Error fetching search results:", error);
+            console.error("Error fetching search results:", error); // Log any errors that occur
         }
-      });
-  </script>
+    });
+</script>
 </body>
 </html>
