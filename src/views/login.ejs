@@ -114,7 +114,7 @@
 
                 if (response.ok) {
                     console.log("Login successful");
-                    window.location.href = "/protected/homepage";
+                    window.location.href = "/p/homepage";
                 } else {
                     const errorData = await response.json();
                     console.log("Login failed:", errorData);
