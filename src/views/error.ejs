@@ -43,6 +43,11 @@
             margin: 1em 0;
         }
 
+        .icon {
+            font-size: 4em;
+            margin-bottom: 1em;
+        }
+
         button {
             padding: 0.5em 1em;
             background-color: #ff9800;
@@ -51,6 +56,7 @@
             border-radius: 4px;
             font-size: 1em;
             cursor: pointer;
+            margin: 0.5em;
         }
 
         button:hover {
@@ -60,10 +66,12 @@
 </head>
 <body>
     <div class="error-container">
+        <div class="icon">⚠️</div> // add icon to make the error more prominent
         <h1><%= status %></h1>
         <h2><%= error %></h2>
         <p><%= message %></p>
         <button onclick="window.location.href='/'">Go to Home</button>
+        <button onclick="window.history.back()">Go Back</button> // added a go back button
     </div>
 </body>
 </html>
