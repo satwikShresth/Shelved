@@ -95,6 +95,22 @@
     .result-card p {
       color: #cccccc;
     }
+
+    /* Loading spinner */
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 4px solid #ffffff;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -110,38 +126,46 @@
       <button type="submit">Search</button>
     </form>
 
+    <!-- Loading spinner -->
+    <div class="spinner" id="spinner"></div>
+
     <div id="resultsContainer"></div>
   </div>
 
   <script>
     document.getElementById("searchForm").addEventListener("submit", async function (event) {
-        event.preventDefault(); // Not let the form submit in the usual way
+        event.preventDefault();
 
         const query = document.getElementById("searchInput").value;
-        const category = document.getElementById("searchCategory").value; // Check if we're looking for movies or books
-        const endpoint = category === "movies" ? "/api/movies/search" : "/api/books/search"; // Choose the endpoint
+        const category = document.getElementById("searchCategory").value;
+        const endpoint = category === "movies" ? "/api/movies/search" : "/api/books/search";
+
+        const spinner = document.getElementById("spinner");
+        const resultsContainer = document.getElementById("resultsContainer");
+
+        spinner.style.display = "block";  // Show the spinner
+        resultsContainer.innerHTML = ""; 
 
         try {
-            const response = await fetch(`${endpoint}?query=${query}`); // Fetch the data from the right API
+            const response = await fetch(`${endpoint}?query=${query}`);
             const results = await response.json();
 
-            const resultsContainer = document.getElementById("resultsContainer");
-            resultsContainer.innerHTML = "";
-
             results.forEach((item) => {
-                const card = document.createElement("div"); // Create a new div for each result
+                const card = document.createElement("div");
                 card.className = "result-card";
                 card.innerHTML = `
                 <img src="${item.poster}" alt="${item.name}" />
                 <h3>${item.name}</h3>
                 <p>${item.author}</p>
-                `; // Fill the div with content
-                resultsContainer.appendChild(card); // Add the new div to the results container
+                `;
+                resultsContainer.appendChild(card);
             });
         } catch (error) {
-            console.error("Error fetching search results:", error); // Log any errors that occur
+            console.error("Error fetching search results:", error);
+        } finally {
+            spinner.style.display = "none"; 
         }
     });
-</script>
+  </script>
 </body>
 </html>
