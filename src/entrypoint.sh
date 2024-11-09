@@ -4,7 +4,7 @@ if [ "${ENV}" = "development" ]; then
   deno install --allow-scripts
   deno task migrate
   deno task seed
-  deno task dev
+  INSECURE_COOKIE=1 deno task dev
 else
   deno install --allow-scripts
   deno task start

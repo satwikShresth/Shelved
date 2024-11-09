@@ -2,8 +2,8 @@ import { retrieveSession } from "crud/session.js";
 import { getUserById, getUserByUsername } from "crud/user.js";
 
 export const cookieOptions = {
-  httpOnly: false,
-  secure: false,
+  httpOnly: true,
+  secure: !Deno.env.has("INSECURE_COOKIE"),
   sameSite: "strict",
 };
 
