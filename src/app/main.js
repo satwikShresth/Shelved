@@ -2,10 +2,7 @@ import express from "express";
 import swaggerDocs from "./swagger.js";
 import cookieParser from "cookie-parser";
 import swaggerUI from "swagger-ui-express";
-import {
-  authMiddleware,
-  validateSessionToken,
-} from "middlewares/authMiddleware.js";
+import { authMiddleware } from "middlewares/authMiddleware.js";
 
 //Routers
 import getLandingRouter from "routers/landingRouter.js";
