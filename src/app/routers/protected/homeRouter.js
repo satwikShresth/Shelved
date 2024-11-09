@@ -27,7 +27,4 @@ const getHomeRouter = () => {
   return router;
 };
 
-export default {
-  getRouter: getHomeRouter,
-  needsAuthentication: true,
-};
+export default getHomeRouter;

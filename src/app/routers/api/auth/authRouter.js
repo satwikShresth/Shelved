@@ -85,7 +85,4 @@ const getAuthRouter = () => {
   return router;
 };
 
-export default {
-  getRouter: getAuthRouter,
-  needsAuthentication: false,
-};
+export default getAuthRouter;

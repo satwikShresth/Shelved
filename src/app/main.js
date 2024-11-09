@@ -6,7 +6,12 @@ import {
   authMiddleware,
   validateSessionToken,
 } from "middlewares/authMiddleware.js";
-import { getRouteDetails } from "utils/common.js";
+
+//Routers
+import getLandingRouter from "routers/landingRouter.js";
+import getAuthRouter from "routers/api/auth/authRouter.js";
+import getHomeRouter from "routers/protected/homeRouter.js";
+import getTmdbRouter from "routers/api/services/tmdbRouter.js";
 
 const port = 3000;
 const hostname = "0.0.0.0";
@@ -15,37 +20,15 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-const authWrapper = (needsAuthentication) => (req, res, next) => {
-  if (needsAuthentication) {
-    validateSessionToken(req, res, () => authMiddleware(req, res, next));
-  } else {
-    next();
-  }
-};
-
 app.set("view engine", "ejs");
 app.set("views", "./views");
 
-try {
-  const arrayData = await getRouteDetails();
-
-  for (const { path, base, filename } of arrayData) {
-    try {
-      const module = await import(path);
-      const { getRouter, needsAuthentication = true } = module.default;
-
-      app.use(base, authWrapper(needsAuthentication), getRouter());
-
-      console.log(
-        `Loaded ${filename}:\n  - Base: ${base}\n  - needsAuthentication: ${needsAuthentication}`,
-      );
-    } catch (error) {
-      console.error(`Failed to load route from ${path}: ${error}`);
-    }
-  }
-} catch (error) {
-  console.error(`Failed to load routes: ${error}`);
-}
+//routes
+app.use("/", getLandingRouter());
+app.use("/api/auth", getAuthRouter());
+app.use("/api/services", getTmdbRouter());
+//routes protected
+app.use("/p", authMiddleware, getHomeRouter());
 
 if (Deno.env.get("ENV") === "development") {
   app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));

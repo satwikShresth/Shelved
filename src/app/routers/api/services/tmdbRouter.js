@@ -30,7 +30,4 @@ const getTmdbRouter = () => {
   return router;
 };
 
-export default {
-  getRouter: getTmdbRouter,
-  needsAuthentication: false,
-};
+export default getTmdbRouter;

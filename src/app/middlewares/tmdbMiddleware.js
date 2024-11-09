@@ -1,4 +1,4 @@
-import { validateMediaType, validateRange } from "services/tmdbValidator.js";
+import { validateMediaType, validateRange } from "services/tmdbService.js";
 
 const tryCatch = (fn) => (req, res, next) => {
   try {

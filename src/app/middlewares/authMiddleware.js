@@ -2,8 +2,8 @@ import { retrieveSession } from "crud/session.js";
 import { getUserById, getUserByUsername } from "crud/user.js";
 
 export const cookieOptions = {
-  httpOnly: true,
-  secure: true,
+  httpOnly: false,
+  secure: false,
   sameSite: "strict",
 };
 
@@ -27,7 +27,7 @@ export const validateSessionToken = async (req, res, next) => {
   next();
 };
 
-export const authMiddleware = async (req, res, next) => {
+export const validateUserId = async (req, res, next) => {
   const { session } = req;
 
   if (!session) {
@@ -42,6 +42,8 @@ export const authMiddleware = async (req, res, next) => {
   res.locals.username = userResult.user.username;
   next();
 };
+
+export const authMiddleware = [validateSessionToken, validateUserId];
 
 export const validateUsernamePassword = (req, res, next) => {
   const { username, password } = req.body || {};
