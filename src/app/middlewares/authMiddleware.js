@@ -3,7 +3,7 @@ import { getUserById, getUserByUsername } from "crud/user.js";
 
 export const cookieOptions = {
   httpOnly: true,
-  secure: !Deno.env.has("INSECURE_COOKIE"),
+  secure: true,
   sameSite: "strict",
 };
 
