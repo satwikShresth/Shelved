@@ -21,6 +21,7 @@
             margin-top: 20px;
             margin-bottom: 10px;
             font-weight: 700;
+            text-align: center;
         }
 
         h1 span {
@@ -41,6 +42,7 @@
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
+            position: relative;
         }
 
         .media-item:hover {
@@ -74,6 +76,72 @@
             font-size: 14px;
             color: #888;
         }
+
+        /* Add button styling */
+        .add-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        /* Hover effect to indicate responsiveness */
+        .add-button:hover {
+            background-color: #004494;
+            transform: scale(1.1);
+        }
+
+        /* Active effect to show click feedback */
+        .add-button:active {
+            background-color: #003366;
+            transform: scale(0.95);
+        }
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .shelf-option {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .shelf-option:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 <body>
@@ -81,21 +149,82 @@
 
     <div class="content">
         <h1>Welcome, <span><%= username %></span>!</h1>
-        <div class="container">
-            <% if (trendingData && trendingData.length > 0) { %>
-                <% trendingData.forEach(media => { %>
-                    <div class="media-item">
-                        <img src="https://image.tmdb.org/t/p/w500<%= media.poster_path %>" alt="<%= media.name || media.title %> Poster" class="poster" />
-                        <div class="content">
-                            <p class="title"><%= media.name || media.title %></p>
-                            <p class="overview"><%= media.overview ? media.overview.substring(0, 100) + '...' : 'No overview available.' %></p>
-                            <p class="rating">Rating: <%= media.vote_average ? media.vote_average : 'N/A' %>/10</p>
+
+        <% Object.keys(trendingData).forEach(source => { %>
+            <h2><%= source.toUpperCase() %> Trending</h2>
+            <div class="container">
+                <% if (trendingData[source] && trendingData[source].results && trendingData[source].results.length > 0) { %>
+                    <% trendingData[source].results.forEach(media => { %>
+                        <div class="media-item">
+                            <button class="add-button" onclick="showShelfModal('<%= media.id %>', '<%= trendingData[source].dbId %>')">+</button>
+                            <img src="https://image.tmdb.org/t/p/w500<%= media.poster_path %>" alt="<%= media.name || media.title %> Poster" class="poster" />
+                            <div class="content">
+                                <p class="title"><%= media.name || media.title %></p>
+                                <p class="overview"><%= media.overview ? media.overview.substring(0, 100) + '...' : 'No overview available.' %></p>
+                                <p class="rating">Rating: <%= media.vote_average ? media.vote_average : 'N/A' %>/10</p>
+                            </div>
                         </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>No trending data available for <%= source.toUpperCase() %>.</p>
+                <% } %>
+            </div>
+        <% }); %>
+    </div>
+
+    <!-- Modal for selecting a shelf -->
+    <div id="shelfModal" class="modal">
+        <div class="modal-content">
+            <h3>Select a Shelf</h3>
+            <div id="shelfOptionsContainer">
+                <!-- Use EJS to render shelves dynamically -->
+                <% shelves.forEach(shelf => { %>
+                    <div class="shelf-option" onclick="addToShelf(<%= shelf.id %>, selectedContentId, selectedSource)">
+                        <%= shelf.name %>
                     </div>
-                <% }); %>
-            <% } %>
+                <% }) %>
+            </div>
+            <button onclick="closeShelfModal()">Cancel</button>
         </div>
     </div>
+
+    <script>
+        let selectedContentId = null;
+        let selectedSource = null;
+
+        function showShelfModal(contentId, source) {
+            selectedContentId = contentId;
+            selectedSource = source;
+            document.getElementById("shelfModal").style.display = "flex";
+        }
+
+        function closeShelfModal() {
+            document.getElementById("shelfModal").style.display = "none";
+        }
+
+        async function addToShelf(shelf_id, external_id, source_id, status) {
+            try {
+                const response = await fetch("/p/api/shelf/content/add", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ shelf_id, external_id, source_id })
+                });
+
+                if (response.ok) {
+                    alert("Added to shelf successfully!");
+                    closeShelfModal();
+                } else {
+                    const result = await response.json();
+                    alert("Failed to add to shelf: " + result.message);
+                }
+            } catch (error) {
+                console.error("Error adding to shelf:", error);
+                alert("An error occurred while adding to shelf.");
+            }
+        }
+    </script>
 </body>
 </html>
 

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .content {
+            padding-top: 100px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin-top: 20px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: #0056b3;
+            margin-top: 20px;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+        }
+
+        .add-shelf-btn {
+            position: absolute;
+            right: 0;
+            top: 0;
+            background-color: #0056b3;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .container {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            padding: 20px;
+        }
+
+        .shelf-item {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+        }
+
+        .shelf-item h3 {
+            font-size: 1.2em;
+            color: #333;
+            margin: 0 0 10px;
+        }
+
+        .shelf-item p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Floating modal styling */
+        .modal {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content h3 {
+            text-align: center;
+            color: #0056b3;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            color: #333;
+        }
+
+        button {
+            background-color: #0056b3;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .close-btn {
+            background-color: #999;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <%- include('navbar', { username: username }) %>
+    <div class="content">
+        <h1>Welcome, <%= user.name %></h1>
+        <h2>My Shelves
+            <button class="add-shelf-btn" onclick="openModal()">Add Shelf</button>
+        </h2>
+
+        <% if (shelves && shelves.length > 0) { %>
+            <div class="container">
+                <% shelves.forEach(shelf => { %>
+                    <div class="shelf-item">
+                        <h3>Shelf: <%= shelf.name %></h3>
+                        <p>Visibility: <%= shelf.visibility %></p>
+                        <p>Created at: <%= shelf.created_at %></p>
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+
+        <!-- Modal for creating a new shelf -->
+        <div class="modal" id="newShelfModal">
+            <div class="modal-content">
+                <h3>Create a New Shelf</h3>
+                <form id="newShelfForm">
+                    <div class="form-group">
+                        <label for="shelfName">Shelf Name:</label>
+                        <input type="text" id="shelfName" name="shelfName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="visibility">Visibility:</label>
+                        <select id="visibility" name="visibility" required>
+                            <% visibilityOptions.forEach(option => { %>
+                                <option value="<%= option %>"><%= option %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <button type="submit">Create Shelf</button>
+                    <button type="button" class="close-btn" onclick="closeModal()">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function openModal() {
+                document.getElementById("newShelfModal").style.display = "flex";
+            }
+
+            function closeModal() {
+                document.getElementById("newShelfModal").style.display = "none";
+            }
+
+            document.getElementById("newShelfForm").addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                const shelfName = document.getElementById("shelfName").value;
+                const visibility = document.getElementById("visibility").value;
+
+                const response = await fetch("/p/api/shelf/create", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ shelfName, visibility }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert("Shelf created successfully!");
+                    closeModal();
+                    location.reload();
+                } else {
+                    alert("Error creating shelf: " + result.message);
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>
+

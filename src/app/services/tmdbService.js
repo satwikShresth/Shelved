@@ -1,4 +1,6 @@
 import axios from "axios";
+import { initializeService } from "services/common.js";
+import { getDbId } from "crud/db_source.js";
 
 export const validMediaTypes = ["all", "movie", "tv", "person"];
 export const validRanges = ["day", "week"];
@@ -15,12 +17,23 @@ export function validateRange(range) {
   }
 }
 
+const DbSource = "tmdb";
+
 class TMDBService {
   constructor(apiKey) {
     if (!apiKey) throw new Error("API key is required");
     this.apiKey = apiKey;
     this.baseUrl = "https://api.themoviedb.org/3/";
     this.defaultLanguage = "en-US";
+
+    getDbId(DbSource)
+      .then((dbVal) => {
+        this.dbId = dbVal.success ? dbVal.id : null;
+      })
+      .catch((error) => {
+        console.error("Failed to retrieve dbId:", error);
+        this.dbId = null;
+      });
   }
 
   async fetchData(url, queryParams = {}) {
@@ -58,4 +71,4 @@ class TMDBService {
   }
 }
 
-export default new TMDBService(Deno.env.get("TMDB_API_KEY"));
+export default await initializeService(TMDBService, DbSource);
