@@ -25,7 +25,8 @@ app.use("/", getLandingRouter());
 app.use("/api/auth", getAuthRouter());
 app.use("/api/services", getTmdbRouter());
 //routes protected
-app.use("/p/", authMiddleware, getHomeRouter());
+app.use("/p/", authMiddleware);
+app.use("/p/", getHomeRouter());
 
 if (Deno.env.get("ENV") === "development") {
   app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
