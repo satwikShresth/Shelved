@@ -31,14 +31,24 @@ const getShelfRouter = () => {
     "/content/add",
     validateBodyString(["external_id"]),
     async (req, res) => {
-      const { external_id, source_id, shelf_id, status } = req.body;
+      const {
+        external_id,
+        source,
+        shelf,
+        content_type,
+        status = "to_consume",
+      } = req.body;
+
+      console.log(req.body);
 
       const result = await addContentToShelf({
         external_id,
-        source_id,
-        shelf_id,
+        source,
+        shelf,
+        content_type,
         status,
       });
+
       if (result.success) {
         res.json(result);
       } else {

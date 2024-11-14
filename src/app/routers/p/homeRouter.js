@@ -1,8 +1,9 @@
 import { Router } from "express";
-import tmdbService from "services/tmdbService.js";
 import { getVisibilityOptions } from "crud/common.js";
 import { getShelvesByUserId } from "crud/shelf.js";
 import { getVisibilityById } from "crud/common.js";
+import { getService } from "services/index.js";
+import { getDetailedShelfContent } from "middlewares/tmdbMiddleware.js";
 
 const getHomeRouter = () => {
   const router = Router();
@@ -10,7 +11,14 @@ const getHomeRouter = () => {
   router.get("/homepage", async (req, res) => {
     const user_id = req.session.user_id;
 
-    const tmdbTrendingData = await tmdbService
+    const shelvesResponse = await getShelvesByUserId(user_id);
+    if (!shelvesResponse.success) {
+      return res.status(500).send("Failed to fetch shelves.");
+    }
+
+    const tmdbService = await getService("tmdb");
+
+    const tmdbTrending = await tmdbService
       .getTrending({ range: "week", mediaType: "all" })
       .then((data) => data.results)
       .catch((error) => {
@@ -18,28 +26,18 @@ const getHomeRouter = () => {
         return [];
       });
 
-    const shelvesResponse = await getShelvesByUserId(user_id);
-    if (!shelvesResponse.success) {
-      return res.status(500).send("Failed to fetch shelves.");
-    }
-
-    const tmdbDbId = await tmdbService.dbId;
-
-    const trendingData = {
-      tmdb: {
-        dbId: tmdbDbId,
-        results: tmdbTrendingData,
-      },
-    };
+    console.log(tmdbTrending);
 
     res.render("homepage", {
       username: res.locals.username,
-      trendingData,
-      shelves: shelvesResponse.shelves,
+      trendingData: {
+        tmdb: tmdbTrending,
+      },
+      shelves: shelvesResponse.shelves || [],
     });
   });
 
-  router.get("/profile", async (req, res) => {
+  router.get("/profile", getDetailedShelfContent, async (req, res) => {
     try {
       const user_id = req.session.user_id;
 
@@ -70,9 +68,13 @@ const getHomeRouter = () => {
         return res.status(500).send("Failed to fetch visibility options.");
       }
 
+      console.log(shelves);
+      console.log(req.detailedShelves);
+
       res.render("profile", {
         user: { name: res.locals.username },
         shelves,
+        shelvesData: req.detailedShelves,
         visibilityOptions: visibilityOptionsResponse.visibilityOptions,
       });
     } catch (error) {

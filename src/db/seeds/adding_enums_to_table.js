@@ -5,7 +5,6 @@
 exports.seed = async function (knex) {
   // Deletes ALL existing entries
   await knex("ratings").del();
-
   await knex("ratings").insert([
     { value: "shite" },
     { value: "meh" },

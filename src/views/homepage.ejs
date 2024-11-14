@@ -153,21 +153,17 @@
         <% Object.keys(trendingData).forEach(source => { %>
             <h2><%= source.toUpperCase() %> Trending</h2>
             <div class="container">
-                <% if (trendingData[source] && trendingData[source].results && trendingData[source].results.length > 0) { %>
-                    <% trendingData[source].results.forEach(media => { %>
-                        <div class="media-item">
-                            <button class="add-button" onclick="showShelfModal('<%= media.id %>', '<%= trendingData[source].dbId %>')">+</button>
-                            <img src="https://image.tmdb.org/t/p/w500<%= media.poster_path %>" alt="<%= media.name || media.title %> Poster" class="poster" />
-                            <div class="content">
-                                <p class="title"><%= media.name || media.title %></p>
-                                <p class="overview"><%= media.overview ? media.overview.substring(0, 100) + '...' : 'No overview available.' %></p>
-                                <p class="rating">Rating: <%= media.vote_average ? media.vote_average : 'N/A' %>/10</p>
-                            </div>
+                <% trendingData[source].forEach(media => { %>
+                    <div class="media-item">
+                        <button class="add-button" onclick="showShelfModal('<%= media.id %>', '<%= source %>','<%= media.media_type %>')">+</button>
+                        <img src="https://image.tmdb.org/t/p/w500<%= media.poster_path %>" alt="<%= media.name || media.title %> Poster" class="poster" />
+                        <div class="content">
+                            <p class="title"><%= media.name || media.title %></p>
+                            <p class="overview"><%= media.overview ? media.overview.substring(0, 100) + '...' : 'No overview available.' %></p>
+                            <p class="rating">Rating: <%= media.vote_average ? media.vote_average : 'N/A' %>/10</p>
                         </div>
-                    <% }); %>
-                <% } else { %>
-                    <p>No trending data available for <%= source.toUpperCase() %>.</p>
-                <% } %>
+                    </div>
+                <% }); %>
             </div>
         <% }); %>
     </div>
@@ -179,7 +175,7 @@
             <div id="shelfOptionsContainer">
                 <!-- Use EJS to render shelves dynamically -->
                 <% shelves.forEach(shelf => { %>
-                    <div class="shelf-option" onclick="addToShelf(<%= shelf.id %>, selectedContentId, selectedSource)">
+                    <div class="shelf-option" onclick="addToShelf(selectedContentId, selectedSource,'<%= shelf.name %>', selectedMediaType)">
                         <%= shelf.name %>
                     </div>
                 <% }) %>
@@ -191,25 +187,30 @@
     <script>
         let selectedContentId = null;
         let selectedSource = null;
+        let selectedMediaType = null;
 
-        function showShelfModal(contentId, source) {
+        function showShelfModal(contentId, source, media_type) {
             selectedContentId = contentId;
             selectedSource = source;
+            selectedMediaType = media_type;
             document.getElementById("shelfModal").style.display = "flex";
         }
 
         function closeShelfModal() {
+            selectedContentId = null;
+            selectedSource = null;
+            selectedMediaType = null;
             document.getElementById("shelfModal").style.display = "none";
         }
 
-        async function addToShelf(shelf_id, external_id, source_id, status) {
+        async function addToShelf(external_id, source, shelf, content_type) {
             try {
                 const response = await fetch("/p/api/shelf/content/add", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ shelf_id, external_id, source_id })
+                    body: JSON.stringify({external_id, source, shelf, content_type })
                 });
 
                 if (response.ok) {

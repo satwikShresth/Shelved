@@ -1,6 +1,4 @@
 import axios from "axios";
-import { initializeService } from "services/common.js";
-import { getDbId } from "crud/db_source.js";
 
 export const validMediaTypes = ["all", "movie", "tv", "person"];
 export const validRanges = ["day", "week"];
@@ -17,28 +15,18 @@ export function validateRange(range) {
   }
 }
 
-const DbSource = "tmdb";
-
-class TMDBService {
+export default class TMDBService {
+  static source = "tmdb";
   constructor(apiKey) {
     if (!apiKey) throw new Error("API key is required");
     this.apiKey = apiKey;
     this.baseUrl = "https://api.themoviedb.org/3/";
     this.defaultLanguage = "en-US";
-
-    getDbId(DbSource)
-      .then((dbVal) => {
-        this.dbId = dbVal.success ? dbVal.id : null;
-      })
-      .catch((error) => {
-        console.error("Failed to retrieve dbId:", error);
-        this.dbId = null;
-      });
   }
 
   async fetchData(url, queryParams = {}) {
     try {
-      const response = await axios.get(url, {
+      const response = await axios.get(`${this.baseUrl}${url}`, {
         params: {
           api_key: this.apiKey,
           language: this.defaultLanguage,
@@ -57,7 +45,7 @@ class TMDBService {
     }
   }
 
-  getTrending({
+  async getTrending({
     range = "day",
     mediaType = "all",
     language = this.defaultLanguage,
@@ -65,10 +53,15 @@ class TMDBService {
     validateMediaType(mediaType);
     validateRange(range);
 
-    const endpoint = `${this.baseUrl}trending/${mediaType}/${range}`;
-    console.log(endpoint);
-    return this.fetchData(endpoint, { language });
+    const path = `trending/${mediaType}/${range}`;
+    return await this.fetchData(path, { language });
+  }
+
+  getDetailsById(id, mediaType = "movie", language = this.defaultLanguage) {
+    if (!id) throw new Error("ID is required");
+    validateMediaType(mediaType);
+
+    const path = `${mediaType}/${id}`;
+    return this.fetchData(path, { language });
   }
 }
-
-export default await initializeService(TMDBService, DbSource);
