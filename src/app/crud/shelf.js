@@ -9,7 +9,7 @@ export const getShelvesByUserId = async (user_id) => {
         "=",
         "visibility_options.id",
       )
-      .select("shelf.name", "visibility_options.value as visibility_options")
+      .select("shelf.name", "visibility_options.value as visibility")
       .where({ "shelf.user_id": user_id });
 
     return {

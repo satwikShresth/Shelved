@@ -4,7 +4,7 @@ import {
   validateMediaTypeParam,
   validateRangeParam,
 } from "middlewares/tmdbMiddleware.js";
-import { getService } from "services/index.js";
+import services from "services/index.js";
 
 const getTmdbRouter = () => {
   const router = Router();
@@ -15,7 +15,7 @@ const getTmdbRouter = () => {
     (req, res) => {
       const { range, mediaType } = req.query;
 
-      getService("tmdb")
+      services["tmdb"]
         .getTrending({ range, mediaType })
         .then((data) => {
           const top5Results = data.results.slice(0, 5);

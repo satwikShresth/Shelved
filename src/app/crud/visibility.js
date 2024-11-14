@@ -18,7 +18,9 @@ export const getVisibilityOptions = async () => {
   }
 };
 
-export const getVisibilityById = async (visibility_id) => {
+export const getVisibilityByValue = async (visibility) => {
+  console.log();
+  console.log(visibility_id);
   try {
     const result = await db("visibility_options")
       .select("value")

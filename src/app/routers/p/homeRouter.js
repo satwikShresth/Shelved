@@ -1,8 +1,7 @@
 import { Router } from "express";
-import { getVisibilityOptions } from "crud/common.js";
+import { getVisibilityOptions } from "crud/visibility.js";
 import { getShelvesByUserId } from "crud/shelf.js";
-import { getVisibilityById } from "crud/common.js";
-import { getService } from "services/index.js";
+import services from "services/index.js";
 import { getDetailedShelfContent } from "middlewares/tmdbMiddleware.js";
 
 const getHomeRouter = () => {
@@ -16,7 +15,7 @@ const getHomeRouter = () => {
       return res.status(500).send("Failed to fetch shelves.");
     }
 
-    const tmdbService = await getService("tmdb");
+    const tmdbService = services["tmdb"];
 
     const tmdbTrending = await tmdbService
       .getTrending({ range: "week", mediaType: "all" })
@@ -25,8 +24,6 @@ const getHomeRouter = () => {
         console.error("Error fetching TMDB trending data:", error.message);
         return [];
       });
-
-    console.log(tmdbTrending);
 
     res.render("homepage", {
       username: res.locals.username,
@@ -49,27 +46,11 @@ const getHomeRouter = () => {
 
       const shelves = shelvesResponse.shelves || [];
 
-      for (const shelf of shelves) {
-        const visibilityResponse = await getVisibilityById(shelf.visibility_id);
-        if (visibilityResponse.success) {
-          shelf.visibility = visibilityResponse.value;
-        } else {
-          console.error(
-            `Failed to fetch visibility for shelf ID ${shelf.id}:`,
-            visibilityResponse.message,
-          );
-          shelf.visibility = "Unknown";
-        }
-      }
-
       const visibilityOptionsResponse = await getVisibilityOptions();
 
       if (!visibilityOptionsResponse.success) {
         return res.status(500).send("Failed to fetch visibility options.");
       }
-
-      console.log(shelves);
-      console.log(req.detailedShelves);
 
       res.render("profile", {
         user: { name: res.locals.username },

@@ -9,7 +9,6 @@ const getShelfRouter = () => {
     "/create",
     validateBodyString(["shelfName", "visibility"]),
     async (req, res) => {
-      console.log(req.body);
       const { shelfName, visibility } = req.body;
       const user_id = req.session.user_id;
 
@@ -38,8 +37,6 @@ const getShelfRouter = () => {
         content_type,
         status = "to_consume",
       } = req.body;
-
-      console.log(req.body);
 
       const result = await addContentToShelf({
         external_id,

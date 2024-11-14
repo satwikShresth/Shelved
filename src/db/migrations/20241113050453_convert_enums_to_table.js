@@ -2,7 +2,7 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.up = async function (knex) {
+exports.up = async (knex) => {
   await knex.schema.createTable("ratings", (table) => {
     table.increments("id").primary();
     table.string("value").notNullable().unique();
@@ -50,7 +50,7 @@ exports.up = async function (knex) {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = async function (knex) {
+exports.down = async (knex) => {
   await knex.schema.raw(`
     CREATE TYPE rating_enum AS ENUM ('shite', 'meh', 'decent', 'good', 'outstanding');
   `);

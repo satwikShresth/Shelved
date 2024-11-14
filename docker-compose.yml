@@ -62,6 +62,8 @@ services:
           action: rebuild
         - path: ./src/dockerfile
           action: rebuild
+        - path: ./.env
+          action: rebuild
 
     depends_on:
       db:

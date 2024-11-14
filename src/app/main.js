@@ -10,8 +10,6 @@ import getAuthRouter from "routers/api/auth/authRouter.js";
 import getHomeRouter from "routers/p/homeRouter.js";
 import getTmdbRouter from "routers/api/services/tmdbRouter.js";
 import getShelfRouter from "routers/p/api/shelf/shelfRouter.js";
-import { getAllShelvesContent } from "crud/shelf.js";
-import { getService } from "services/index.js";
 
 const port = 3000;
 const hostname = "0.0.0.0";

@@ -1,6 +1,6 @@
 import { validateMediaType, validateRange } from "services/tmdbService.js";
 import { getAllShelvesContent } from "crud/shelf.js";
-import { getService } from "services/index.js";
+import services from "services/index.js";
 
 const tryCatch = (fn) => (req, res, next) => {
   try {
@@ -44,7 +44,7 @@ export const getDetailedShelfContent = async (req, res, next) => {
 
       for (const item of shelvesResponse.shelves[shelfName]) {
         try {
-          const service = await getService(item.db_source);
+          const service = services[item.db_source];
 
           if (!service) {
             throw new Error(`Failed to initialize ${item.db_source} service`);

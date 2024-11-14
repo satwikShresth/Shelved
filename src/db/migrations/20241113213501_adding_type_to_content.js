@@ -3,7 +3,7 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  return knex.schema.table("content", function (table) {
+  return knex.schema.table("content", (table) => {
     table
       .integer("type_id")
       .unsigned()
@@ -19,7 +19,7 @@ exports.up = function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-  return knex.schema.table("content", function (table) {
+  return knex.schema.table("content", (table) => {
     table.dropColumn("type_id");
   });
 };

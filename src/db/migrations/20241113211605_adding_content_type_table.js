@@ -3,7 +3,7 @@
  * @returns { Promise<void> }
  */
 exports.up = async function (knex) {
-  return await knex.schema.createTable("content_type", function (table) {
+  return await knex.schema.createTable("content_type", (table) => {
     table.increments("id").primary();
     table.string("value", 255).notNullable().unique();
   });
@@ -13,6 +13,6 @@ exports.up = async function (knex) {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = async function (knex) {
+exports.down = async (knex) => {
   return await knex.schema.dropTableIfExists("content_type");
 };
