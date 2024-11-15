@@ -8,7 +8,7 @@ import { authMiddleware } from "middlewares/authMiddleware.js";
 import getLandingRouter from "routers/landingRouter.js";
 import getAuthRouter from "routers/api/auth/authRouter.js";
 import getHomeRouter from "routers/p/homeRouter.js";
-import getTmdbRouter from "routers/api/services/tmdbRouter.js";
+import getShelfRouter from "routers/p/api/shelf/shelfRouter.js";
 
 const port = 3000;
 const hostname = "0.0.0.0";
@@ -23,10 +23,10 @@ app.set("views", "./views");
 //routes
 app.use("/", getLandingRouter());
 app.use("/api/auth", getAuthRouter());
-app.use("/api/services", getTmdbRouter());
 //routes protected
 app.use("/p/", authMiddleware);
 app.use("/p/", getHomeRouter());
+app.use("/p/api/shelf", getShelfRouter());
 
 if (Deno.env.get("ENV") === "development") {
   app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));

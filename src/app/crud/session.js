@@ -11,7 +11,7 @@ export const checkSession = async (user_id) => {
       : { success: false, error: "Session not found" };
   } catch (error) {
     console.error("Error checking session:", error);
-    return { success: false, error: "Database error" };
+    return { success: false, error: "Session error" };
   }
 };
 
@@ -28,7 +28,7 @@ export const createSession = async (user_id) => {
     return { success: true, token: insertResult.session_token };
   } catch (error) {
     console.error("Error creating session:", error);
-    return { success: false, error: "Database error" };
+    return { success: false, error: "Session error" };
   }
 };
 
@@ -53,24 +53,28 @@ export const deleteSession = async (token) => {
     return { success: true };
   } catch (error) {
     console.error("Database Error in deleteSession:", error);
-    return { success: false, error: "Database error while deleting session" };
+    return { success: false, error: "Error while deleting session" };
   }
 };
 
 export const retrieveSession = async (token) => {
-  if (!token) return { success: false, error: "Authentication token missing" };
+  try {
+    if (!token) throw new Error("Token missing");
 
-  const sessionResult = await getSessionByToken(token);
-  if (!sessionResult.success)
-    return { success: false, error: sessionResult.error || "Invalid session" };
+    const sessionResult = await getSessionByToken(token);
+    if (!sessionResult.success)
+      throw new Error(sessionResult.error || "Invalid session");
 
-  const { session } = sessionResult;
-  const now = new Date();
+    const { session } = sessionResult;
+    const now = new Date();
 
-  if (new Date(session.expires_at) <= now) {
-    await deleteSession(token);
-    return { success: false, error: "Session expired" };
+    if (new Date(session.expires_at) <= now) {
+      await deleteSession(token);
+      throw new Error("Token expired");
+    }
+
+    return { success: true, session };
+  } catch (error) {
+    return { success: false, error: `Session Error: ${error.message}` };
   }
-
-  return { success: true, session };
 };

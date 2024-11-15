@@ -1,4 +1,4 @@
-import axios from "axios";
+import { Service } from "services/service.js";
 
 export const validMediaTypes = ["all", "movie", "tv", "person"];
 export const validRanges = ["day", "week"];
@@ -15,36 +15,14 @@ export function validateRange(range) {
   }
 }
 
-class TMDBService {
+export default class TMDBService extends Service {
   constructor(apiKey) {
-    if (!apiKey) throw new Error("API key is required");
-    this.apiKey = apiKey;
+    super(apiKey);
     this.baseUrl = "https://api.themoviedb.org/3/";
     this.defaultLanguage = "en-US";
   }
 
-  async fetchData(url, queryParams = {}) {
-    try {
-      const response = await axios.get(url, {
-        params: {
-          api_key: this.apiKey,
-          language: this.defaultLanguage,
-          ...queryParams,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error(`Error fetching data from ${url}:`);
-      console.error(`    Status: ${error.response?.status || "N/A"}`);
-      console.error(
-        `    Details: ${error.response?.data.status_message || error.message}`,
-      );
-
-      throw new Error("Failed to fetch data.");
-    }
-  }
-
-  getTrending({
+  async getTrending({
     range = "day",
     mediaType = "all",
     language = this.defaultLanguage,
@@ -52,10 +30,15 @@ class TMDBService {
     validateMediaType(mediaType);
     validateRange(range);
 
-    const endpoint = `${this.baseUrl}trending/${mediaType}/${range}`;
-    console.log(endpoint);
-    return this.fetchData(endpoint, { language });
+    const path = `trending/${mediaType}/${range}`;
+    return await this.fetchData(path, { language });
+  }
+
+  getDetailsById(id, mediaType, language = this.defaultLanguage) {
+    if (!id) throw new Error("ID is required");
+    validateMediaType(mediaType);
+
+    const path = `${mediaType}/${id}`;
+    return this.fetchData(path, { language });
   }
 }
-
-export default new TMDBService(Deno.env.get("TMDB_API_KEY"));
