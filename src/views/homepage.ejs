@@ -2,22 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>Home - Shelved</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background-color: #121212;
+            color: #f5f5f5;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: #1e1e1e;
+            border-bottom: 1px solid #333;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            color: #ff9800;
+            margin: 0;
+        }
+
+        .hero p {
+            font-size: 1.5em;
+            color: #bbb;
+            margin: 10px 0 0;
         }
 
         .content {
-            padding-top: 100px;
+            padding-top: 20px;
         }
 
         h1 {
             font-size: 2.5em;
-            color: #333;
+            color: #ff9800;
             margin-top: 20px;
             margin-bottom: 10px;
             font-weight: 700;
@@ -25,7 +45,7 @@
         }
 
         h1 span {
-            color: #0056b3;
+            color: #ff9800;
         }
 
         .container {
@@ -36,17 +56,18 @@
         }
 
         .media-item {
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s, box-shadow 0.3s;
             position: relative;
         }
 
         .media-item:hover {
             transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
         }
 
         .poster {
@@ -63,13 +84,13 @@
             font-size: 18px;
             font-weight: bold;
             margin: 0;
-            color: #333;
+            color: #ff9800;
         }
 
         .overview {
             font-size: 14px;
             margin: 10px 0;
-            color: #666;
+            color: #bbb;
         }
 
         .rating {
@@ -146,6 +167,11 @@
 </head>
 <body>
     <%- include('navbar', { username: username }) %>
+
+    <div class="hero">
+        <h1>Shelved</h1>
+        <p>Log all of your media, in one place</p>
+    </div>
 
     <div class="content">
         <h1>Welcome, <span><%= username %></span>!</h1>
@@ -228,4 +254,3 @@
     </script>
 </body>
 </html>
-
