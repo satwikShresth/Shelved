@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <style>
+        /* Root Variables for Consistent Styling */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #ecf0f1;
+            --accent-color: #3498db;
+            --text-color: #2c3e50;
+            --border-radius: 5px;
+            --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .content {
+            max-width: 1000px;
+            margin: auto;
+            padding: 60px 20px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 1.75em;
+            font-weight: 400;
+            margin: 40px 0 20px;
+            position: relative;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #bdc3c7;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: flex-start;
+        }
+
+        .media-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            width: 160px;
+            box-shadow: var(--box-shadow);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .media-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .poster {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+        }
+
+        .media-content {
+            padding: 15px;
+        }
+
+        .title {
+            font-size: 1em;
+            font-weight: 500;
+            margin: 0 0 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .overview {
+            font-size: 0.85em;
+            line-height: 1.4;
+            color: #7f8c8d;
+            max-height: 44px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .rating {
+            font-size: 0.8em;
+            color: #95a5a6;
+            margin-top: 10px;
+        }
+
+        .shelf-section {
+            margin-top: 50px;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            background-color: #fff;
+            box-shadow: var(--box-shadow);
+        }
+
+        .add-shelf-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--accent-color);
+            color: #fff;
+            padding: 8px 12px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: background-color var(--transition-speed);
+        }
+
+        .add-shelf-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(44, 62, 80, 0.9);
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+        }
+
+        .modal-content h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 400;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        select,
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: var(--border-radius);
+            font-size: 0.9em;
+            color: var(--text-color);
+            background-color: #ecf0f1;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 0.9em;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color var(--transition-speed);
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .close-btn {
+            background-color: #e74c3c;
+            margin-top: 15px;
+        }
+
+        .close-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .media-item {
+                width: 45%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .media-item {
+                width: 100%;
+            }
+
+            .add-shelf-btn {
+                top: 10px;
+                right: 10px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('navbar', { username: username }) %>
+    <div class="content">
+        <div>
+            <h1>Welcome, <%= user.name %></h1>
+            <button class="add-shelf-btn" onclick="openModal()">+ Add Shelf</button>
+        </div>
+
+        <h2>My Shelves</h2>
+        <% shelves.forEach(shelf => { %>
+            <div class="shelf-section">
+                <h2><%= shelf.name %></h2>
+                <div class="container">
+                    <% if (shelvesData[shelf.name] && Array.isArray(shelvesData[shelf.name])) { %>
+                        <% shelvesData[shelf.name].forEach(item => { %>
+                            <div class="media-item">
+                                <img src="https://image.tmdb.org/t/p/w500<%= item.poster_path %>" alt="<%= item.name || item.title %> Poster" class="poster" />
+                                <div class="media-content">
+                                    <p class="title"><%= item.name || item.title %></p>
+                                    <p class="overview"><%= item.overview ? item.overview.substring(0, 100) + '...' : 'No overview available.' %></p>
+                                    <p class="rating">Rating: <%= item.vote_average ? item.vote_average : 'N/A' %>/10</p>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <p>No items available for this shelf.</p>
+                    <% } %>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+
+    <!-- Modal for creating a new shelf -->
+    <div class="modal" id="newShelfModal">
+        <div class="modal-content">
+            <h3>Create a New Shelf</h3>
+            <form id="newShelfForm">
+                <div class="form-group">
+                    <label for="shelfName">Shelf Name:</label>
+                    <input type="text" id="shelfName" name="shelfName" required>
+                </div>
+                <div class="form-group">
+                    <label for="visibility">Visibility:</label>
+                    <select id="visibility" name="visibility" required>
+                        <% visibilityOptions.forEach(option => { %>
+                            <option value="<%= option %>"><%= option %></option>
+                        <% }) %>
+                    </select>
+                </div>
+                <button type="submit">Create Shelf</button>
+                <button type="button" class="close-btn" onclick="closeModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById("newShelfModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("newShelfModal").style.display = "none";
+        }
+
+        document.getElementById("newShelfForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const shelfName = document.getElementById("shelfName").value;
+            const visibility = document.getElementById("visibility").value;
+
+            const response = await fetch("/p/api/shelf/create", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ shelfName, visibility }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert("Shelf created successfully!");
+                closeModal();
+                location.reload();
+            } else {
+                alert("Error creating shelf: " + result.message);
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -774,6 +774,7 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@std/fs@*",
       "jsr:@std/path@*",
       "npm:axios@^1.7.7",
       "npm:cookie-parser@^1.4.7",
