@@ -32,7 +32,6 @@ export const getDetailedShelfContent = async (req, res, next) => {
     if (!shelvesResponse.success) {
       return res.status(500).json({
         success: false,
-        message: "Failed to fetch all shelves content",
         error: shelvesResponse.message,
       });
     }

@@ -15,14 +15,12 @@ export const getShelvesByUserId = async (user_id) => {
     return {
       success: true,
       shelves: shelves.length ? shelves : null,
-      message: shelves.length ? "Shelves found" : "No shelves found",
     };
   } catch (error) {
     console.error("Error fetching shelves:", error.message);
     return {
       success: false,
-      message: "Failed to fetch shelves",
-      error: error.message,
+      error: `Shelve error: ${error.message}`,
     };
   }
 };
@@ -34,12 +32,8 @@ export const createShelf = async ({ user_id, name, visibility }) => {
       .where("value", visibility)
       .first();
 
-    if (!visibilityResult) {
-      return {
-        success: false,
-        message: `Invalid visibility value: ${visibility}`,
-      };
-    }
+    if (!visibilityResult)
+      throw new Error(`Invalid visibility value: ${visibility}`);
 
     const [newShelf] = await db("shelf")
       .insert({ user_id, name, visibility_id: visibilityResult.id })
@@ -47,15 +41,13 @@ export const createShelf = async ({ user_id, name, visibility }) => {
 
     return {
       success: true,
-      message: "Shelf created successfully",
       shelf: newShelf,
     };
   } catch (error) {
     console.error("Error creating shelf:", error.message);
     return {
       success: false,
-      message: "Failed to create shelf",
-      error: error.message,
+      error: `Shelve error: ${error.message}`,
     };
   }
 };
@@ -126,8 +118,7 @@ export const addContentToShelf = async ({
     console.error("Error adding item to shelf_content:", error.message);
     return {
       success: false,
-      message: "Failed to add item to shelf",
-      error: error.message,
+      error: `Shelve error: ${error.message}`,
     };
   }
 };
@@ -140,10 +131,7 @@ export const getShelfContent = async (user_id, shelf) => {
       .first();
 
     if (!shelfRecord) {
-      return {
-        success: false,
-        message: "Shelf not found or does not belong to the user",
-      };
+      throw new Error("Shelf not found or does not belong to the user");
     }
 
     const shelfContentData = await db("shelf_content")
@@ -163,8 +151,7 @@ export const getShelfContent = async (user_id, shelf) => {
     console.error("Error fetching shelf content:", error.message);
     return {
       success: false,
-      message: "Failed to fetch shelf content",
-      error: error.message,
+      error: `Shelve error: ${error.message}`,
     };
   }
 };
@@ -188,11 +175,9 @@ export const getAllShelvesContent = async (user_id) => {
       const shelfContentResponse = await getShelfContent(user_id, shelf.id);
 
       if (!shelfContentResponse.success) {
-        return {
-          success: false,
-          message: `Failed to fetch content for shelf ID ${shelf.id}`,
-          error: shelfContentResponse.message,
-        };
+        throw new Error(
+          `Failed to fetch content for shelf ID ${shelf.id}: ${shelfContentResponse.message}`,
+        );
       }
       shelvesContent[shelf.name] = shelfContentResponse.content.map((item) => ({
         content_type: item.content_type,
@@ -206,8 +191,7 @@ export const getAllShelvesContent = async (user_id) => {
     console.error("Error aggregating shelves content:", error.message);
     return {
       success: false,
-      message: "Failed to fetch all shelves content",
-      error: error.message,
+      error: `Shelve error: ${error.message}`,
     };
   }
 };

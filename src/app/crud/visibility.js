@@ -19,12 +19,10 @@ export const getVisibilityOptions = async () => {
 };
 
 export const getVisibilityByValue = async (visibility) => {
-  console.log();
-  console.log(visibility_id);
   try {
     const result = await db("visibility_options")
       .select("value")
-      .where("id", visibility_id)
+      .where("id", visibility)
       .first();
 
     if (result) {

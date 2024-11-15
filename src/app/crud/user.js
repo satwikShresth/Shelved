@@ -15,16 +15,16 @@ export const createUser = async (username, password) => {
 export const getUserByUsername = async (username) => {
   try {
     const user = await db("users")
-      .select("id", "password", "username") // Add any other fields as needed
+      .select("id", "password", "username")
       .where({ username })
       .first();
 
     return user
-      ? { success: true, exists: true, user }
-      : { success: true, exists: false, error: "User not found" };
+      ? { success: true, user }
+      : { success: false, error: "User not found" };
   } catch (error) {
     console.error("Crud Error:", error);
-    return { success: false, error: "Database error", details: error.message };
+    return { success: false, error: `Database error: ${error.message}` };
   }
 };
 
@@ -36,10 +36,10 @@ export const getUserById = async (user_id) => {
       .first();
 
     return user
-      ? { success: true, exists: true, user }
-      : { success: true, exists: false, error: "User not found" };
+      ? { success: true, user }
+      : { success: false, error: "User not found" };
   } catch (error) {
     console.error("Crud Error:", error);
-    return { success: false, error: "Database error", details: error.message };
+    return { success: false, error: `Database error: ${error.message}` };
   }
 };

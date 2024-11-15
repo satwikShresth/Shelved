@@ -18,7 +18,7 @@ const getShelfRouter = () => {
           .status(201)
           .json({ success: true, message: "Shelf created successfully" });
       } catch (error) {
-        console.error("Error creating shelf:", error.message);
+        console.error("Error creating shelf:", error.error);
         res
           .status(500)
           .json({ success: false, message: "Failed to create shelf" });
