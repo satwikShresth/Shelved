@@ -80,8 +80,8 @@ export const validateUserCreation = async (req, res, next) => {
 
   const userResult = await getUserByUsername(username);
 
-  if (!userResult.success) {
-    return res.status(500).json({ error: userResult.error });
+  if (userResult.success) {
+    return res.status(500).json({ error: "User already exists" });
   }
 
   next();
