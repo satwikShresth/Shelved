@@ -51,6 +51,7 @@ The project includes a Docker Compose configuration file (`docker-compose.yml`) 
    - **Port**: `3000`
    - Accessible via `http://localhost:3000`.
    - Communicates with the Postgres database using environment variables defined in `.env`.
+   - **IMPORTANT**: Make sure the site is accessed at `http://localhost:3000` when working locally (and not `http://0.0.0.0:3000`) or the cookies will not be set properly
 
 ### Running the Environment
 

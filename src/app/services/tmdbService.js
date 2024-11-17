@@ -15,7 +15,7 @@ export function validateRange(range) {
   }
 }
 
-class TMDBService extends Service {
+export default class TMDBService extends Service {
   constructor(apiKey) {
     super(apiKey);
     this.baseUrl = "https://api.themoviedb.org/3/";
@@ -33,6 +33,12 @@ class TMDBService extends Service {
     const path = `trending/${mediaType}/${range}`;
     return await this.fetchData(path, { language });
   }
-}
 
-export default new TMDBService(Deno.env.get("TMDB_API_KEY"));
+  getDetailsById(id, mediaType, language = this.defaultLanguage) {
+    if (!id) throw new Error("ID is required");
+    validateMediaType(mediaType);
+
+    const path = `${mediaType}/${id}`;
+    return this.fetchData(path, { language });
+  }
+}

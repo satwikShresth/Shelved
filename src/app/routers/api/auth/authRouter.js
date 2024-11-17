@@ -29,11 +29,7 @@ const getAuthRouter = () => {
     const userResult = await getUserByUsername(username);
 
     if (!userResult.success) {
-      return res.status(400).send({ message: userResult.error });
-    }
-
-    if (!userResult.exists) {
-      return res.status(409).json({ message: "Username does not exists" });
+      return res.status(400).send({ error: userResult.error });
     }
 
     const isPasswordCorrect = await bcrypt.compare(
@@ -85,7 +81,4 @@ const getAuthRouter = () => {
   return router;
 };
 
-export default {
-  getRouter: getAuthRouter,
-  needsAuthentication: false,
-};
+export default getAuthRouter;

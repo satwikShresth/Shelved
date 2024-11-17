@@ -44,10 +44,27 @@ services:
       - .env
     environment:
       - ENV=development
-    volumes:
-      - ./src/app:/src/app
-      - ./src/views:/src/views
-      - ./src/db:/src/db
+    develop:
+      watch: 
+        - path: ./src/app
+          target: /src/app
+          action: sync
+        - path: ./src/views
+          target: /src/views
+          action: sync
+        - path: ./src/db
+          target: /src/db
+          action: sync+restart
+        - path: ./src/deno.json
+          target: /src/deno.json
+          action: sync+restart
+        - path: ./src/entrypoint.sh
+          action: rebuild
+        - path: ./src/dockerfile
+          action: rebuild
+        - path: ./.env
+          action: rebuild
+
     depends_on:
       db:
         condition: service_healthy
