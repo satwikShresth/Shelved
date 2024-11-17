@@ -1,36 +1,28 @@
-import axios from "axios";
-import { validateMediaType, validateRange } from "services/tmdbValidator.js";
+import { Service } from "services/service.js";
 
-class TMDBService {
+export const validMediaTypes = ["all", "movie", "tv", "person"];
+export const validRanges = ["day", "week"];
+
+export function validateMediaType(mediaType) {
+  if (mediaType !== undefined && !validMediaTypes.includes(mediaType)) {
+    throw new Error("Invalid mediaType");
+  }
+}
+
+export function validateRange(range) {
+  if (range !== undefined && !validRanges.includes(range)) {
+    throw new Error("Invalid range");
+  }
+}
+
+class TMDBService extends Service {
   constructor(apiKey) {
-    if (!apiKey) throw new Error("API key is required");
-    this.apiKey = apiKey;
+    super(apiKey);
     this.baseUrl = "https://api.themoviedb.org/3/";
     this.defaultLanguage = "en-US";
   }
 
-  async fetchData(url) {
-    try {
-      const response = await axios.get(url, {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${this.apiKey}`,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error(`Error fetching data from ${url}:`);
-      console.error(`    Status: ${error.response?.status || "N/A"}`);
-      console.error(
-        `    Details: ${error.response?.data.status_message || error.message}`,
-      );
-
-      throw new Error("Failed to fetch data.");
-    }
-  }
-
-  getTrending({
+  async getTrending({
     range = "week",
     mediaType = "all",
     language = this.defaultLanguage,
@@ -38,9 +30,8 @@ class TMDBService {
     validateMediaType(mediaType);
     validateRange(range);
 
-    const endpoint = `${this.baseUrl}trending/${mediaType}/${range}?language=${language}`;
-    console.log(endpoint);
-    return this.fetchData(endpoint);
+    const path = `trending/${mediaType}/${range}`;
+    return await this.fetchData(path, { language });
   }
 }
 
