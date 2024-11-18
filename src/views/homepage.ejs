@@ -41,7 +41,6 @@
             margin-top: 20px;
             margin-bottom: 10px;
             font-weight: 700;
-            text-align: center;
         }
 
         h1 span {
@@ -150,7 +149,7 @@
         </div>
 
         <div class="content">
-            <h1>Welcome, <span><%= username %></span>!</h1>
+                <h1>Welcome, <span style="color:#8ecae6;"><%= username %></span>!</h1>
 
             <% Object.keys(trendingData).forEach(source => { %>
                 <h2><%= source.toUpperCase() %> Trending</h2>
