@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <title>Profile</title>
     <style>
-        /* Root Variables for Consistent Styling */
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #ecf0f1;
             --accent-color: #3498db;
-            --text-color: #2c3e50;
-            --border-radius: 5px;
-            --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --hover-color: #004494;
+            --active-color: #003366;
+            --tooltip-bg: #2c3e50;
+            --tooltip-text-color: #ffffff;
+            --tooltip-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            --box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
             --transition-speed: 0.3s;
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -21,14 +24,17 @@
             margin: 0;
             padding: 0;
             background-color: var(--secondary-color);
-            color: var(--text-color);
+            color: var(--primary-color);
         }
 
         .content {
-            max-width: 1000px;
-            margin: auto;
-            padding: 60px 20px;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: calc(100vh - 60px);
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         h1 {
@@ -41,94 +47,74 @@
         h2 {
             font-size: 1.75em;
             font-weight: 400;
-            margin: 40px 0 20px;
-            position: relative;
+            margin: 20px 0;
+            border-bottom: 2px solid #bdc3c7;
             padding-bottom: 10px;
-            border-bottom: 1px solid #bdc3c7;
         }
 
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: flex-start;
-        }
-
-        .media-item {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            width: 160px;
-            box-shadow: var(--box-shadow);
-            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-        }
-
-        .media-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .poster {
-            width: 100%;
-            height: 240px;
-            object-fit: cover;
-        }
-
-        .media-content {
-            padding: 15px;
-        }
-
-        .title {
-            font-size: 1em;
-            font-weight: 500;
-            margin: 0 0 10px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .overview {
-            font-size: 0.85em;
-            line-height: 1.4;
-            color: #7f8c8d;
-            max-height: 44px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .rating {
-            font-size: 0.8em;
-            color: #95a5a6;
+        label {
+            font-weight: 600;
+            margin-bottom: 6px;
             margin-top: 10px;
+            display: inline-block;
+            color: var(--primary-color);
         }
 
-        .shelf-section {
-            margin-top: 50px;
-            padding: 20px;
+        /* Form input and select styling */
+        input[type="text"], select {
+            width: 90%;
+            padding: 15px;
+            border: 1px solid #dcdfe6;
             border-radius: var(--border-radius);
-            background-color: #fff;
-            box-shadow: var(--box-shadow);
+            background-color: var(--secondary-color);
+            font-size: 1rem;
+            color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
         }
 
-        .add-shelf-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: var(--accent-color);
-            color: #fff;
-            padding: 8px 12px;
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 8px var(--accent-color);
+            background-color: #ffffff; /* Subtle highlight for focus */
+        }
+
+        /* Buttons styling */
+        button {
+            padding: 10px 15px;
             border: none;
             border-radius: var(--border-radius);
             cursor: pointer;
-            font-size: 0.85em;
-            transition: background-color var(--transition-speed);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
         }
 
-        .add-shelf-btn:hover {
-            background-color: #2980b9;
+        button[type="submit"] {
+            background-color: var(--accent-color);
+            color: #ffffff;
         }
 
+        button[type="submit"]:hover {
+            background-color: var(--hover-color);
+        }
+
+        button[type="submit"]:active {
+            background-color: var(--active-color);
+        }
+
+        button.close-btn {
+            background-color: #e74c3c;
+            color: white;
+            margin-top: 15px;
+        }
+
+        button.close-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* Modal styling */
         .modal {
             display: none;
             position: fixed;
@@ -137,10 +123,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(44, 62, 80, 0.9);
+            background-color: rgba(0, 0, 0, 0.5); /* Dimmed background */
             justify-content: center;
             align-items: center;
-            overflow: auto;
         }
 
         .modal-content {
@@ -149,92 +134,133 @@
             border-radius: var(--border-radius);
             width: 90%;
             max-width: 400px;
+            box-shadow: var(--tooltip-shadow);
+        }
+
+        /* Shelf section styling */
+        .shelf-section {
+            margin-top: 50px;
+            padding: 20px;
+            width: 90%;
+            border-radius: var(--border-radius);
+            background-color: #fff;
             box-shadow: var(--box-shadow);
+        }
+
+        /* Add button styling */
+        .add-button-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .add-button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--tooltip-shadow);
+            transition: transform var(--transition-speed), background-color var(--transition-speed);
             position: relative;
         }
 
-        .modal-content h3 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-weight: 400;
-            color: var(--primary-color);
+        .add-button:hover {
+            background-color: var(--hover-color);
         }
 
-        .form-group {
-            margin-bottom: 20px;
+        .add-button:active {
+            background-color: var(--active-color);
         }
 
-        label {
-            display: block;
+        .add-button:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(10px) scale(1);
+        }
+
+        .add-button:hover span {
+            transform: rotate(45deg);
+        }
+
+        /* Tooltip styling */
+        .tooltip {
+            position: absolute;
+            top: 50%;
+            right: 75px;
+            transform: translateY(-50%) translateX(20px) scale(0.9);
+            background-color: var(--tooltip-bg);
+            color: var(--tooltip-text-color);
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            font-size: 0.85em;
             font-weight: 500;
-            margin-bottom: 8px;
+            white-space: nowrap;
+            box-shadow: var(--tooltip-shadow);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, transform 0.3s ease-in-out;
         }
 
-        select,
-        input[type="text"] {
+        span {
+            display: inline-block;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Media item styling */
+        .container {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            padding: 20px;
+        }
+
+        .media-item {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .media-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+        }
+
+        .poster {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #bdc3c7;
-            border-radius: var(--border-radius);
-            font-size: 0.9em;
-            color: var(--text-color);
-            background-color: #ecf0f1;
+            height: auto;
+            object-fit: cover;
         }
 
-        button {
-            background-color: var(--accent-color);
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 0.9em;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color var(--transition-speed);
+        .media-content {
+            padding: 15px;
         }
 
-        button:hover {
-            background-color: #2980b9;
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+            color: #ff9800;
         }
 
-        .close-btn {
-            background-color: #e74c3c;
-            margin-top: 15px;
-        }
-
-        .close-btn:hover {
-            background-color: #c0392b;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .media-item {
-                width: 45%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .media-item {
-                width: 100%;
-            }
-
-            .add-shelf-btn {
-                top: 10px;
-                right: 10px;
-                padding: 6px 10px;
-            }
-        }
     </style>
 </head>
 <body>
     <%- include('navbar', { username: username }) %>
     <div class="content">
-        <div>
-            <h1>Welcome, <%= user.name %></h1>
-            <button class="add-shelf-btn" onclick="openModal()">+ Add Shelf</button>
-        </div>
+        <h1><%= user.name %>'s Shelves</h1>
 
-        <h2>My Shelves</h2>
         <% shelves.forEach(shelf => { %>
             <div class="shelf-section">
                 <h2><%= shelf.name %></h2>
@@ -242,11 +268,9 @@
                     <% if (shelvesData[shelf.name] && Array.isArray(shelvesData[shelf.name])) { %>
                         <% shelvesData[shelf.name].forEach(item => { %>
                             <div class="media-item">
-                                <img src="https://image.tmdb.org/t/p/w500<%= item.poster_path %>" alt="<%= item.name || item.title %> Poster" class="poster" />
+                                <img src="https://image.tmdb.org/t/p/w500<%= item.poster_path %>" alt="<%= item.name || item.title %>" class="poster">
                                 <div class="media-content">
                                     <p class="title"><%= item.name || item.title %></p>
-                                    <p class="overview"><%= item.overview ? item.overview.substring(0, 100) + '...' : 'No overview available.' %></p>
-                                    <p class="rating">Rating: <%= item.vote_average ? item.vote_average : 'N/A' %>/10</p>
                                 </div>
                             </div>
                         <% }); %>
@@ -256,25 +280,30 @@
                 </div>
             </div>
         <% }); %>
+
+
+
     </div>
 
-    <!-- Modal for creating a new shelf -->
+    <div class="add-button-container">
+        <button class="add-button" onclick="openModal()">
+            <span>+</span>
+            <div class="tooltip">Add Shelf</div>
+        </button>
+    </div>
+
     <div class="modal" id="newShelfModal">
         <div class="modal-content">
             <h3>Create a New Shelf</h3>
             <form id="newShelfForm">
-                <div class="form-group">
-                    <label for="shelfName">Shelf Name:</label>
-                    <input type="text" id="shelfName" name="shelfName" required>
-                </div>
-                <div class="form-group">
-                    <label for="visibility">Visibility:</label>
-                    <select id="visibility" name="visibility" required>
-                        <% visibilityOptions.forEach(option => { %>
-                            <option value="<%= option %>"><%= option %></option>
-                        <% }) %>
-                    </select>
-                </div>
+                <label for="shelfName">Shelf Name:</label>
+                <input type="text" id="shelfName" required>
+                <label for="visibility">Visibility:</label>
+                <select id="visibility" name="visibility" required>
+                    <% visibilityOptions.forEach(option => { %>
+                        <option value="<%= option %>"><%= option %></option>
+                    <% }) %>
+                </select>
                 <button type="submit">Create Shelf</button>
                 <button type="button" class="close-btn" onclick="closeModal()">Cancel</button>
             </form>
@@ -283,35 +312,33 @@
 
     <script>
         function openModal() {
-            document.getElementById("newShelfModal").style.display = "flex";
+            const modal = document.getElementById("newShelfModal");
+            modal.style.display = "flex";
         }
 
         function closeModal() {
-            document.getElementById("newShelfModal").style.display = "none";
+            const modal = document.getElementById("newShelfModal");
+            modal.style.display = "none";
         }
 
         document.getElementById("newShelfForm").addEventListener("submit", async (event) => {
             event.preventDefault();
-
             const shelfName = document.getElementById("shelfName").value;
             const visibility = document.getElementById("visibility").value;
 
             const response = await fetch("/p/api/shelf/create", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ shelfName, visibility }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ shelfName,visibility }),
             });
-
-            const result = await response.json();
 
             if (response.ok) {
                 alert("Shelf created successfully!");
                 closeModal();
                 location.reload();
             } else {
-                alert("Error creating shelf: " + result.message);
+                console.error(response.json());
+                alert("Failed to create shelf.");
             }
         });
     </script>
