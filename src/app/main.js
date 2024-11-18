@@ -17,6 +17,7 @@ const hostname = "0.0.0.0";
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.static("public"));
 
 app.set("view engine", "ejs");
 app.set("views", "./views");
@@ -27,11 +28,21 @@ app.use("/api/auth", getAuthRouter());
 //routes protected
 app.use("/p/", authMiddleware);
 app.use("/p/", getHomeRouter());
-app.use("/p/", getSearchRouter())
+app.use("/p/", getSearchRouter());
 app.use("/p/api/shelf", getShelfRouter());
 
 if (Deno.env.get("ENV") === "development") {
   app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+  app.use((req, res, next) => {
+    res.set(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, proxy-revalidate",
+    );
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
+    res.set("Surrogate-Control", "no-store");
+    next();
+  });
 }
 
 app.listen(port, hostname, () => {

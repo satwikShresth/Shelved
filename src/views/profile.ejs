@@ -4,260 +4,14 @@
     <meta charset="UTF-8">
     <title>Profile</title>
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #ecf0f1;
-            --accent-color: #3498db;
-            --hover-color: #004494;
-            --active-color: #003366;
-            --tooltip-bg: #2c3e50;
-            --tooltip-text-color: #ffffff;
-            --tooltip-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            --box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
-            --border-radius: 8px;
-            --transition-speed: 0.3s;
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            font-family: var(--font-family);
-            margin: 0;
-            padding: 0;
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
-        }
-
-        .content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: calc(100vh - 60px);
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        h1 {
-            font-size: 2.5em;
-            font-weight: 300;
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        h2 {
-            font-size: 1.75em;
-            font-weight: 400;
-            margin: 20px 0;
-            border-bottom: 2px solid #bdc3c7;
-            padding-bottom: 10px;
-        }
-
-        label {
-            font-weight: 600;
-            margin-bottom: 6px;
-            margin-top: 10px;
-            display: inline-block;
-            color: var(--primary-color);
-        }
-
-        /* Form input and select styling */
-        input[type="text"], select {
-            width: 90%;
-            padding: 15px;
-            border: 1px solid #dcdfe6;
-            border-radius: var(--border-radius);
-            background-color: var(--secondary-color);
-            font-size: 1rem;
-            color: var(--primary-color);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
-        }
-
-        input[type="text"]:focus, select:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 8px var(--accent-color);
-            background-color: #ffffff; /* Subtle highlight for focus */
-        }
-
-        /* Buttons styling */
-        button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
-        }
-
-        button[type="submit"] {
-            background-color: var(--accent-color);
-            color: #ffffff;
-        }
-
-        button[type="submit"]:hover {
-            background-color: var(--hover-color);
-        }
-
-        button[type="submit"]:active {
-            background-color: var(--active-color);
-        }
-
-        button.close-btn {
-            background-color: #e74c3c;
-            color: white;
-            margin-top: 15px;
-        }
-
-        button.close-btn:hover {
-            background-color: #c0392b;
-        }
-
-        /* Modal styling */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Dimmed background */
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 400px;
-            box-shadow: var(--tooltip-shadow);
-        }
-
-        /* Shelf section styling */
-        .shelf-section {
-            margin-top: 50px;
-            padding: 20px;
-            width: 90%;
-            border-radius: var(--border-radius);
-            background-color: #fff;
-            box-shadow: var(--box-shadow);
-        }
-
-        /* Add button styling */
-        .add-button-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-        }
-
-        .add-button {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--tooltip-shadow);
-            transition: transform var(--transition-speed), background-color var(--transition-speed);
-            position: relative;
-        }
-
-        .add-button:hover {
-            background-color: var(--hover-color);
-        }
-
-        .add-button:active {
-            background-color: var(--active-color);
-        }
-
-        .add-button:hover .tooltip {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(10px) scale(1);
-        }
-
-        .add-button:hover span {
-            transform: rotate(45deg);
-        }
-
-        /* Tooltip styling */
-        .tooltip {
-            position: absolute;
-            top: 50%;
-            right: 75px;
-            transform: translateY(-50%) translateX(20px) scale(0.9);
-            background-color: var(--tooltip-bg);
-            color: var(--tooltip-text-color);
-            padding: 8px 12px;
-            border-radius: var(--border-radius);
-            font-size: 0.85em;
-            font-weight: 500;
-            white-space: nowrap;
-            box-shadow: var(--tooltip-shadow);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, transform 0.3s ease-in-out;
-        }
-
-        span {
-            display: inline-block;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        /* Media item styling */
-        .container {
-            display: grid;
-            gap: 20px;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            padding: 20px;
-        }
-
-        .media-item {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
-            transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
-        }
-
-        .media-item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
-        }
-
-        .poster {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-        }
-
-        .media-content {
-            padding: 15px;
-        }
-
-        .title {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 0;
-            color: #ff9800;
-        }
-
+    <%- include('static/css/main.css') %>
+    <%- include('static/css/profile.css') %>
+    <%- include('static/css/media.css') %>
     </style>
 </head>
 <body>
     <%- include('navbar', { username: username }) %>
+
     <div class="content">
         <h1><%= user.name %>'s Shelves</h1>
 
@@ -267,12 +21,7 @@
                 <div class="container">
                     <% if (shelvesData[shelf.name] && Array.isArray(shelvesData[shelf.name])) { %>
                         <% shelvesData[shelf.name].forEach(item => { %>
-                            <div class="media-item">
-                                <img src="https://image.tmdb.org/t/p/w500<%= item.poster_path %>" alt="<%= item.name || item.title %>" class="poster">
-                                <div class="media-content">
-                                    <p class="title"><%= item.name || item.title %></p>
-                                </div>
-                            </div>
+                            <%- include('components/media', { media: item, showAddButton: false }) %>
                         <% }); %>
                     <% } else { %>
                         <p>No items available for this shelf.</p>
@@ -280,9 +29,6 @@
                 </div>
             </div>
         <% }); %>
-
-
-
     </div>
 
     <div class="add-button-container">
@@ -311,36 +57,7 @@
     </div>
 
     <script>
-        function openModal() {
-            const modal = document.getElementById("newShelfModal");
-            modal.style.display = "flex";
-        }
-
-        function closeModal() {
-            const modal = document.getElementById("newShelfModal");
-            modal.style.display = "none";
-        }
-
-        document.getElementById("newShelfForm").addEventListener("submit", async (event) => {
-            event.preventDefault();
-            const shelfName = document.getElementById("shelfName").value;
-            const visibility = document.getElementById("visibility").value;
-
-            const response = await fetch("/p/api/shelf/create", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ shelfName,visibility }),
-            });
-
-            if (response.ok) {
-                alert("Shelf created successfully!");
-                closeModal();
-                location.reload();
-            } else {
-                console.error(response.json());
-                alert("Failed to create shelf.");
-            }
-        });
+    <%- include('static/js/profile.js') %>
     </script>
 </body>
 </html>

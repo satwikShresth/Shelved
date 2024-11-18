@@ -1,0 +1,90 @@
+/* media.css */
+
+/* Individual media item */
+.media-item {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    position: relative;
+    cursor: pointer;
+}
+
+/* Poster image */
+.media-item .poster {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Media content */
+.media-item .content {
+    padding: 15px;
+}
+
+/* Title */
+.media-item .title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    color: var(--highlight-text);
+}
+
+/* Overview */
+.media-item .overview {
+    font-size: 14px;
+    margin: 10px 0;
+    color: var(--secondary-text);
+}
+
+/* Rating */
+.media-item .rating {
+    font-size: 14px;
+    color: var(--secondary-text);
+}
+
+/* Add button */
+.media-item .add-button {
+    position: absolute;
+    top: -10px;
+    right: 6px;
+    background-color: #0056b3;
+    color: var(--primary-text);
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.media-item .add-button:hover {
+    background-color: var(--btn-hover-bg);
+    transform: scale(1.1);
+}
+
+.media-item .add-button:active {
+    background-color: var(--btn-active-bg);
+    transform: scale(0.95);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .media-item {
+        width: calc(50% - 20px);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .media-item {
+        width: 100%;
+    }
+}
+
