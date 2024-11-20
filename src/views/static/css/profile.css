@@ -1,0 +1,156 @@
+.content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.content h1 {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-align: center;
+    color: var(--highlight-text);
+}
+
+.shelf-section {
+    margin-bottom: 50px;
+}
+
+.shelf-section h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    color: var(--highlight-text);
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Adjust .media-item to have variable height */
+.container .media-item {
+    width: calc(20% - 20px);
+}
+
+@media screen and (max-width: 480px) {
+    .add-button {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5em;
+    }
+
+    .add-button:hover .tooltip {
+        right: 60px;
+    }
+}
+
+/* Add button container */
+.add-button-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+}
+
+.add-button {
+    position: relative;
+    background-color: var(--btn-bg);
+    color: var(--primary-text);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--box-shadow);
+    transition: background-color var(--transition-speed);
+}
+
+.add-button:hover {
+    background-color: var(--btn-hover-bg);
+}
+
+/* Plus sign inside the add button */
+.add-button span {
+    position: relative;
+}
+
+/* Tooltip styling */
+.tooltip {
+    position: absolute;
+    top: 50%;
+    right: 75px;
+    transform: translateY(-50%) translateX(20px) scale(0.9);
+    background-color: var(--secondary-bg);
+    color: var(--primary-text);
+    padding: 8px 12px;
+    border-radius: var(--border-radius);
+    font-size: 0.85em;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: var(--box-shadow);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, transform 0.3s ease-in-out;
+}
+
+.add-button:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(0) scale(1);
+}
+
+/* Modal content */
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content label {
+    text-align: left;
+    margin-bottom: 5px;
+    font-size: 1em;
+}
+
+.modal-content input,
+.modal-content select {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
+    font-size: 1em;
+}
+
+.modal-content button {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: var(--btn-bg);
+    color: var(--primary-text);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+.modal-content button:hover {
+    background-color: var(--btn-hover-bg);
+}
+
+.close-btn {
+    background-color: var(--secondary-bg);
+    color: var(--primary-text);
+}
+
+.close-btn:hover {
+    background-color: var(--border-color);
+}

@@ -36,7 +36,7 @@ export const validateUserId = async (req, res, next) => {
 
   const userResult = await getUserById(session.user_id);
   if (!userResult.success) {
-    return clearTokenAndRenderError(res, userResult.error);
+    return clearTokenAndRenderError(res, userResult.error || "User not found");
   }
 
   res.locals.username = userResult.user.username;
@@ -80,8 +80,14 @@ export const validateUserCreation = async (req, res, next) => {
 
   const userResult = await getUserByUsername(username);
 
-  if (userResult.success) {
-    return res.status(500).json({ error: "User already exists" });
+  if (!userResult.success) {
+    return res
+      .status(500)
+      .json({ error: "Database error", details: userResult.details });
+  }
+
+  if (userResult.exists) {
+    return res.status(409).json({ error: "Username already exists" });
   }
 
   next();
