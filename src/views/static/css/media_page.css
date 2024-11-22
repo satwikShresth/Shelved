@@ -32,10 +32,6 @@ h1, h2 {
     max-width: 65%;
 }
 
-.reviews {
-    max-width: 30%;
-}
-
 /* Header Content */
 .header-content {
     display: flex;
@@ -246,6 +242,192 @@ h1, h2 {
 .header-text h1 a.title-link:visited {
     color: var(--highlight-text);
     text-decoration: none;
+}
+
+
+.reviews {
+    margin-top: 30px;
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--box-shadow);
+}
+
+/* Reviews Header */
+.reviews h2 {
+    font-size: 24px;
+    color: var(--highlight-text);
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+/* Individual Review */
+.review {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--primary-bg);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+/* Review Title */
+.review .review-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 10px;
+    color: var(--highlight-text);
+}
+
+/* Review Body */
+.review .review-body {
+    font-size: 14px;
+    color: var(--secondary-text);
+    margin-bottom: 10px;
+}
+
+/* Review Rating */
+.review .review-rating {
+    font-size: 14px;
+    color: var(--highlight-text);
+}
+
+/* Review Metadata (User and Date) */
+.review .review-user,
+.review .review-date {
+    font-size: 12px;
+    color: var(--secondary-text);
+    margin-top: 5px;
+}
+
+/* Add Review Form */
+.add-review {
+    margin-top: 30px;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--primary-bg);
+    box-shadow: var(--box-shadow);
+}
+
+/* Add Review Form Header */
+.add-review h3 {
+    font-size: 20px;
+    color: var(--highlight-text);
+    margin-bottom: 15px;
+}
+
+/* Form Fields */
+.add-review .form-group {
+    margin-bottom: 15px;
+}
+
+/* Form Labels */
+.add-review label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--highlight-text);
+    margin-bottom: 5px;
+}
+
+/* Input and Textarea */
+.add-review input[type="text"],
+.add-review textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--secondary-bg);
+    color: var(--primary-text);
+    font-size: 14px;
+}
+
+
+/* Default star color */
+.star {
+    font-size: 24px;
+    color: var(--secondary-text);
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.star.highlight {
+    color: var(--highlight-text); /* Replace with your desired highlight color */
+}
+
+/* Add hover effect */
+.star:hover {
+    transform: scale(1.2);
+}
+
+/* Rating Stars */
+.add-review .rating-input {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.add-review .rating-input input[type="radio"] {
+    display: none;
+}
+
+.add-review .rating-input label {
+    font-size: 20px;
+    color: var(--secondary-text);
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.add-review .rating-input input[type="radio"]:checked + label,
+.add-review .rating-input label:hover {
+    color: var(--highlight-text);
+    transform: scale(1.2);
+}
+
+/* Submit Button */
+.add-review .submit-review {
+    padding: 10px 20px;
+    background-color: var(--btn-bg);
+    color: var(--primary-text);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.add-review .submit-review:hover {
+    background-color: var(--btn-hover-bg);
+    transform: scale(1.05);
+}
+
+.add-review .submit-review:active {
+    background-color: var(--btn-active-bg);
+    transform: scale(0.95);
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+    .reviews,
+    .add-review {
+        padding: 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .reviews h2,
+    .add-review h3 {
+        font-size: 18px;
+    }
+
+    .review .review-title,
+    .add-review label {
+        font-size: 16px;
+    }
 }
 
 

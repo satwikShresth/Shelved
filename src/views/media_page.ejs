@@ -148,7 +148,7 @@
                                 <p class="review-rating">
                                     Rating: 
                                     <% for (let i = 1; i <= 5; i++) { %>
-                                        <% if (i <= review.rating_value) { %>
+                                        <% if (i <= review.rating_id) { %>
                                             &#9733; <!-- Filled Star -->
                                         <% } else { %>
                                             &#9734; <!-- Empty Star -->
@@ -185,15 +185,15 @@
                             <label for="rating_id">Rating:</label>
                             <div class="rating-input">
                                 <input type="radio" id="star-1" name="rating_id" value="1" required>
-                                <label for="star-1">&#9733;</label>
+                                <label for="star-1" class="star" data-value="1">&#9733;</label>
                                 <input type="radio" id="star-2" name="rating_id" value="2">
-                                <label for="star-2">&#9733;</label>
+                                <label for="star-2" class="star" data-value="2">&#9733;</label>
                                 <input type="radio" id="star-3" name="rating_id" value="3">
-                                <label for="star-3">&#9733;</label>
+                                <label for="star-3" class="star" data-value="3">&#9733;</label>
                                 <input type="radio" id="star-4" name="rating_id" value="4">
-                                <label for="star-4">&#9733;</label>
+                                <label for="star-4" class="star" data-value="4">&#9733;</label>
                                 <input type="radio" id="star-5" name="rating_id" value="5">
-                                <label for="star-5">&#9733;</label>
+                                <label for="star-5" class="star" data-value="5">&#9733;</label>
                             </div>
                         </div>
 
@@ -247,6 +247,26 @@
                     console.error('Error in submission:', error);
                     alert('An error occurred. Please try again.');
                 }
+            });
+        });
+
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const stars = document.querySelectorAll('.star');
+
+            stars.forEach((star) => {
+                star.addEventListener('click', () => {
+                    const value = parseInt(star.getAttribute('data-value'), 10);
+
+                    stars.forEach((s) => {
+                        if (parseInt(s.getAttribute('data-value'), 10) <= value) {
+                            s.classList.add('highlight');
+                        } else {
+                            s.classList.remove('highlight');
+                        }
+                    });
+                });
             });
         });
     </script>
