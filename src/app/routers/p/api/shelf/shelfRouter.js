@@ -12,13 +12,17 @@ const getShelfRouter = () => {
       const { shelfName, visibility } = req.body;
       const user_id = req.session.user_id;
 
-      try {
-        await createShelf({ user_id, name: shelfName, visibility });
+      const result = await createShelf({
+        user_id,
+        name: shelfName,
+        visibility,
+      });
+
+      if (result.success) {
         res
           .status(201)
           .json({ success: true, message: "Shelf created successfully" });
-      } catch (error) {
-        console.error("Error creating shelf:", error.error);
+      } else {
         res
           .status(500)
           .json({ success: false, message: "Failed to create shelf" });

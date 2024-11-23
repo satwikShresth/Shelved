@@ -130,11 +130,11 @@
                         console.log("Login successful");
                         window.location.href = "/p/homepage";
                     } else {
-                        console.log("Login failed");
+                        console.log("Login failed:",await loginResponse.json());
                         alert("Login failed after signup. Please try logging in manually.");
                     }
                 } else {
-                    console.log("Sign up failed");
+                    console.log("Sign up failed:",await signupResponse.json());
                     alert("Sign up failed. Please try again.");
                 }
             } catch (error) {

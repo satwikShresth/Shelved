@@ -32,6 +32,10 @@ const getAuthRouter = () => {
       return res.status(400).send({ error: userResult.error });
     }
 
+    if (!userResult.exists) {
+      return res.status(409).json({ message: "Username does not exists" });
+    }
+
     const isPasswordCorrect = await bcrypt.compare(
       password,
       userResult.user.password,

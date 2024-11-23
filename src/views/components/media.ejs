@@ -1,0 +1,11 @@
+<div class="media-item">
+    <% if (showAddButton) { %>
+        <button class="add-button" onclick="<%= addButtonCallback %>('<%= media.id %>', '<%= source %>', '<%= media.media_type %>')">+</button>
+    <% } %>
+    <img src="https://image.tmdb.org/t/p/w500<%= media.poster_path %>" alt="<%= media.name || media.title %> Poster" class="poster" />
+    <div class="content">
+        <p class="title"><%= media.name || media.title %></p>
+        <p class="overview"><%= media.overview ? media.overview.substring(0, 100) + '...' : 'No overview available.' %></p>
+        <p class="rating">Rating: <%= media.vote_average ? media.vote_average : 'N/A' %>/10</p>
+    </div>
+</div>

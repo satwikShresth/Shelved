@@ -3,8 +3,6 @@ services:
     image: postgres:latest
     env_file:
       - .env
-    # volumes:
-    #   - ./setup.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
     healthcheck:
@@ -37,8 +35,6 @@ services:
     build:
       context: ./src
       dockerfile: dockerfile
-      # args:
-      #   ENV: dev
     container_name: shelved
     env_file:
       - .env
