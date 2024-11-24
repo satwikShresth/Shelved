@@ -10,6 +10,7 @@ import getAuthRouter from "routers/api/auth/authRouter.js";
 import getHomeRouter from "routers/p/homeRouter.js";
 import getShelfRouter from "routers/p/api/shelf/shelfRouter.js";
 import getSearchRouter from "routers/p/searchRouter.js";
+import getFriendRouter from "routers/p/friendRouter.js";
 import getContentRouter from "routers/p/api/content/contentRouter.js";
 
 const port = 3000;
@@ -30,6 +31,7 @@ app.use("/api/auth", getAuthRouter());
 app.use("/p/", authMiddleware);
 app.use("/p/", getHomeRouter());
 app.use("/p/", getSearchRouter());
+app.use("/p/", getFriendRouter());
 app.use("/p/api/shelf", getShelfRouter());
 app.use("/p/api/content", getContentRouter());
 
