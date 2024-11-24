@@ -54,7 +54,11 @@ export const getDetailedShelfContent = async (req, res, next) => {
             item.content_type,
           );
 
-          detailedShelves[shelfName].push(details);
+          detailedShelves[shelfName].push({
+            ...details,
+            source: item.db_source,
+            media_type: item.content_type,
+          });
         } catch (error) {
           console.error(
             `Error fetching details for ${item.content_type} with ID ${item.external_id}:`,
