@@ -2,7 +2,7 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.up = function (knex) {
+export const up = function (knex) {
   return knex.schema.table("db_source", (table) => {
     table.dropColumn("api_key");
   });
@@ -12,7 +12,7 @@ exports.up = function (knex) {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = function (knex) {
+export const down = function (knex) {
   return knex.schema.table("db_source", (table) => {
     table.string("api_key", 255);
   });
