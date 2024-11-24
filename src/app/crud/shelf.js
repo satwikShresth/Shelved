@@ -1,4 +1,5 @@
 import db from "db";
+import { getContentID } from "crud/content.js";
 
 export const getShelvesByUserId = async (user_id) => {
   try {
@@ -60,35 +61,9 @@ export const addContentToShelf = async ({
   status,
 }) => {
   try {
-    const sourceRecord = await db("db_source")
-      .select("id")
-      .where("name", source)
-      .first();
-
-    if (!sourceRecord) {
-      throw new Error(`Source '${source}' not found.`);
-    }
-
-    const typeRecord = await db("content_type")
-      .select("id")
-      .where("value", content_type)
-      .first();
-    if (!typeRecord) {
-      throw new Error(`Content type '${content_type}' not found.`);
-    }
-
-    const [contentResult] = await db("content")
-      .insert({
-        external_id,
-        source_id: sourceRecord.id,
-        type_id: typeRecord.id,
-      })
-      .onConflict(["external_id", "source_id"])
-      .merge()
-      .returning("id");
-
-    if (!contentResult) {
-      throw new Error("Failed to insert or retrieve content ID.");
+    const contentResult = await getContentID(source, content_type, external_id);
+    if (!contentResult.success) {
+      throw new Error(contentResult.message);
     }
 
     const shelfRecord = await db("shelf")
@@ -107,18 +82,21 @@ export const addContentToShelf = async ({
       throw new Error(`Status '${status}' not found.`);
     }
 
-    await db("shelf_content").insert({
-      shelf_id: shelfRecord.id,
-      content_id: contentResult.id,
-      status_id: statusRecord.id,
-    });
+    await db("shelf_content")
+      .insert({
+        shelf_id: shelfRecord.id,
+        content_id: contentResult.content_id,
+        status_id: statusRecord.id,
+      })
+      .onConflict(["shelf_id", "content_id"])
+      .merge();
 
     return { success: true, message: "Item added to shelf successfully" };
   } catch (error) {
     console.error("Error adding item to shelf_content:", error.message);
     return {
       success: false,
-      error: `Shelve error: ${error.message}`,
+      error: `Shelf error: ${error.message}`,
     };
   }
 };
