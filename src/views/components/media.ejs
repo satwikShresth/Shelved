@@ -7,7 +7,7 @@
 >    <% if (showAddButton) { %>
         <button class="add-button" onclick="<%= addButtonCallback %>('<%= media.id %>', '<%= source %>', '<%= media.media_type %>')">+</button>
     <% } %>
-    <img src="<%= media.poster %>" alt="<%= media.name || media.title %> Poster" class="poster" />
+    <img src="<%= media.media_type === 'book' ? `https://covers.openlibrary.org/b/id/${media.poster_path}-M.jpg` : `https://image.tmdb.org/t/p/original${media.poster_path}`%>" alt="<%= media.name || media.title %> Poster" class="poster" />
     <div class="content">
         <p class="title"><%= media.title.length > 27 ? media.title.substring(0, 27) + '...' : media.title %></p>
         <% if (media.overview) { %>

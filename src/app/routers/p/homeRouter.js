@@ -49,7 +49,7 @@ const getHomeRouter = () => {
         release_date: movie.release_date,
         overview: movie.overview,
         vote_average: movie.vote_average,
-        poster: `https://image.tmdb.org/t/p/original${movie.poster_path}`,
+        poster_path: movie.poster_path,
         media_type: 'movie',
       });
 
@@ -60,7 +60,7 @@ const getHomeRouter = () => {
         release_date: show.first_air_date,
         overview: movie.overview,
         vote_average: movie.vote_average,
-        poster: `https://image.tmdb.org/t/p/original${show.poster_path}`,
+        poster_path: show.poster_path,
         media_type: 'tv',
       });
 
@@ -71,7 +71,7 @@ const getHomeRouter = () => {
         release_date: book.first_publish_year.toString(),
         overview: book.author_name[0],
         vote_average: book.ratings_average,
-        poster: `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`,
+        poster_path: book.cover_i,
         media_type: 'book',
       });
     }
@@ -104,11 +104,53 @@ const getHomeRouter = () => {
       if (!visibilityOptionsResponse.success) {
         return res.status(500).send("Failed to fetch visibility options.");
       }
+      
+      let formattedShelves = {};
+
+      shelves.forEach((shelf) => {
+        let formattedShelf = [];
+
+        req.detailedShelves[shelf.name].forEach((media) => {
+          if (media.media_type === 'movie') {
+            formattedShelf.push({
+              id: media.id,
+              title: media.title,
+              release_date: media.release_date,
+              overview: media.overview,
+              vote_average: media.vote_average,
+              poster_path: media.poster_path,
+              media_type: 'movie',
+            })
+          } else if (media.media_type === 'tv') {
+            formattedShelf.push({
+              id: media.id,
+              title: media.name,
+              release_date: media.first_air_date,
+              overview: media.overview,
+              vote_average: media.vote_average,
+              poster_path: media.poster_path,
+              media_type: 'tv',
+            });
+          } else if (media.media_type === 'book') {
+            formattedShelf.push({
+              id: media.key,
+              title: media.title,
+              release_date: media.first_publish_year.toString(),
+              overview: media.author_name[0],
+              vote_average: media.ratings_average,
+              poster_path: media.cover_i,
+              media_type: 'book',
+            });
+          }
+        })
+
+        formattedShelves[shelf.name] = formattedShelf;
+      });
 
       res.render("profile", {
         username: res.locals.username,
         shelves,
-        shelvesData: req.detailedShelves,
+        shelvesData: formattedShelves,
         visibilityOptions: visibilityOptionsResponse.visibilityOptions,
       });
     } catch (error) {

@@ -1,4 +1,10 @@
 const openMediaPage = async (contentId, source, media_type) => {
+  if (source === "movies" || source === "shows") {
+    source = "tmdb";
+  } else if (source === "books") {
+    source = "openlibrary";
+  }
+
   try {
     const response = await fetch("/p/api/content", {
       method: "POST",
