@@ -2,9 +2,18 @@ let selectedContentId = null;
 let selectedSource = null;
 let selectedMediaType = null;
 
-function showShelfModal(contentId, source, media_type) {
+function showShelfModal(contentId, source, media_type, event) {
+  event.stopPropagation();
   selectedContentId = contentId;
-  selectedSource = source;
+
+  if (source === "movies" || source === "shows") {
+    selectedSource = "tmdb";
+  } else if (source === "books") {
+    selectedSource = "openlibrary";
+  } else {
+    selectedSource = source;
+  }
+
   selectedMediaType = media_type;
   document.getElementById("shelfModal").style.display = "flex";
 }
