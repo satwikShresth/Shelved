@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { unfollowUser, followUser, getFollowers, getFollowing } from "crud/following.js";
 
-const getFriendRouter = () => {
+export const getFriendViewRouter = () => {
   const router = Router();
 
   router.get("/friends", async (_, res) => {
@@ -25,7 +25,13 @@ const getFriendRouter = () => {
       res.status(500).send("Failed to load friends page.");
     }
   });
-  router.post("/api/friends/add", async (req, res) => {
+  return router;
+};
+
+export const getFriendApiRouter = () => {
+  const router = Router();
+
+  router.post("/add", async (req, res) => {
     try {
       const { userToFollow } = req.body;
       const username = res.locals.username;
@@ -59,7 +65,7 @@ const getFriendRouter = () => {
     }
   });
 
-  router.post("/api/friends/remove", async (req, res) => {
+  router.post("/remove", async (req, res) => {
     try {
       const { userToUnfollow } = req.body;
       const username = res.locals.username;
@@ -94,5 +100,3 @@ const getFriendRouter = () => {
   });
   return router;
 };
-
-export default getFriendRouter;
