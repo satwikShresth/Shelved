@@ -2,8 +2,8 @@ let selectedContentId = null;
 let selectedSource = null;
 let selectedMediaType = null;
 
-function showShelfModal(contentId, source, media_type) {
-  console.log(source)
+function showShelfModal(contentId, source, media_type, event) {
+  event.stopPropagation();
   selectedContentId = contentId;
 
   if (source === "movies" || source === "shows") {
