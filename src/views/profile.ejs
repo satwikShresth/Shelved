@@ -10,18 +10,23 @@
     </style>
 </head>
 <body>
-    <%- include('navbar', { username: username }) %>
+    <%- include('navbar', { username }) %>
 
     <div class="content">
-        <h1><%= user.name %>'s Shelves</h1>
+        <h1><%= username %>'s Shelves</h1>
 
         <% shelves.forEach(shelf => { %>
             <div class="shelf-section">
                 <h2><%= shelf.name %></h2>
                 <div class="container">
                     <% if (shelvesData[shelf.name] && Array.isArray(shelvesData[shelf.name])) { %>
-                        <% shelvesData[shelf.name].forEach(item => { %>
-                            <%- include('components/media', { media: item, showAddButton: false }) %>
+                        <% shelvesData[shelf.name].forEach(item => {%>
+                            <%- include('components/media', { 
+                                    media: item,
+                                    source: item.source,
+                                    showAddButton: false,
+                                    openMediaCallback: 'openMediaPage'
+                                }) %>
                         <% }); %>
                     <% } else { %>
                         <p>No items available for this shelf.</p>
@@ -58,6 +63,7 @@
 
     <script>
     <%- include('static/js/profile.js') %>
+    <%- include('static/js/media.js') %>
     </script>
 </body>
 </html>

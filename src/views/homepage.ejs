@@ -10,7 +10,7 @@
     </style>
 </head>
 <body>
-    <%- include('navbar', { username: username }) %>
+    <%- include('navbar', { username }) %>
 
     <div class="main-content">
         <div class="hero">
@@ -29,7 +29,8 @@
                             media: media,
                             source: source,
                             showAddButton: true,
-                            addButtonCallback: 'showShelfModal'
+                            addButtonCallback: 'showShelfModal',
+                            openMediaCallback: 'openMediaPage'
                         }) %>
                     <% }); %>
                 </div>
@@ -56,6 +57,7 @@
 
     <script>
     <%- include('static/js/homepage.js') %>
+    <%- include('static/js/media.js') %>
     </script>
 </body>
 </html>

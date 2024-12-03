@@ -16,7 +16,7 @@
       "routers/":"./app/routers/",
       "utils/":"./app/utils/",
       "swagger-autogen": "npm:swagger-autogen@^2.23.7",
-      "swagger-ui-express": "npm:swagger-ui-express@^5.0.1",
+      "swagger-ui-express": "npm:swagger-ui-express@^5.0.1"
    },
    "fmt": {
       "useTabs": false,
@@ -38,7 +38,7 @@
       "seed": "deno run -A  npm:knex --env development --knexfile db/knexfile.js --knexpath db seed:run ",
       "seed_local": "deno run --env-file=../.env -A  npm:knex --env local --knexfile db/knexfile.js --knexpath db seed:run ",
       "migrate_dev": "deno run --env-file=../.env -A  npm:knex --knexfile db/knexfile.js --knexpath db migrate:latest",
-      "seed_dev": "deno run --env-file=../.env -A  npm:knex --knexfile db/knexfile.js --knexpath db seed:run ",
+      "seed_dev": "deno run --env-file=../.env -A  npm:knex --knexfile db/knexfile.js --knexpath db seed:run "
    },
    "nodeModulesDir": "auto"
 }

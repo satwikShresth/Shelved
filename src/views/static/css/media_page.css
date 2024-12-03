@@ -1,0 +1,443 @@
+body {
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
+}
+
+.container {
+    padding: 20px;
+}
+
+h1, h2 {
+    margin-top: 0;
+    color: var(--highlight-text);
+}
+
+/* Main Content Layout */
+.main-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.details, .reviews {
+    flex: 1;
+    min-width: 300px;
+    margin: 10px;
+}
+
+.details {
+    max-width: 65%;
+}
+
+/* Header Content */
+.header-content {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+}
+
+.poster {
+    height: 400px;
+    width: auto;
+    border-radius: var(--border-radius);
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.header-text {
+    flex: 1;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.header-text h1 {
+    margin-top: 0;
+}
+
+.header-text p {
+    margin: 5px 0;
+}
+
+/* Horizontal Info Section */
+.horizontal-info {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+    margin-bottom: 5px;
+}
+
+.info-title {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.info-list {
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.info-list li {
+    margin-right: 5px;
+    background-color: var(--secondary-bg);
+    padding: 3px 8px;
+    border-radius: var(--border-radius);
+    margin-bottom: 5px;
+}
+
+/* Overview Section */
+.overview {
+    margin-top: 10px;
+}
+
+/* Seasons Section */
+.seasons {
+    margin-top: 20px;
+}
+
+.seasons-horizontal {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.season {
+    background-color: var(--secondary-bg);
+    padding: 10px;
+    border-radius: var(--border-radius);
+    margin-right: 10px;
+    min-width: 200px;
+    max-width: 250px;
+    min-height: 200px;
+    flex: 0 0 auto;
+}
+
+.season h3 {
+    margin: 10px 0 5px;
+}
+
+.season p {
+    margin: 2px 0;
+}
+
+.season img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+}
+
+.no-image {
+    width: 100%;
+    height: 300px;
+    background-color: var(--border-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--secondary-text);
+    border-radius: var(--border-radius);
+}
+
+/* More Details Section */
+#more-details {
+    display: none;
+    margin-top: 20px;
+}
+
+#more-details-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: var(--btn-bg);
+    color: var(--primary-text);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+}
+
+#more-details-button:hover {
+    background-color: var(--btn-hover-bg);
+}
+
+.additional-details .info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.additional-details .info-title {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+/* Reviews Section */
+.reviews h2 {
+    margin-top: 0;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--modal-bg);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--secondary-bg);
+    color: var(--primary-text);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    max-width: 90%;
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    animation: fadeIn var(--transition-speed) ease-in-out;
+    position: relative;
+}
+
+.modal-content img {
+    max-width: 100%;
+    border-radius: var(--border-radius);
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 30px;
+    cursor: pointer;
+    color: var(--primary-text);
+}
+
+
+/* Add the following styles at the end of your media_page.css */
+
+/* Style for the title link inside h1 */
+.header-text h1 a.title-link {
+    color: var(--highlight-text);
+    text-decoration: none;
+    transition: color var(--transition-speed);
+}
+
+.header-text h1 a.title-link:hover {
+    color: var(--btn-bg);
+}
+
+.header-text h1 a.title-link:visited {
+    color: var(--highlight-text);
+    text-decoration: none;
+}
+
+
+.reviews {
+    margin-top: 30px;
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--box-shadow);
+}
+
+/* Reviews Header */
+.reviews h2 {
+    font-size: 24px;
+    color: var(--highlight-text);
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+/* Individual Review */
+.review {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--primary-bg);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+/* Review Title */
+.review .review-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 10px;
+    color: var(--highlight-text);
+}
+
+/* Review Body */
+.review .review-body {
+    font-size: 14px;
+    color: var(--secondary-text);
+    margin-bottom: 10px;
+}
+
+/* Review Rating */
+.review .review-rating {
+    font-size: 14px;
+    color: var(--highlight-text);
+}
+
+/* Review Metadata (User and Date) */
+.review .review-user,
+.review .review-date {
+    font-size: 12px;
+    color: var(--secondary-text);
+    margin-top: 5px;
+}
+
+/* Add Review Form */
+.add-review {
+    margin-top: 30px;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--primary-bg);
+    box-shadow: var(--box-shadow);
+}
+
+/* Add Review Form Header */
+.add-review h3 {
+    font-size: 20px;
+    color: var(--highlight-text);
+    margin-bottom: 15px;
+}
+
+/* Form Fields */
+.add-review .form-group {
+    margin-bottom: 15px;
+}
+
+/* Form Labels */
+.add-review label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--highlight-text);
+    margin-bottom: 5px;
+}
+
+/* Input and Textarea */
+.add-review input[type="text"],
+.add-review textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--secondary-bg);
+    color: var(--primary-text);
+    font-size: 14px;
+}
+
+
+/* Default star color */
+.star {
+    font-size: 24px;
+    color: var(--secondary-text);
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.star.highlight {
+    color: var(--highlight-text); /* Replace with your desired highlight color */
+}
+
+/* Add hover effect */
+.star:hover {
+    transform: scale(1.2);
+}
+
+/* Rating Stars */
+.add-review .rating-input {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.add-review .rating-input input[type="radio"] {
+    display: none;
+}
+
+.add-review .rating-input label {
+    font-size: 20px;
+    color: var(--secondary-text);
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.add-review .rating-input input[type="radio"]:checked + label,
+.add-review .rating-input label:hover {
+    color: var(--highlight-text);
+    transform: scale(1.2);
+}
+
+/* Submit Button */
+.add-review .submit-review {
+    padding: 10px 20px;
+    background-color: var(--btn-bg);
+    color: var(--primary-text);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.add-review .submit-review:hover {
+    background-color: var(--btn-hover-bg);
+    transform: scale(1.05);
+}
+
+.add-review .submit-review:active {
+    background-color: var(--btn-active-bg);
+    transform: scale(0.95);
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+    .reviews,
+    .add-review {
+        padding: 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .reviews h2,
+    .add-review h3 {
+        font-size: 18px;
+    }
+
+    .review .review-title,
+    .add-review label {
+        font-size: 16px;
+    }
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

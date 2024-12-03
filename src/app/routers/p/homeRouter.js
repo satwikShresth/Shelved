@@ -3,6 +3,8 @@ import { getVisibilityOptions } from "crud/visibility.js";
 import { getShelvesByUserId } from "crud/shelf.js";
 import services from "services/index.js";
 import { getDetailedShelfContent } from "middlewares/tmdbMiddleware.js";
+import { getContentById } from "crud/content.js";
+import { getReviewsByContentID } from "crud/reveiw.js";
 import axios from 'axios';
 
 const getHomeRouter = () => {
@@ -101,7 +103,7 @@ const getHomeRouter = () => {
       }
 
       res.render("profile", {
-        user: { name: res.locals.username },
+        username: res.locals.username,
         shelves,
         shelvesData: req.detailedShelves,
         visibilityOptions: visibilityOptionsResponse.visibilityOptions,
@@ -109,6 +111,50 @@ const getHomeRouter = () => {
     } catch (error) {
       console.error("Error loading profile:", error.message);
       res.status(500).send("Failed to load profile.");
+    }
+  });
+
+  router.get("/content/:content_id", async (req, res) => {
+    const { content_id } = req.params;
+
+    try {
+      const { success, message, data } = await getContentById(content_id);
+
+      if (!success) {
+        throw new Error(`Cannot get External ID: ${message}`);
+      }
+
+      const { external_id, content_type, source } = data;
+
+      const service = services[source];
+
+      const item = await service.getDetailsById(external_id, content_type);
+      const reviews = await getReviewsByContentID(content_id);
+
+      console.log(reviews);
+
+      if (!item) {
+        throw new Error("Content not found");
+      }
+
+      res.render("media_page", {
+        username: res.locals.username,
+        data: item,
+        media_type: content_type,
+        content_id: content_id,
+        source,
+        reviews,
+
+        formatDate: (inputDate) =>
+          new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }).format(new Date(inputDate)),
+      });
+    } catch (error) {
+      console.error("Error fetching content:", error.message);
+      res.status(500).send("Failed to load content page.");
     }
   });
 

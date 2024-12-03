@@ -1,5 +1,10 @@
-<div class="media-item">
-    <% if (showAddButton) { %>
+<div 
+    class="media-item" 
+    onclick="<%= openMediaCallback %>('<%= media.id %>', '<%= source %>', '<%= media.media_type %>')"
+    tabindex="0"
+    role="button"
+    aria-label="<%= media.name || media.title %>"
+>    <% if (showAddButton) { %>
         <button class="add-button" onclick="<%= addButtonCallback %>('<%= media.id %>', '<%= source %>', '<%= media.media_type %>')">+</button>
     <% } %>
     <img src="<%= media.poster %>" alt="<%= media.name || media.title %> Poster" class="poster" />
