@@ -44,6 +44,7 @@ const getHomeRouter = () => {
     for (let i = 0; i < 5; i++) {
       let movie = moviesData.results[i];
       trendingMovies.push({
+        id: movie.id,
         title: movie.title,
         release_date: movie.release_date,
         overview: movie.overview,
@@ -54,6 +55,7 @@ const getHomeRouter = () => {
 
       let show = showsData.results[i];
       trendingShows.push({
+        id: show.id,
         title: show.name,
         release_date: show.first_air_date,
         overview: movie.overview,
@@ -64,12 +66,12 @@ const getHomeRouter = () => {
 
       let book = booksData.data.docs[i];
       trendingBooks.push({
+        id: book.key,
         title: book.title,
         release_date: book.first_publish_year.toString(),
         overview: book.author_name[0],
         vote_average: book.ratings_average,
         poster: `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`,
-        external_id: book.key,
         media_type: 'book',
       });
     }
