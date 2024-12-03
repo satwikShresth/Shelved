@@ -10,7 +10,7 @@ export const followUser = async (followerUsername, followingUsername) => {
     if (!follower) {
       return {
         success: false,
-        error: "Follower not found",
+        error: "User not found",
       };
     }
 
@@ -34,9 +34,9 @@ export const followUser = async (followerUsername, followingUsername) => {
       };
     }
 
-    await db("user_follows").insert({
-      follower_id: follower.id,
-      following_id: following.id,
+    await db("followings").insert({
+      user_id: follower.id,
+      followed_user_id: following.id,
     });
 
     return {
@@ -56,11 +56,11 @@ export const followUser = async (followerUsername, followingUsername) => {
 export const getFollowers = async (username) => {
   try {
     const followers = await db("users AS followers")
-      .join("user_follows", "user_follows.follower_id", "followers.id")
-      .join("users AS following", "user_follows.following_id", "following.id")
+      .join("followings", "followings.user_id", "followers.id")
+      .join("users AS following", "followings.followed_user_id", "following.id")
       .where("following.username", username)
-      .select("followers.username", "user_follows.created_at as followed_at")
-      .orderBy("user_follows.created_at", "desc");
+      .select("followers.username", "followings.created_at as followed_at")
+      .orderBy("followings.created_at", "desc");
 
     return {
       success: true,
@@ -79,11 +79,11 @@ export const getFollowers = async (username) => {
 export const getFollowing = async (username) => {
   try {
     const following = await db("users AS following")
-      .join("user_follows", "user_follows.following_id", "following.id")
-      .join("users AS follower", "user_follows.follower_id", "follower.id")
+      .join("followings", "followings.followed_user_id", "following.id")
+      .join("users AS follower", "followings.user_id", "follower.id")
       .where("follower.username", username)
-      .select("following.username", "user_follows.created_at as followed_at")
-      .orderBy("user_follows.created_at", "desc");
+      .select("following.username", "followings.created_at as followed_at")
+      .orderBy("followings.created_at", "desc");
 
     return {
       success: true,
