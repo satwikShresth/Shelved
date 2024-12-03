@@ -34,7 +34,7 @@ const getHomeRouter = () => {
       });
     const booksData = await axios
       .request(
-        `https://openlibrary.org/search.json?q=subject:fiction&sort=readinglog&limit=5&fields=title,author_name,cover_i,first_publish_year,ratings_average`
+        `https://openlibrary.org/search.json?q=subject:fiction&sort=readinglog&limit=5&fields=title,author_name,cover_i,first_publish_year,ratings_average,key`
       )
       .catch((err) => console.error(err))
 
@@ -69,6 +69,7 @@ const getHomeRouter = () => {
         overview: book.author_name[0],
         vote_average: book.ratings_average,
         poster: `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`,
+        external_id: book.key,
         media_type: 'book',
       });
     }
