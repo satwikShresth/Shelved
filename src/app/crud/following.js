@@ -53,6 +53,60 @@ export const followUser = async (followerUsername, followingUsername) => {
   }
 };
 
+export const unfollowUser = async (followerUsername, followingUsername) => {
+  try {
+    const follower = await db("users")
+      .select("id")
+      .where({ username: followerUsername })
+      .first();
+
+    if (!follower) {
+      return {
+        success: false,
+        error: "User not found",
+      };
+    }
+
+    const following = await db("users")
+      .select("id")
+      .where({ username: followingUsername })
+      .first();
+
+    if (!following) {
+      return {
+        success: false,
+        error: "User to unfollow not found",
+      };
+    }
+
+    const deleted = await db("followings")
+      .where({
+        user_id: follower.id,
+        followed_user_id: following.id,
+      })
+      .del();
+
+    if (deleted === 0) {
+      return {
+        success: false,
+        error: "You are not following this user",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Successfully unfollowed user",
+    };
+  } catch (error) {
+    console.error("Unfollow Error:", error);
+    return {
+      success: false,
+      error: "Failed to unfollow user",
+      details: error.message,
+    };
+  }
+};
+
 export const getFollowers = async (username) => {
   try {
     const followers = await db("users AS followers")

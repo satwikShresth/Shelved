@@ -1,15 +1,15 @@
 import { Router } from "express";
-import { followUser, getFollowers, getFollowing } from "crud/following.js";
+import { unfollowUser, followUser, getFollowers, getFollowing } from "crud/following.js";
 
 const getFriendRouter = () => {
   const router = Router();
 
-  router.get("/friends", async (req, res) => {
+  router.get("/friends", async (_, res) => {
     try {
-      const user_id = res.locals.username;
+      const username = res.locals.username;
 
-      const followersResponse = await getFollowers(user_id);
-      const followingResponse = await getFollowing(user_id);
+      const followersResponse = await getFollowers(username);
+      const followingResponse = await getFollowing(username);
 
       if (!followersResponse.success || !followingResponse.success) {
         throw new Error("Failed to fetch follow data");
@@ -25,30 +25,70 @@ const getFriendRouter = () => {
       res.status(500).send("Failed to load friends page.");
     }
   });
-
-  router.get("/api/friends/search", async (req, res) => {
+  router.post("/api/friends/add", async (req, res) => {
     try {
-      const { query } = req.query;
+      const { userToFollow } = req.body;
+      const username = res.locals.username;
 
-      if (!query) {
+      if (!userToFollow) {
         return res.status(400).json({
           success: false,
-          message: "Search query is required",
+          message: "Username to follow is required",
         });
       }
 
-      const searchResponse = await searchUsers(query);
+      const followResponse = await followUser(username, userToFollow);
 
-      if (!searchResponse.success) {
-        throw new Error(searchResponse.message || "Search failed");
+      if (!followResponse.success) {
+        return res.status(400).json({
+          success: false,
+          message: followResponse.error || "Failed to follow user",
+        });
       }
 
-      res.json(searchResponse.users);
+      res.json({
+        success: true,
+        message: followResponse.message,
+      });
     } catch (error) {
-      console.error("Error searching users:", error.message);
+      console.error("Error following user:", error.message);
       res.status(500).json({
         success: false,
-        message: "Failed to search users",
+        message: "Failed to follow user",
+      });
+    }
+  });
+
+  router.post("/api/friends/remove", async (req, res) => {
+    try {
+      const { userToUnfollow } = req.body;
+      const username = res.locals.username;
+
+      if (!userToUnfollow) {
+        return res.status(400).json({
+          success: false,
+          message: "Username to unfollow is required",
+        });
+      }
+
+      const followResponse = await unfollowUser(username, userToUnfollow);
+
+      if (!followResponse.success) {
+        return res.status(400).json({
+          success: false,
+          message: followResponse.error || "Failed to unfollow user",
+        });
+      }
+
+      res.json({
+        success: true,
+        message: followResponse.message,
+      });
+    } catch (error) {
+      console.error("Error unfollowing user:", error.message);
+      res.status(500).json({
+        success: false,
+        message: "Failed to unfollow user",
       });
     }
   });

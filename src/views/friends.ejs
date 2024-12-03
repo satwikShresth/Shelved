@@ -11,102 +11,57 @@
       background-color: #121212;
       color: #ffffff;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
-    .page-content {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
       padding: 20px;
     }
 
-    .main-container {
-      background-color: #1e1e1e;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-      width: 80%;
-      max-width: 800px;
-    }
-
-    .tabs {
-      display: flex;
-      margin-bottom: 20px;
-      border-bottom: 1px solid #444444;
-    }
-
-    .tab {
-      padding: 10px 20px;
-      cursor: pointer;
-      color: #cccccc;
-      border-bottom: 2px solid transparent;
-      margin-right: 20px;
-    }
-
-    .tab.active {
-      color: #ff6600;
-      border-bottom: 2px solid #ff6600;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    #searchForm {
-      display: flex;
-      margin-bottom: 20px;
-      gap: 10px;
-    }
-
-    #searchInput {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #444444;
-      border-radius: 4px;
-      background-color: #333333;
-      color: #ffffff;
-    }
-
-    #searchForm button {
-      padding: 10px 20px;
-      border: none;
-      background-color: #ff6600;
-      color: white;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    #searchForm button:hover {
-      background-color: #e65c00;
-    }
-
-    .user-list {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .user-card {
-      background-color: #2e2e2e;
-      padding: 15px;
-      border-radius: 8px;
+    .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      color: #ff6600;
+      margin: 0;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .column {
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .column h2 {
+      color: #ff6600;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #2e2e2e;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
     }
 
     .user-info {
       display: flex;
       align-items: center;
-      gap: 15px;
     }
 
     .user-avatar {
@@ -117,215 +72,265 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
       font-weight: bold;
+      margin-right: 15px;
     }
 
-    .user-details h3 {
-      margin: 0;
-      color: #ff6600;
-    }
-
-    .user-details p {
-      margin: 5px 0 0;
-      color: #cccccc;
-      font-size: 14px;
+    .user-name {
+      font-size: 16px;
     }
 
     .follow-btn {
-      padding: 8px 16px;
+      background-color: #ff6600;
+      color: white;
       border: none;
+      padding: 10px 20px;
       border-radius: 4px;
       cursor: pointer;
-      font-weight: bold;
-      transition: all 0.3s ease;
     }
 
-    .follow-btn.following {
-      background-color: #2e2e2e;
-      color: #cccccc;
-      border: 1px solid #cccccc;
+    .follow-btn:hover {
+      background-color: #e65c00;
     }
 
-    .follow-btn.not-following {
+    .unfollow-btn {
+      background-color: transparent;
+      color: #ff6600;
+      border: 1px solid #ff6600;
+      padding: 8px 8px;
+      margin-left: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .unfollow-btn:hover {
       background-color: #ff6600;
       color: white;
     }
 
-    .spinner {
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top: 4px solid #ffffff;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
+    .modal {
       display: none;
-      margin: 20px auto;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      align-items: center;
+      justify-content: center;
     }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    .modal.active {
+      display: flex;
     }
 
-    <%- include('static/css/main.css') %>
-    <%- include('static/css/profile.css') %>
-    <%- include('static/css/media.css') %>
+    .modal-content {
+      background-color: #1e1e1e;
+      padding: 30px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .modal-header {
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      color: #ff6600;
+      margin: 0;
+    }
+
+    #followForm {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    #usernameInput {
+      padding: 10px;
+      background-color: #333333;
+      border: 1px solid #444444;
+      border-radius: 4px;
+      color: white;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .cancel-btn {
+      background-color: #333333;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .cancel-btn:hover {
+      background-color: #444444;
+    }
+
+    #statusMessage {
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .success {
+      background-color: #1b5e20;
+    }
+
+    .error {
+      background-color: #b71c1c;
+    }
+
+    @media (max-width: 768px) {
+      .columns {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
   <%- include('navbar', { username }) %>
-  
-  <div class="page-content">
-    <div class="main-container">
-      <div class="tabs">
-        <div class="tab active" data-tab="search">Find Users</div>
-        <div class="tab" data-tab="followers">Followers (<%= followers.length %>)</div>
-        <div class="tab" data-tab="following">Following (<%= following.length %>)</div>
-      </div>
 
-      <div class="tab-content active" id="search">
-        <form id="searchForm">
-          <input type="text" id="searchInput" placeholder="Search by username..." required>
-          <button type="submit">Search</button>
-        </form>
+  <div class="container">
+    <div class="header">
+      <h1>Friends</h1>
+      <button class="follow-btn" onclick="openModal()">Follow New User</button>
+    </div>
 
-        <div class="spinner" id="spinner"></div>
-        <div id="resultsContainer"></div>
-      </div>
-
-      <div class="tab-content" id="followers">
+    <div class="columns">
+      <div class="column">
+        <h2>Followers (<%= followers.length %>)</h2>
         <div class="user-list">
           <% followers.forEach(function(follower) { %>
             <div class="user-card">
               <div class="user-info">
-                <div class="user-avatar"><%= follower[0].toUpperCase() %></div>
-                <div class="user-details">
-                  <h3>@<%= follower %></h3>
-                </div>
+                <div class="user-avatar"><%= follower.username[0].toUpperCase() %></div>
+                <div class="user-name">@<%= follower.username %></div>
               </div>
             </div>
           <% }); %>
         </div>
       </div>
 
-      <div class="tab-content" id="following">
+      <div class="column">
+        <h2>Following (<%= following.length %>)</h2>
         <div class="user-list">
           <% following.forEach(function(followedUser) { %>
             <div class="user-card">
               <div class="user-info">
-                <div class="user-avatar"><%= followedUser[0].toUpperCase() %></div>
-                <div class="user-details">
-                  <h3>@<%= followedUser %></h3>
-                </div>
+                <div class="user-avatar"><%= followedUser.username[0].toUpperCase() %></div>
+                <div class="user-name">@<%= followedUser.username %></div>
               </div>
+              <button 
+                class="unfollow-btn" 
+                onclick="unfollowUser('<%= followedUser.username %>')"
+              >
+                Unfollow
+              </button>
             </div>
           <% }); %>
         </div>
       </div>
     </div>
   </div>
-<script>
-    const currentUsername = '<%= username %>';
 
-    async function followUser(username, buttonElement) {
+  <div class="modal" id="followModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Follow New User</h2>
+      </div>
+      <div id="statusMessage"></div>
+      <form id="followForm">
+        <input type="text" id="usernameInput" placeholder="Enter username to follow..." required>
+        <div class="button-group">
+          <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="follow-btn">Follow</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('followModal');
+    const followForm = document.getElementById('followForm');
+    const statusMessage = document.getElementById('statusMessage');
+
+    function openModal() {
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      followForm.reset();
+      statusMessage.style.display = 'none';
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    async function unfollowUser(username) {
       try {
-        const response = await fetch('/p/api/friends/follow', {
+        const response = await fetch('/p/api/friends/remove', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            followingUsername: username
-          })
+          body: JSON.stringify({ userToUnfollow: username })
         });
 
         const result = await response.json();
         
         if (result.success) {
-          buttonElement.textContent = 'Following';
-          buttonElement.classList.remove('not-following');
-          buttonElement.classList.add('following');
+          window.location.reload();
         } else {
-          console.error('Failed to follow:', result.error);
+          alert(result.message || 'Failed to unfollow user');
         }
       } catch (error) {
-        console.error('Error following user:', error);
+        alert('Failed to unfollow user. Please try again.');
       }
     }
 
-    async function checkFollowStatus(username) {
+    followForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const userToFollow = document.getElementById('usernameInput').value;
+      
       try {
-        const response = await fetch(`/p/api/friends/following`);
+        const response = await fetch('/p/api/friends/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userToFollow })
+        });
+
         const result = await response.json();
         
+        statusMessage.style.display = 'block';
         if (result.success) {
-          return result.following.some(user => user === username);
-        }
-        return false;
-      } catch (error) {
-        console.error('Error checking follow status:', error);
-        return false;
-      }
-    }
-
-    document.getElementById("searchForm").addEventListener("submit", async function (event) {
-      event.preventDefault();
-
-      const username = document.getElementById("searchInput").value;
-      const spinner = document.getElementById("spinner");
-      const resultsContainer = document.getElementById("resultsContainer");
-
-      spinner.style.display = "block";
-      resultsContainer.innerHTML = "";
-
-      try {
-        const response = await fetch(`/p/api/friends/search?username=${username}`);
-        const results = await response.json();
-
-        for (const user of results) {
-          const isFollowing = await checkFollowStatus(user.username);
+          statusMessage.className = 'success';
+          statusMessage.textContent = result.message;
+          followForm.reset();
           
-          const card = document.createElement("div");
-          card.className = "user-card";
-          card.innerHTML = `
-            <div class="user-info">
-              <div class="user-avatar">${user.username[0].toUpperCase()}</div>
-              <div class="user-details">
-                <h3>@${user.username}</h3>
-                <p>Joined ${new Date(user.created_at).toLocaleDateString()}</p>
-              </div>
-            </div>
-            ${currentUsername !== user.username ? `
-              <button class="follow-btn ${isFollowing ? 'following' : 'not-following'}">
-                ${isFollowing ? 'Following' : 'Follow'}
-              </button>
-            ` : ''}
-          `;
-
-          const followBtn = card.querySelector('.follow-btn');
-          if (followBtn && !isFollowing) {
-            followBtn.addEventListener('click', () => followUser(user.username, followBtn));
-          }
-
-          resultsContainer.appendChild(card);
+          setTimeout(() => window.location.reload(), 750);
+        } else {
+          statusMessage.className = 'error';
+          statusMessage.textContent = result.message;
         }
       } catch (error) {
-        console.error("Error fetching search results:", error);
-        resultsContainer.innerHTML = '<p>Error fetching results. Please try again.</p>';
-      } finally {
-        spinner.style.display = "none";
+        statusMessage.style.display = 'block';
+        statusMessage.className = 'error';
+        statusMessage.textContent = 'Failed to follow user. Please try again.';
       }
-    });
-
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
-      });
     });
   </script>
 </body>
