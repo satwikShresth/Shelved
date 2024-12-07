@@ -1,11 +1,11 @@
 import db from "db";
 
-export const followUser = async (followerUsername, followingUsername) => {
+const getUsersByUsernames = async (followerUsername, followingUsername) => {
   try {
-    const follower = await db("users")
-      .select("id")
-      .where({ username: followerUsername })
-      .first();
+    const [follower, following] = await Promise.all([
+      db("users").select("id").where({ username: followerUsername }).first(),
+      db("users").select("id").where({ username: followingUsername }).first(),
+    ]);
 
     if (!follower) {
       return {
@@ -14,19 +14,42 @@ export const followUser = async (followerUsername, followingUsername) => {
       };
     }
 
-    const following = await db("users")
-      .select("id")
-      .where({ username: followingUsername })
-      .first();
-
     if (!following) {
       return {
         success: false,
-        error: "User to follow not found",
+        error: "Target user not found",
       };
     }
 
-    // Prevent self-follows. This is specified in the DB schema too but just in case
+    return {
+      success: true,
+      follower,
+      following,
+    };
+  } catch (error) {
+    console.error("Get Users Error:", error);
+    return {
+      success: false,
+      error: "Failed to get users",
+      details: error.message,
+    };
+  }
+};
+
+export const followUser = async (followerUsername, followingUsername) => {
+  try {
+    const result = await getUsersByUsernames(
+      followerUsername,
+      followingUsername,
+    );
+
+    if (!result.success) {
+      return result;
+    }
+
+    const { follower, following } = result;
+
+    // Prevent self-follows
     if (follower.id === following.id) {
       return {
         success: false,
@@ -55,29 +78,16 @@ export const followUser = async (followerUsername, followingUsername) => {
 
 export const unfollowUser = async (followerUsername, followingUsername) => {
   try {
-    const follower = await db("users")
-      .select("id")
-      .where({ username: followerUsername })
-      .first();
+    const result = await getUsersByUsernames(
+      followerUsername,
+      followingUsername,
+    );
 
-    if (!follower) {
-      return {
-        success: false,
-        error: "User not found",
-      };
+    if (!result.success) {
+      return result;
     }
 
-    const following = await db("users")
-      .select("id")
-      .where({ username: followingUsername })
-      .first();
-
-    if (!following) {
-      return {
-        success: false,
-        error: "User to unfollow not found",
-      };
-    }
+    const { follower, following } = result;
 
     const deleted = await db("followings")
       .where({
