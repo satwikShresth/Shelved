@@ -3,14 +3,16 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { authMiddleware } from 'middlewares/authMiddleware.js';
 
-
-import getLandingRouter from "routers/landingRouter.js";
-import getAuthRouter from "routers/api/auth/authRouter.js";
-import getHomeRouter from "routers/p/homeRouter.js";
-import getShelfRouter from "routers/p/api/shelf/shelfRouter.js";
-import getSearchRouter from "routers/p/searchRouter.js";
-import {getFriendViewRouter, getFriendApiRouter} from "routers/p/friendRouter.js";
-import getContentRouter from "routers/p/api/content/contentRouter.js";
+import getLandingRouter from 'routers/landingRouter.js';
+import getAuthRouter from 'routers/api/auth/authRouter.js';
+import getHomeRouter from 'routers/p/homeRouter.js';
+import getShelfRouter from 'routers/p/api/shelf/shelfRouter.js';
+import getSearchRouter from 'routers/p/searchRouter.js';
+import {
+   getFriendApiRouter,
+   getFriendViewRouter,
+} from 'routers/p/friendRouter.js';
+import getContentRouter from 'routers/p/api/content/contentRouter.js';
 
 const port = 3000;
 const hostname = '0.0.0.0';
@@ -40,25 +42,25 @@ app.set('views', './views');
 app.use('/', getLandingRouter());
 app.use('/api/auth', getAuthRouter());
 //routes protected
-app.use("/p/", authMiddleware);
-app.use("/p/", getHomeRouter());
-app.use("/p/", getSearchRouter());
-app.use("/p/", getFriendViewRouter());
-app.use("/p/api/friends", getFriendApiRouter());
-app.use("/p/api/shelf", getShelfRouter());
-app.use("/p/api/content", getContentRouter());
+app.use('/p/', authMiddleware);
+app.use('/p/', getHomeRouter());
+app.use('/p/', getSearchRouter());
+app.use('/p/', getFriendViewRouter());
+app.use('/p/api/friends', getFriendApiRouter());
+app.use('/p/api/shelf', getShelfRouter());
+app.use('/p/api/content', getContentRouter());
 
-if (Deno.env.get("ENV") === "development") {
-  app.use((req, res, next) => {
-    res.set(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate, proxy-revalidate",
-    );
-    res.set("Pragma", "no-cache");
-    res.set("Expires", "0");
-    res.set("Surrogate-Control", "no-store");
-    next();
-  });
+if (Deno.env.get('ENV') === 'development') {
+   app.use((req, res, next) => {
+      res.set(
+         'Cache-Control',
+         'no-store, no-cache, must-revalidate, proxy-revalidate',
+      );
+      res.set('Pragma', 'no-cache');
+      res.set('Expires', '0');
+      res.set('Surrogate-Control', 'no-store');
+      next();
+   });
 }
 
 app.use((req, res, next) => {

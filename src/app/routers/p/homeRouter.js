@@ -21,9 +21,9 @@ const getHomeRouter = () => {
 
       const trendingData = {
          movies: await tmdb
-            .getTrending({ range: 'week', mediaType: 'movie' }),
+            .getTrending({ range: 'week', media_type: 'movie' }),
          shows: await tmdb
-            .getTrending({ range: 'week', mediaType: 'tv' }),
+            .getTrending({ range: 'week', media_type: 'tv' }),
          books: await openlibrary
             .getTrending(),
       };

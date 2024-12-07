@@ -24,6 +24,14 @@ export default class TMDBService extends Service {
       vote_average: 'vote_average',
       poster_path: 'poster_path',
       media_type: 'media_type',
+      tagline: 'tagline',
+      vote_average: 'vote_average',
+      staus: 'staus',
+      release_date: 'release_date',
+      genres: 'genres',
+      created_by: 'created_by',
+      networks: 'networks',
+      production_companies: 'production_companies',
    };
 
    constructor(apiKey) {
@@ -57,9 +65,11 @@ export default class TMDBService extends Service {
 
       const path = `${media_type}/${id}`;
       const rawData = await this.fetchData(path, { language });
-      return this.normalizeData(
+      const returnVal = this.normalizeData(
          rawData,
          this.media_box_mapping,
       );
+      returnVal.media_type = media_type;
+      return returnVal;
    }
 }
