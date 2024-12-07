@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Friends</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #121212;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      color: #ff9800;
+      margin: 0;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .column {
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .column h2 {
+      color: #ff9800;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #2e2e2e;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      background-color: #ff9800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+
+    .user-name {
+      font-size: 16px;
+    }
+
+    .follow-btn {
+      background-color: #ff9800;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .follow-btn:hover {
+      background-color: #ff9850;
+    }
+
+    .unfollow-btn {
+      background-color: transparent;
+      color: #ff9800;
+      border: 1px solid #ff9800;
+      padding: 8px 8px;
+      margin-left: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .unfollow-btn:hover {
+      background-color: #ff9800;
+      color: white;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background-color: #1e1e1e;
+      padding: 30px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .modal-header {
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      color: #ff9800;
+      margin: 0;
+    }
+
+    #followForm {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    #usernameInput {
+      padding: 10px;
+      background-color: #333333;
+      border: 1px solid #444444;
+      border-radius: 4px;
+      color: white;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .cancel-btn {
+      background-color: #333333;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .cancel-btn:hover {
+      background-color: #444444;
+    }
+
+    #statusMessage {
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .success {
+      background-color: #1b5e20;
+    }
+
+    .error {
+      background-color: #b71c1c;
+    }
+
+    @media (max-width: 768px) {
+      .columns {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include('navbar', { username }) %>
+
+  <div class="container">
+    <div class="header">
+      <h1>Friends</h1>
+      <button class="follow-btn" onclick="openModal()">Follow New User</button>
+    </div>
+
+    <div class="columns">
+      <div class="column">
+        <h2>Followers (<%= followers.length %>)</h2>
+        <div class="user-list">
+          <% followers.forEach(function(follower) { %>
+            <div class="user-card">
+              <div class="user-info">
+                <div class="user-avatar"><%= follower.username[0].toUpperCase() %></div>
+                <div class="user-name">@<%= follower.username %></div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <div class="column">
+        <h2>Following (<%= following.length %>)</h2>
+        <div class="user-list">
+          <% following.forEach(function(followedUser) { %>
+            <div class="user-card">
+              <div class="user-info">
+                <div class="user-avatar"><%= followedUser.username[0].toUpperCase() %></div>
+                <div class="user-name">@<%= followedUser.username %></div>
+              </div>
+              <button 
+                class="unfollow-btn" 
+                onclick="unfollowUser('<%= followedUser.username %>')"
+              >
+                Unfollow
+              </button>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="followModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Follow New User</h2>
+      </div>
+      <div id="statusMessage"></div>
+      <form id="followForm">
+        <input type="text" id="usernameInput" placeholder="Enter username to follow..." required>
+        <div class="button-group">
+          <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="follow-btn">Follow</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('followModal');
+    const followForm = document.getElementById('followForm');
+    const statusMessage = document.getElementById('statusMessage');
+
+    function openModal() {
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      followForm.reset();
+      statusMessage.style.display = 'none';
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    async function unfollowUser(username) {
+      try {
+        const response = await fetch('/p/api/friends/remove', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userToUnfollow: username })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          window.location.reload();
+        } else {
+          alert(result.message || 'Failed to unfollow user');
+        }
+      } catch (error) {
+        alert('Failed to unfollow user. Please try again.');
+      }
+    }
+
+    followForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const userToFollow = document.getElementById('usernameInput').value;
+      
+      try {
+        const response = await fetch('/p/api/friends/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userToFollow })
+        });
+
+        const result = await response.json();
+        
+        statusMessage.style.display = 'block';
+        if (result.success) {
+          statusMessage.className = 'success';
+          statusMessage.textContent = result.message;
+          followForm.reset();
+          
+          setTimeout(() => window.location.reload(), 750);
+        } else {
+          statusMessage.className = 'error';
+          statusMessage.textContent = result.message;
+        }
+      } catch (error) {
+        statusMessage.style.display = 'block';
+        statusMessage.className = 'error';
+        statusMessage.textContent = 'Failed to follow user. Please try again.';
+      }
+    });
+  </script>
+</body>
+</html>
