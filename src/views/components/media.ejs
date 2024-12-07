@@ -10,6 +10,9 @@
     <img src="<%= media.media_type === 'book' ? `https://covers.openlibrary.org/b/id/${media.poster_path}-M.jpg` : `https://image.tmdb.org/t/p/original${media.poster_path}`%>" alt="<%= media.name || media.title %> Poster" class="poster" />
     <div class="content">
         <p class="title"><%= media.title.length > 27 ? media.title.substring(0, 27) + '...' : media.title %></p>
+        <% if (media.creator) { %>
+            <p class="creator"><%= media.creator.length > 100 ? media.creator.substring(0, 120) + '...' : media.creator %></p>
+        <% } %>
         <% if (media.overview) { %>
             <p class="overview"><%= media.overview.length > 100 ? media.overview.substring(0, 120) + '...' : media.overview %></p>
         <% } else { %>

@@ -24,7 +24,7 @@
             <% Object.keys(trendingData).forEach(source => { %>
                 <h2>Top 5 Trending <%= String(source).charAt(0).toUpperCase() + String(source).slice(1) %></h2>
                 <div class="container">
-                    <% trendingData[source].forEach(media => { %>
+                    <% trendingData[source].forEach(media => { console.log(media)%>
                         <%- include('components/media', {
                             media: media,
                             source: source,
