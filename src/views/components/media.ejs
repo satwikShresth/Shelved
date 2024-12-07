@@ -4,7 +4,7 @@
     tabindex="0"
     role="button"
     aria-label="<%= media.name || media.title %>"
->    <% console.log(media); if (showAddButton) { %>
+>    <% if (showAddButton) { %>
         <button class="add-button" onclick="<%= addButtonCallback %>('<%= media.id %>', '<%= source %>', '<%= media.media_type %>', event)">+</button>
     <% } %>
     <img src="<%= media.media_type === 'book' ? `https://covers.openlibrary.org/b/id/${media.poster_path}-M.jpg` : `https://image.tmdb.org/t/p/original${media.poster_path}`%>" alt="<%= media.name || media.title %> Poster" class="poster" />

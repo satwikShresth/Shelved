@@ -20,7 +20,7 @@
                 <h2><%= shelf.name %></h2>
                 <div class="container">
                     <% if (shelvesData[shelf.name] && Array.isArray(shelvesData[shelf.name])) { %>
-                        <% shelvesData[shelf.name].forEach(item => { console.log(item) %>
+                        <% shelvesData[shelf.name].forEach(item => {%>
                             <%- include('components/media', { 
                                     media: item,
                                     source: item.source,

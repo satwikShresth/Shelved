@@ -57,7 +57,6 @@ export default class TMDBService extends Service {
 
       const path = `${media_type}/${id}`;
       const rawData = await this.fetchData(path, { language });
-      console.log(rawData);
       return this.normalizeData(
          rawData,
          this.media_box_mapping,
