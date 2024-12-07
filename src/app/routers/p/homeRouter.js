@@ -63,52 +63,10 @@ const getHomeRouter = () => {
          return res.status(500).send('Failed to fetch visibility options.');
       }
 
-      const formattedShelves = {};
-
-      shelves.forEach((shelf) => {
-         const formattedShelf = [];
-
-         req.detailedShelves[shelf.name].forEach((media) => {
-            if (media.media_type === 'movie') {
-               formattedShelf.push({
-                  id: media.id,
-                  title: media.title,
-                  release_date: media.release_date,
-                  overview: media.overview,
-                  vote_average: media.vote_average,
-                  poster_path: media.poster_path,
-                  media_type: 'movie',
-               });
-            } else if (media.media_type === 'tv') {
-               formattedShelf.push({
-                  id: media.id,
-                  title: media.name,
-                  release_date: media.first_air_date,
-                  overview: media.overview,
-                  vote_average: media.vote_average,
-                  poster_path: media.poster_path,
-                  media_type: 'tv',
-               });
-            } else if (media.media_type === 'book') {
-               formattedShelf.push({
-                  id: media.key,
-                  title: media.title,
-                  release_date: media.first_publish_year.toString(),
-                  overview: media.author_name[0],
-                  vote_average: media.ratings_average,
-                  poster_path: media.cover_i,
-                  media_type: 'book',
-               });
-            }
-         });
-
-         formattedShelves[shelf.name] = formattedShelf;
-      });
-
       res.render('profile', {
          username: res.locals.username,
          shelves,
-         shelvesData: formattedShelves,
+         shelvesData: req.detailedShelves,
          visibilityOptions: visibilityOptionsResponse.visibilityOptions,
       });
    });
@@ -125,15 +83,11 @@ const getHomeRouter = () => {
       const { external_id, media_type, source } = data;
 
       const service = services[source];
-      console.log(service);
-      console.log(external_id, source, media_type);
       const item = await service.getDetailsById({
          id: external_id,
          media_type,
       });
       const reviews = await getReviewsByContentID(content_id);
-
-      console.log(reviews);
 
       if (!item) {
          throw new Error('Content not found');

@@ -16,6 +16,28 @@ export function validateRange(range) {
 }
 
 export default class OLService extends Service {
+   media_box_mapping = {
+      id: 'key',
+      release_date: 'first_publish_year',
+      vote_average: 'ratings_average',
+      poster_path: 'cover_i',
+   };
+
+   async media_box_mapping_func(item) {
+      item.release_date = item.release_date.toString();
+      item.media_type = 'book';
+
+      const rawData = await this.fetchData(`${item.id}.json`);
+
+      item.title = rawData.title || 'unavailable';
+
+      item.overview = (typeof rawData.description === 'string')
+         ? rawData.description
+         : (rawData.description && rawData.description.value) || 'unavailable';
+
+      return item;
+   }
+
    constructor(apiKey = 'not-required') {
       super(apiKey);
       this.baseUrl = 'https://openlibrary.org/';
@@ -34,29 +56,49 @@ export default class OLService extends Service {
       };
 
       const rawData = await this.fetchData(path, queryParams);
-      console.log(rawData.docs);
-      const mapping = {
-         id: 'key',
-         title: 'title',
-         release_date: 'first_publish_year',
-         overview: 'author_name',
-         vote_average: 'ratings_average',
-         poster_path: 'cover_i',
-      };
 
-      return this.normalizeDataList(rawData.docs, mapping).map((item) => {
-         item.release_date = item.release_date.toString();
-         item.overview = item.overview[0];
-         item.media_type = 'book';
-         return item;
-      });
+      // Validate that rawData.docs is present and is an array
+      if (!rawData.docs || !Array.isArray(rawData.docs)) {
+         throw new Error(
+            'Invalid response format: expected rawData.docs to be an array',
+         );
+      }
+
+      const normalizedData = await this.normalizeDataList(
+         rawData.docs,
+         this.media_box_mapping,
+      );
+
+      return await Promise.all(
+         normalizedData.map((item) => this.media_box_mapping_func(item)),
+      );
    }
 
    async getDetailsById({ id }) {
       if (!id) throw new Error('ID is required');
-      const path = `${id}.json`;
-      const ret = await this.fetchData(path);
-      console.log(ret);
-      return ret;
+
+      const rawData = await this.fetchData('search.json', {
+         q: `key:${id}`,
+         limit: 10,
+      });
+
+      // Validate that rawData.docs is present and is an array
+      if (!rawData.docs || !Array.isArray(rawData.docs)) {
+         throw new Error(
+            'Invalid response format: expected rawData.docs to be an array',
+         );
+      }
+
+      // Find the object with the matching key (ID)
+      const item = rawData.docs.find((doc) => doc.key === id);
+
+      if (!item) {
+         throw new Error(`No item found with key: ${id}`);
+      }
+      const normalizedItem = await this.normalizeData(
+         item,
+         this.media_box_mapping,
+      );
+      return this.media_box_mapping_func(normalizedItem);
    }
 }

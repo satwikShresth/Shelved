@@ -20,7 +20,7 @@
                 <h2><%= shelf.name %></h2>
                 <div class="container">
                     <% if (shelvesData[shelf.name] && Array.isArray(shelvesData[shelf.name])) { %>
-                        <% shelvesData[shelf.name].forEach(item => {%>
+                        <% shelvesData[shelf.name].forEach(item => { console.log(item) %>
                             <%- include('components/media', { 
                                     media: item,
                                     source: item.source,
@@ -62,6 +62,8 @@
     </div>
 
     <script>
+    const shelves = <%- JSON.stringify(shelves) %>;
+    const shelvesData = <%- JSON.stringify(shelvesData) %>;
     <%- include('static/js/profile.js') %>
     <%- include('static/js/media.js') %>
     </script>
