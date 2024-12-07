@@ -24,7 +24,7 @@ export default class TMDBService extends Service {
   }
 
   async getTrending({
-    range = "day",
+    range = "week",
     mediaType = "all",
     language = this.defaultLanguage,
   } = {}) {
