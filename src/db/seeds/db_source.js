@@ -5,4 +5,5 @@
 export const seed = async function (knex) {
   await knex("db_source").del();
   await knex("db_source").insert([{ name: "tmdb" }]);
+  await knex("db_source").insert([{ name: "openlibrary" }]);
 };

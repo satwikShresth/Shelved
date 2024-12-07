@@ -1,13 +1,13 @@
-import { Router } from "express";
+import { Router } from 'express';
 
 const getSearchRouter = () => {
-  const router = Router();
+   const router = Router();
 
-  router.get("/search", async (_req, res) => {
-    res.render("search");
-  });
+   router.get('/search', (_req, res) => {
+      res.render('search');
+   });
 
-  return router;
+   return router;
 };
 
 export default getSearchRouter;
