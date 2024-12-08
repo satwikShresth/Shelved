@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Discover</title>
+    <style>
+    <%- include('static/css/main.css') %>
+    <%- include('static/css/profile.css') %>
+    <%- include('static/css/media.css') %>
+
+    .discover-feed {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .more-items-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        margin-left: 1rem;
+    }
+
+    .more-items-indicator span {
+        color: #888;
+        font-size: 0.9rem;
+    }
+
+    .shelf-section h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        color: #ccc;
+    }
+    </style>
+</head>
+<body>
+    <%- include('navbar', { username }) %>
+
+    <div class="content">
+        <h1>Discover</h1>
+        <div class="discover-feed">
+            <% Object.entries(mutualData.shelves).forEach(([mutualUsername, userShelves]) => { %>
+                <% Object.entries(userShelves).forEach(([shelfName, items]) => { %>
+                    <% if (Array.isArray(items) && items.length > 0) { %>
+                        <div class="shelf-section">
+                            <h2><%= mutualUsername %> added the following to their shelf <%= shelfName %>:</h2>
+                            <div class="container">
+                                <%- include('components/media', { 
+                                    media: items[0],
+                                    source: items[0].source,
+                                    showAddButton: false,
+                                    openMediaCallback: 'openMediaPage'
+                                }) %>
+                                
+                                <% if (items.length > 1) { %>
+                                    <%- include('components/media', { 
+                                        media: items[1],
+                                        source: items[1].source,
+                                        showAddButton: false,
+                                        openMediaCallback: 'openMediaPage'
+                                    }) %>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% } %>
+                <% }); %>
+            <% }); %>
+        </div>
+    </div>
+
+    <script>
+    const mutualData = <%- JSON.stringify(mutualData) %>;
+    <%- include('static/js/profile.js') %>
+    <%- include('static/js/media.js') %>
+    </script>
+</body>
+</html>
