@@ -7,7 +7,10 @@ import getLandingRouter from 'routers/landingRouter.js';
 import getAuthRouter from 'routers/api/auth/authRouter.js';
 import getHomeRouter from 'routers/p/homeRouter.js';
 import getShelfRouter from 'routers/p/api/shelf/shelfRouter.js';
-import getSearchRouter from 'routers/p/searchRouter.js';
+import {
+   getSearchViewRouter,
+   getSearchApiRouter,
+} from 'routers/p/searchRouter.js';
 import {
    getFriendApiRouter,
    getFriendViewRouter,
@@ -44,14 +47,15 @@ app.use('/api/auth', getAuthRouter());
 //routes protected
 app.use('/p/', authMiddleware);
 app.use('/p/', getHomeRouter());
-app.use('/p/', getSearchRouter());
+app.use('/p/', getSearchViewRouter());
 app.use('/p/', getFriendViewRouter());
 app.use('/p/api/friends', getFriendApiRouter());
+app.use('/p/api/search', getSearchApiRouter());
 app.use('/p/api/shelf', getShelfRouter());
 app.use('/p/api/content', getContentRouter());
 
 if (Deno.env.get('ENV') === 'development') {
-   app.use((req, res, next) => {
+   app.use((_req, res, next) => {
       res.set(
          'Cache-Control',
          'no-store, no-cache, must-revalidate, proxy-revalidate',

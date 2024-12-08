@@ -59,6 +59,33 @@ export default class TMDBService extends Service {
       return this.normalizeDataList(rawData.results, this.media_box_mapping);
    }
 
+   async search(name, media_type = 'movie', language = this.defaultLanguage) {
+      if (!name) throw new Error('Name is required');
+
+      const path = `search/${media_type}`;
+      const rawData = await this.fetchData(path, { query: name, language });
+
+      return this.normalizeDataList(rawData.results, this.media_box_mapping);
+   }
+
+   async getGenre(genre = 'Action', language = this.defaultLanguage) {
+      if (!genre) throw new Error('Name is required');
+
+      const genresData = await this.fetchData(`genre/movie/list`);
+
+      const genreMatch = genresData.genres.find(
+         (g) => g.name.toLowerCase() === genre.toLowerCase(),
+      );
+
+      if (!genreMatch) {
+         throw new Error(`Genre "${genre}" not found`);
+      }
+
+      const path = `discover/movie/${genre}`;
+      const rawData = await this.fetchData(path, { query: genre, language });
+      return this.normalizeDataList(rawData.results, this.media_box_mapping);
+   }
+
    async getDetailsById({ id, media_type, language = this.defaultLanguage }) {
       if (!id) throw new Error('ID is required');
       validateMediaType(media_type);
