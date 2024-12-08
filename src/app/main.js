@@ -7,9 +7,7 @@ import getLandingRouter from 'routers/landingRouter.js';
 import getAuthRouter from 'routers/api/auth/authRouter.js';
 import getHomeRouter from 'routers/p/homeRouter.js';
 import getShelfRouter from 'routers/p/api/shelf/shelfRouter.js';
-import {
-   getSearchRouter,
-} from 'routers/p/searchRouter.js';
+import { getSearchRouter } from 'routers/p/searchRouter.js';
 import {
    getFriendApiRouter,
    getFriendViewRouter,

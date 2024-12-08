@@ -53,6 +53,7 @@ export default class TMDBService extends Service {
       const path = `trending/${media_type}/${range}`;
 
       const rawData = await this.fetchData(path, { language });
+      console.log(rawData);
 
       return this.normalizeDataList(rawData.results, this.media_box_mapping);
    }
@@ -62,6 +63,12 @@ export default class TMDBService extends Service {
 
       const path = `search/${media_type}`;
       const rawData = await this.fetchData(path, { query: name, language });
+
+      // Add media_type to all results since it doesn't show up for this endpoint
+      rawData.results = rawData.results.map((result) => ({
+         ...result,
+         media_type: media_type,
+      }));
 
       return this.normalizeDataList(rawData.results, this.media_box_mapping);
    }
