@@ -1,5 +1,8 @@
 <nav class="navbar">
-    <a href="/p/homepage">Home Page</a>
+    <div class="nav-links">
+        <a href="/">Home Page</a>
+        <a href="/p/discover">Discover</a>
+    </div>
 
     <div class="dropdown">
         <a href="#" class="dropbtn"><%= username %></a>
@@ -12,7 +15,6 @@
 </nav>
 
 <style>
-    /* Body layout adjustment */
     body {
         margin: 0;
         font-family: Arial, sans-serif;
@@ -21,7 +23,6 @@
         min-height: 100vh;
     }
 
-    /* Navbar styling */
     .navbar {
         display: flex;
         justify-content: space-between;
@@ -29,9 +30,15 @@
         padding: 1em;
         background-color: #1e1e1e;
         border-bottom: 1px solid #333;
-        height: 60px; /* Define fixed height */
+        height: 60px;
         box-sizing: border-box;
         z-index: 1000;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 1em;
+        align-items: center;
     }
 
     .navbar a {
@@ -46,7 +53,6 @@
         color: #e68900;
     }
 
-    /* Dropdown menu styling */
     .dropdown {
         padding: 0.5em 1em;
         position: relative;
@@ -87,9 +93,8 @@
         display: block;
     }
 
-    /* Main content wrapper ensures no overlap */
     .main-content {
-        flex: 1; /* Pushes the content below the navbar dynamically */
+        flex: 1;
         display: flex;
         flex-direction: column;
         box-sizing: border-box;
@@ -115,4 +120,3 @@
         }
     });
 </script>
-
