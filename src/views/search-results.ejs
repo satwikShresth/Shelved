@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results - Shelved</title>
+    <style>
+    <%- include('static/css/main.css') %>
+    <%- include('static/css/homepage.css') %>
+    <%- include('static/css/media.css') %>
+    </style>
+</head>
+<body>
+    <%- include('navbar', { username }) %>
+
+    <div class="main-content">
+        <div class="hero">
+            <h1>Search Results</h1>
+            <p>Showing results for "<%= query %>"</p>
+        </div>
+
+        <div class="content">
+            <% if (results && results.length > 0) { %>
+                <h2>Found <%= results.length %> <%= searchType %></h2>
+                <div class="container">
+                    <% results.forEach(item => { %>
+                        <%- include('components/media', { 
+                            media: item,
+                            source: searchType === 'books' ? 'openlibrary' : 'tmdb',
+                            showAddButton: true,
+                            addButtonCallback: 'showShelfModal',
+                            openMediaCallback: 'openMediaPage'
+                        }) %>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <p>No results found for "<%= query %>"</p>
+            <% } %>
+        </div>
+
+        <!-- Modal for selecting a shelf -->
+        <div id="shelfModal" class="modal">
+            <div class="modal-content">
+                <h3>Select a Shelf</h3>
+                <div id="shelfOptionsContainer">
+                    <% shelves.forEach(shelf => { %>
+                        <div class="shelf-option" onclick="addToShelf(selectedContentId, selectedSource, '<%= shelf.name %>', selectedMediaType)">
+                            <%= shelf.name %>
+                        </div>
+                    <% }) %>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="cancel-btn" onclick="closeShelfModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    <%- include('static/js/homepage.js') %>
+    <%- include('static/js/media.js') %>
+    </script>
+</body>
+</html>

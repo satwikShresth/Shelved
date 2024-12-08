@@ -1,75 +1,124 @@
 import { Router } from "express";
 import services from "services/index.js";
+import { getShelvesByUserId } from 'crud/shelf.js';
 
-export const getSearchViewRouter = () => {
+export const getSearchRouter = () => {
   const router = Router();
 
   router.get("/search", (_req, res) => {
     res.render("search");
   });
 
-  return router;
-};
-
-export const getSearchApiRouter = () => {
-  const router = Router();
-
-  router.get("/movies", async (req, res) => {
+  router.get("/search/movies", async (req, res) => {
     try {
       const { name } = req.query;
+      const { user_id } = req.session;
 
       if (!name) {
-        return res.status(400).json({
-          success: false,
-          error: "Search query is required",
+        return res.render("search", {
+          error: "Search query is required"
         });
       }
 
-      const tmdb = services["tmdb"];
-      const searchResults = await tmdb.search(name);
+      const shelvesResponse = await getShelvesByUserId(user_id);
+
+      const [searchResults, shelves] = await Promise.all([
+        services["tmdb"].search(name, "movie"),
+        shelvesResponse.shelves || []
+      ]);
+
       const data = searchResults.slice(0, 5);
 
-      return res.json({
-        success: true,
-        data,
+      return res.render("search-results", {
+        username: res.locals.username,
+        searchType: "movies",
+        query: name,
+        results: data,
+        shelves: shelves.success ? shelves.shelves : []
       });
+
     } catch (error) {
       console.error("Error searching movies:", error);
-      return res.status(500).json({
-        success: false,
+      return res.render("search", {
         error: "Failed to search movies",
-        details: error.message,
+        details: error.message
       });
     }
   });
 
-  router.get("/books", async (req, res) => {
+  router.get("/search/shows", async (req, res) => {
     try {
       const { name } = req.query;
+      const { user_id } = req.session;
 
       if (!name) {
-        return res.status(400).json({
-          success: false,
-          error: "Search query is required",
+        return res.render("search", {
+          error: "Search query is required"
         });
       }
 
-      const openlibrary = services['openlibrary'];
-      const searchResults = await openlibrary.search(name);
+      const shelvesResponse = await getShelvesByUserId(user_id);
+
+      const [searchResults, shelves] = await Promise.all([
+        services["tmdb"].search(name, "tv"),
+        shelvesResponse.shelves || []
+      ]);
+
       const data = searchResults.slice(0, 5);
 
-      return res.json({
-        success: true,
-        data,
+      return res.render("search-results", {
+        username: res.locals.username,
+        searchType: "shows",
+        query: name,
+        results: data,
+        shelves: shelves.success ? shelves.shelves : []
       });
+
     } catch (error) {
-      console.error("Error searching books:", error);
-      return res.status(500).json({
-        success: false,
-        error: "Failed to search books",
-        details: error.message,
+      console.error("Error searching shows:", error);
+      return res.render("search", {
+        error: "Failed to search shows",
+        details: error.message
       });
     }
   });
+
+  router.get("/search/books", async (req, res) => {
+    try {
+      const { name } = req.query;
+      const { user_id } = req.session;
+
+      if (!name) {
+        return res.render("search", {
+          error: "Search query is required"
+        });
+      }
+
+      const shelvesResponse = await getShelvesByUserId(user_id);
+
+      const [searchResults, shelves] = await Promise.all([
+        services["tmdb"].search(name),
+        shelvesResponse.shelves || []
+      ]);
+
+      const data = searchResults.slice(0, 5);
+
+      return res.render("search-results", {
+        username: res.locals.username,
+        searchType: "books",
+        query: name,
+        results: data,
+        shelves: shelves.success ? shelves.shelves : []
+      });
+
+    } catch (error) {
+      console.error("Error searching books:", error);
+      return res.render("search", {
+        error: "Failed to search books",
+        details: error.message
+      });
+    }
+  });
+
   return router;
 };

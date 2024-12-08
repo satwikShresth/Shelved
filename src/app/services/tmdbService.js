@@ -57,7 +57,7 @@ export default class TMDBService extends Service {
       return this.normalizeDataList(rawData.results, this.media_box_mapping);
    }
 
-   async search(name, media_type = 'movie', language = this.defaultLanguage) {
+   async search(name, media_type, language = this.defaultLanguage) {
       if (!name) throw new Error('Name is required');
 
       const path = `search/${media_type}`;
