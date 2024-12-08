@@ -6,14 +6,21 @@
   <title>Search Page</title>
   <style>
     body {
+      margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    .main-content {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #121212;
-      color: #ffffff;
+      min-height: calc(100vh - 60px);
+      padding: 20px;
+      box-sizing: border-box;
     }
 
     .search-page {
@@ -55,30 +62,34 @@
     #searchForm button {
       padding: 10px;
       border: none;
-      background-color: #ff6600;
+      background-color: #ff9800;
       color: white;
       cursor: pointer;
       border-radius: 0 4px 4px 0;
     }
 
-    #searchForm button:hover {
-      background-color: #e65c00;
+    body {
+      display: block;
     }
   </style>
 </head>
 <body>
-  <div class="search-page">
-    <h1>Search Movies and Books</h1>
+  <%- include('navbar', { username }) %>
+  
+  <div class="main-content">
+    <div class="search-page">
+      <h1>Search Movies and Books</h1>
 
-    <form id="searchForm">
-      <input type="text" id="searchInput" placeholder="Search by name or author..." required>
-      <select id="searchCategory" required>
-        <option value="movies">Movies</option>
-        <option value="shows">Shows</option>
-        <option value="books">Books</option>
-      </select>
-      <button type="submit">Search</button>
-    </form>
+      <form id="searchForm">
+        <input type="text" id="searchInput" placeholder="Search by name or author..." required>
+        <select id="searchCategory" required>
+          <option value="movies">Movies</option>
+          <option value="shows">Shows</option>
+          <option value="books">Books</option>
+        </select>
+        <button type="submit">Search</button>
+      </form>
+    </div>
   </div>
 
   <script>

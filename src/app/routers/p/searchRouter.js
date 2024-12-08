@@ -6,7 +6,9 @@ export const getSearchRouter = () => {
    const router = Router();
 
    router.get('/search', (_req, res) => {
-      res.render('search');
+      res.render('search', {
+         username: res.locals.username,
+      });
    });
 
    router.get('/search/movies', async (req, res) => {

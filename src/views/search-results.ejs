@@ -7,6 +7,26 @@
     <%- include('static/css/main.css') %>
     <%- include('static/css/homepage.css') %>
     <%- include('static/css/media.css') %>
+
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        margin: 1rem;
+        background-color: transparent;
+        border: 1px solid #ff9800;
+        color: #ff9800;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .back-button:hover {
+        background-color: #ff9800;
+        color: #1e1e1e;
+    }
     </style>
 </head>
 <body>
@@ -16,6 +36,7 @@
         <div class="hero">
             <h1>Search Results</h1>
             <p>Showing results for "<%= query %>"</p>
+            <a href="/p/search" class="back-button">← Back to Search</a>
         </div>
 
         <div class="content">
