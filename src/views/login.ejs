@@ -8,6 +8,7 @@
         /* Embedded CSS */
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -25,6 +26,8 @@
             background-color: #1e1e1e;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+            width: 300px;
+            text-align: center;
         }
 
         h1 {
@@ -38,6 +41,8 @@
             margin-top: 1em;
             font-weight: bold;
             color: #bbb;
+            text-align: left;
+            width: 100%;
         }
 
         input[type="text"],
@@ -61,6 +66,7 @@
             border-radius: 4px;
             font-size: 1em;
             cursor: pointer;
+            width: 100%;
         }
 
         button:hover {
@@ -80,9 +86,15 @@
         a:hover {
             text-decoration: underline;
         }
+
+        img {
+            margin-bottom: 4em;
+            margin-top: 2em;
+        }
     </style>
 </head>
 <body>
+    <img src="https://utfs.io/f/nB1xmZbE7IaTtHkSpMQLclgDtT3pJ7iPuR564romjYNUasXh" alt="Shelved logo" width="150px" height="150px" class="image">
     <div class="login-container">
         <h1>Login</h1>
         <form id="loginForm">
