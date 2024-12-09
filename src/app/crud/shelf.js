@@ -1,5 +1,6 @@
 import db from 'db';
 import { getContentID } from 'crud/content.js';
+import { getUserById } from 'crud/user.js';
 
 export const getShelvesByUserId = async (user_id) => {
    try {
@@ -73,7 +74,7 @@ export const addContentToShelf = async ({
 
       const shelfRecord = await db('shelf')
          .select('id')
-         .where('name', shelf)
+         .where('id', shelf)
          .first();
       if (!shelfRecord) {
          throw new Error(`Shelf '${shelf}' not found.`);

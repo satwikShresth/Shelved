@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { addContentToShelf, createShelf } from 'crud/shelf.js';
 import { validateBodyString } from 'middlewares/commonMiddleware.js';
+import db from 'db';
 
 const getShelfRouter = () => {
    const router = Router();
@@ -42,10 +43,18 @@ const getShelfRouter = () => {
             status = 'to_consume',
          } = req.body;
 
+         const user_id = req.session.user_id;
+
+         const user_shelf = await db('shelf')
+            .select('id')
+            .where('user_id', user_id)
+            .where('name', shelf)
+            .first();
+
          const result = await addContentToShelf({
             external_id,
             source,
-            shelf,
+            shelf: user_shelf.id,
             content_type,
             status,
          });
