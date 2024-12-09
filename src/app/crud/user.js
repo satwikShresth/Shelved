@@ -1,10 +1,15 @@
 import * as bcrypt from 'bcrypt';
 import db from 'db';
+import { createShelf } from 'crud/shelf.js';
 
 export const createUser = async (username, password) => {
    try {
       const hashedPassword = await bcrypt.hash(password);
       await db('users').insert({ username, password: hashedPassword });
+      const user = await getUserByUsername(username);
+      if (user.success && user.exists) {
+            await createShelf({user_id: user.user.id, name: "Default", visibility: "public"});
+      }
       return { success: true, message: 'User created successfully' };
    } catch (error) {
       console.error('Crud Error:', error);

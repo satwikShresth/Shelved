@@ -74,6 +74,36 @@ export default class OLService extends Service {
       );
    }
 
+   async search(
+      name,
+      _language = this.defaultLanguage,
+      limit = 5,
+   ) {
+      const path = 'search.json';
+      const queryParams = {
+         q: `title:${name}`,
+         limit,
+      };
+
+      const rawData = await this.fetchData(path, queryParams);
+
+      // Validate that rawData.docs is present and is an array
+      if (!rawData.docs || !Array.isArray(rawData.docs)) {
+         throw new Error(
+            'Invalid response format: expected rawData.docs to be an array',
+         );
+      }
+
+      const normalizedData = await this.normalizeDataList(
+         rawData.docs,
+         this.media_box_mapping,
+      );
+
+      return await Promise.all(
+         normalizedData.map((item) => this.media_box_mapping_func(item)),
+      );
+   }
+
    async getDetailsById({ id }) {
       if (!id) throw new Error('ID is required');
 

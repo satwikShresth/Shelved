@@ -36,7 +36,6 @@ async function addToShelf(external_id, source, shelf, content_type) {
     });
 
     if (response.ok) {
-      alert("Added to shelf successfully!");
       closeShelfModal();
     } else {
       const result = await response.json();

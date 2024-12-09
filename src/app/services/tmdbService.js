@@ -25,9 +25,7 @@ export default class TMDBService extends Service {
       poster_path: 'poster_path',
       media_type: 'media_type',
       tagline: 'tagline',
-      vote_average: 'vote_average',
       staus: 'staus',
-      release_date: 'release_date',
       genres: 'genres',
       created_by: 'created_by',
       networks: 'networks',
@@ -56,6 +54,39 @@ export default class TMDBService extends Service {
 
       const rawData = await this.fetchData(path, { language });
 
+      return this.normalizeDataList(rawData.results, this.media_box_mapping);
+   }
+
+   async search(name, media_type, language = this.defaultLanguage) {
+      if (!name) throw new Error('Name is required');
+
+      const path = `search/${media_type}`;
+      const rawData = await this.fetchData(path, { query: name, language });
+
+      // Add media_type to all results since it doesn't show up for this endpoint
+      rawData.results = rawData.results.map((result) => ({
+         ...result,
+         media_type: media_type,
+      }));
+
+      return this.normalizeDataList(rawData.results, this.media_box_mapping);
+   }
+
+   async getGenre(genre = 'Action', language = this.defaultLanguage) {
+      if (!genre) throw new Error('Name is required');
+
+      const genresData = await this.fetchData(`genre/movie/list`);
+
+      const genreMatch = genresData.genres.find(
+         (g) => g.name.toLowerCase() === genre.toLowerCase(),
+      );
+
+      if (!genreMatch) {
+         throw new Error(`Genre "${genre}" not found`);
+      }
+
+      const path = `discover/movie/${genre}`;
+      const rawData = await this.fetchData(path, { query: genre, language });
       return this.normalizeDataList(rawData.results, this.media_box_mapping);
    }
 

@@ -22,7 +22,6 @@ document
     });
 
     if (response.ok) {
-      alert("Shelf created successfully!");
       closeModal();
       location.reload();
     } else {

@@ -2,12 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home - Shelved</title>
+    <title>Search Results - Shelved</title>
     <style>
     <%- include('static/css/main.css') %>
     <%- include('static/css/homepage.css') %>
     <%- include('static/css/media.css') %>
-    .content h1,
+
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        margin: 1rem;
+        background-color: transparent;
+        border: 1px solid #ff9800;
+        color: #ff9800;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .back-button:hover {
+        background-color: #ff9800;
+        color: #1e1e1e;
+    }
     .content h2 {
         text-align: center;
     }
@@ -18,27 +37,28 @@
 
     <div class="main-content">
         <div class="hero">
-            <h1>Shelved</h1>
-            <p>Log all of your media, in one place</p>
+            <h1>Search Results</h1>
+            <p>Showing results for "<%= query %>"</p>
+            <a href="/p/search" class="back-button">← Back to Search</a>
         </div>
 
         <div class="content">
-            <h1>Welcome, <span style="color:#8ecae6;"><%= username %></span>!</h1>
-
-            <% Object.keys(trendingData).forEach(source => { %>
-                <h2>Top 5 Trending <%= String(source).charAt(0).toUpperCase() + String(source).slice(1) %></h2>
+            <% if (results && results.length > 0) { %>
+                <h2>Found <%= results.length %> <%= searchType %></h2>
                 <div class="container">
-                    <% trendingData[source].forEach(media => { %>
-                        <%- include('components/media', {
-                            media: media,
-                            source: source,
+                    <% results.forEach(item => { %>
+                        <%- include('components/media', { 
+                            media: item,
+                            source: searchType === 'books' ? 'openlibrary' : 'tmdb',
                             showAddButton: true,
                             addButtonCallback: 'showShelfModal',
                             openMediaCallback: 'openMediaPage'
                         }) %>
                     <% }); %>
                 </div>
-            <% }); %>
+            <% } else { %>
+                <p>No results found for "<%= query %>"</p>
+            <% } %>
         </div>
 
         <!-- Modal for selecting a shelf -->
@@ -65,4 +85,3 @@
     </script>
 </body>
 </html>
-
