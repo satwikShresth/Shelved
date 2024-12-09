@@ -6,7 +6,7 @@ import {
    unfollowUser,
 } from 'crud/following.js';
 import services from 'services/index.js';
-import { getAllShelvesContent } from 'crud/shelf.js';
+import { getAllShelvesContent, getShelvesByUserId } from 'crud/shelf.js';
 import { getUserByUsername } from 'crud/user.js';
 
 const getDetailedShelfContentByUsername = async (username) => {
@@ -37,10 +37,17 @@ const getDetailedShelfContentByUsername = async (username) => {
             details: shelvesResponse.message,
          };
       }
+      const { shelves } = await getShelvesByUserId(userResponse.user.id);
+      const privateShelves = shelves
+        .filter(shelf => shelf.visibility === "private")
+        .map(shelf => shelf.name);
 
       const detailedShelves = {};
 
       for (const shelfName in shelvesResponse.shelves) {
+         if (privateShelves.includes(shelfName)) {
+                continue;
+         }
          detailedShelves[shelfName] = [];
 
          for (const item of shelvesResponse.shelves[shelfName]) {
