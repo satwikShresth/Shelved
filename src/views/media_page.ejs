@@ -264,11 +264,13 @@
                 star.addEventListener('click', () => {
                     const value = parseInt(star.getAttribute('data-value'), 10);
 
+                    console.log('Selected rating:', value);
+
                     stars.forEach((s) => {
                         if (parseInt(s.getAttribute('data-value'), 10) <= value) {
-                            s.classList.add('highlight');
+                            s.style.color = '#ff9800';
                         } else {
-                            s.classList.remove('highlight');
+                            s.style.color = '#bbb';
                         }
                     });
                 });
