@@ -80,11 +80,13 @@ export default class OLService extends Service {
       name,
       _language = this.defaultLanguage,
       limit = 5,
+      sort = 'readinglog',
    ) {
       const path = 'search.json';
       const queryParams = {
          q: `title:${name}`,
          limit,
+         sort,
       };
 
       const rawData = await this.fetchData(path, queryParams);

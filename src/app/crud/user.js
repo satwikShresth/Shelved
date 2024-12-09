@@ -8,7 +8,9 @@ export const createUser = async (username, password) => {
       await db('users').insert({ username, password: hashedPassword });
       const user = await getUserByUsername(username);
       if (user.success && user.exists) {
-            await createShelf({user_id: user.user.id, name: "Default", visibility: "public"});
+            await createShelf({user_id: user.user.id, name: "Consumed", visibility: "public"});
+            await createShelf({user_id: user.user.id, name: "Consuming", visibility: "public"});
+            await createShelf({user_id: user.user.id, name: "To Be Consumed", visibility: "public"});
       }
       return { success: true, message: 'User created successfully' };
    } catch (error) {
