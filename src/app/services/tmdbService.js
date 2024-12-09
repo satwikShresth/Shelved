@@ -53,7 +53,6 @@ export default class TMDBService extends Service {
       const path = `trending/${media_type}/${range}`;
 
       const rawData = await this.fetchData(path, { language });
-      console.log(rawData);
 
       return this.normalizeDataList(rawData.results, this.media_box_mapping);
    }
