@@ -10,12 +10,14 @@ This application is a full-stack setup using Deno, Postgres, and Adminer, all co
 
 - [Docker](https://docs.docker.com/get-started/get-docker/) installed on your system.
 - [Deno](https://deno.com/) installed locally if you want to run the application outside of Docker.
+- [tmdb](https://www.themoviedb.org/?language=en-US) API key, set in `.env`
 
 ## Getting Started
 
 ### General
 
 The easiest way to run the app is by running the following docker command
+
 ```sh
 docker compose up --build --attach shelved
 ```
