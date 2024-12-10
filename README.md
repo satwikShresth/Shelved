@@ -13,6 +13,19 @@ This application is a full-stack setup using Deno, Postgres, and Adminer, all co
 
 ## Getting Started
 
+### General
+
+The easiest way to run the app is by running the following docker command
+```sh
+docker compose up --build --attach shelved
+```
+The `--attach` is not necessary but it will allow you to see the output of just the shelved
+container, instead of all the containers at once.
+
+If the above command does not work on windows, you likely have messed up line endings for
+`src/entrypoint.sh`. This is a windows specific issue and you will have to save that file
+with the correct line endings
+
 ### Deno Commands
 
 1. **Development Mode**:
