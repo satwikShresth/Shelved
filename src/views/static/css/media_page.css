@@ -4,82 +4,74 @@ body {
     padding: 0;
     background-color: var(--primary-bg);
     color: var(--primary-text);
+    line-height: 1.6;
 }
 
 .container {
-    padding: 20px;
-}
-
-h1, h2 {
-    margin-top: 0;
-    color: var(--highlight-text);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
 }
 
 /* Main Content Layout */
 .main-content {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 5rem; /* Add space below navbar */
 }
 
-.details, .reviews {
-    flex: 1;
-    min-width: 300px;
-    margin: 10px;
+@media (max-width: 1024px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
 }
 
-.details {
-    max-width: 65%;
-}
-
-/* Header Content */
+/* Header Section */
 .header-content {
     display: flex;
-    flex-wrap: nowrap;
-    align-items: flex-start;
+    gap: 2rem;
+    margin-bottom: 2rem;
 }
 
 .poster {
-    height: 400px;
-    width: auto;
+    width: 300px;
+    height: auto;
     border-radius: var(--border-radius);
-    margin-right: 20px;
-    cursor: pointer;
+    box-shadow: var(--box-shadow);
+    transition: transform var(--transition-speed);
+}
+
+.poster:hover {
+    transform: scale(1.02);
 }
 
 .header-text {
     flex: 1;
-    max-height: 400px;
-    overflow-y: auto;
 }
 
-.header-text h1 {
-    margin-top: 0;
+.title-link {
+    color: var(--highlight-text);
+    text-decoration: none;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    display: inline-block;
+    transition: color var(--transition-speed);
 }
 
-.header-text p {
-    margin: 5px 0;
+.title-link:hover {
+    color: var(--btn-hover-bg);
 }
 
-/* Horizontal Info Section */
-.horizontal-info {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 10px;
+.tagline {
+    font-size: 1.2rem;
+    color: var(--secondary-text);
+    margin-bottom: 1.5rem;
 }
 
-.info-item {
-    display: flex;
-    align-items: center;
-    margin-right: 20px;
-    margin-bottom: 5px;
-}
-
-.info-title {
-    font-weight: bold;
-    margin-right: 5px;
-}
-
+/* Info Lists */
 .info-list {
     display: flex;
     flex-wrap: wrap;
@@ -87,7 +79,6 @@ h1, h2 {
     padding: 0;
     margin: 0;
 }
-
 .info-list li {
     margin-right: 5px;
     background-color: var(--secondary-bg);
@@ -96,274 +87,107 @@ h1, h2 {
     margin-bottom: 5px;
 }
 
-/* Overview Section */
-.overview {
-    margin-top: 10px;
+
+.info-list li:hover {
+    background-color: var(--border-color);
 }
 
 /* Seasons Section */
 .seasons {
-    margin-top: 20px;
+    margin-top: 3rem;
 }
 
 .seasons-horizontal {
-    display: flex;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 250px;
+    gap: 1.5rem;
     overflow-x: auto;
-    padding-bottom: 10px;
+    padding: 1rem 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
 }
 
 .season {
+    scroll-snap-align: start;
     background-color: var(--secondary-bg);
-    padding: 10px;
     border-radius: var(--border-radius);
-    margin-right: 10px;
-    min-width: 200px;
-    max-width: 250px;
-    min-height: 200px;
-    flex: 0 0 auto;
+    padding: 1rem;
+    transition: transform var(--transition-speed);
 }
 
-.season h3 {
-    margin: 10px 0 5px;
-}
-
-.season p {
-    margin: 2px 0;
+.season:hover {
+    transform: translateY(-5px);
 }
 
 .season img {
-    max-width: 100%;
-    max-height: 300px;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-}
-
-.no-image {
     width: 100%;
-    height: 300px;
-    background-color: var(--border-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--secondary-text);
+    height: 350px;
+    object-fit: cover;
     border-radius: var(--border-radius);
-}
-
-/* More Details Section */
-#more-details {
-    display: none;
-    margin-top: 20px;
-}
-
-#more-details-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: var(--btn-bg);
-    color: var(--primary-text);
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-}
-
-#more-details-button:hover {
-    background-color: var(--btn-hover-bg);
-}
-
-.additional-details .info-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-.additional-details .info-title {
-    font-weight: bold;
-    margin-right: 5px;
+    margin-bottom: 1rem;
 }
 
 /* Reviews Section */
-.reviews h2 {
-    margin-top: 0;
-}
-
-/* Modal Styles */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--modal-bg);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background-color: var(--secondary-bg);
-    color: var(--primary-text);
-    padding: 30px;
-    border-radius: var(--border-radius);
-    max-width: 90%;
-    text-align: center;
-    box-shadow: var(--box-shadow);
-    animation: fadeIn var(--transition-speed) ease-in-out;
-    position: relative;
-}
-
-.modal-content img {
-    max-width: 100%;
-    border-radius: var(--border-radius);
-}
-
-.close-button {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 30px;
-    cursor: pointer;
-    color: var(--primary-text);
-}
-
-
-/* Add the following styles at the end of your media_page.css */
-
-/* Style for the title link inside h1 */
-.header-text h1 a.title-link {
-    color: var(--highlight-text);
-    text-decoration: none;
-    transition: color var(--transition-speed);
-}
-
-.header-text h1 a.title-link:hover {
-    color: var(--btn-bg);
-}
-
-.header-text h1 a.title-link:visited {
-    color: var(--highlight-text);
-    text-decoration: none;
-}
-
-
 .reviews {
-    margin-top: 30px;
     background-color: var(--secondary-bg);
-    border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
-    padding: 20px;
-    box-shadow: var(--box-shadow);
-}
-
-/* Reviews Header */
-.reviews h2 {
-    font-size: 24px;
-    color: var(--highlight-text);
-    margin-bottom: 15px;
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 10px;
-}
-
-/* Individual Review */
-.review {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    background-color: var(--primary-bg);
-    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-}
-
-/* Review Title */
-.review .review-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0 0 10px;
-    color: var(--highlight-text);
-}
-
-/* Review Body */
-.review .review-body {
-    font-size: 14px;
-    color: var(--secondary-text);
-    margin-bottom: 10px;
-}
-
-/* Review Rating */
-.review .review-rating {
-    font-size: 14px;
-    color: var(--highlight-text);
-}
-
-/* Review Metadata (User and Date) */
-.review .review-user,
-.review .review-date {
-    font-size: 12px;
-    color: var(--secondary-text);
-    margin-top: 5px;
-}
-
-/* Add Review Form */
-.add-review {
-    margin-top: 30px;
-    padding: 15px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    background-color: var(--primary-bg);
-    box-shadow: var(--box-shadow);
-}
-
-/* Add Review Form Header */
-.add-review h3 {
-    font-size: 20px;
-    color: var(--highlight-text);
-    margin-bottom: 15px;
-}
-
-/* Form Fields */
-.add-review .form-group {
-    margin-bottom: 15px;
-}
-
-/* Form Labels */
-.add-review label {
-    display: block;
-    font-size: 14px;
-    font-weight: bold;
-    color: var(--highlight-text);
-    margin-bottom: 5px;
-}
-
-/* Input and Textarea */
-.add-review input[type="text"],
-.add-review textarea {
+    padding: 2rem;
     width: 100%;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    background-color: var(--secondary-bg);
-    color: var(--primary-text);
-    font-size: 14px;
+    max-width: 1200px;
+    margin: 2rem auto;
 }
 
+.review {
+    background-color: var(--primary-bg);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform var(--transition-speed);
+}
 
-/* Default star color */
-.star {
-    font-size: 24px;
+.review:hover {
+    transform: translateY(-2px);
+}
+
+.review-title {
+    font-size: 1.2rem;
+    color: var(--highlight-text);
+    margin-bottom: 0.5rem;
+}
+
+.review-body {
     color: var(--secondary-text);
+    margin-bottom: 1rem;
+}
+
+/* Rating Stars */
+.rating-input {
+    display: inline-flex;
+    gap: 0.5rem;
+    background-color: var(--secondary-bg);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+}
+
+.star {
+    color: #bbb;
+    font-size: 1.5rem;
     cursor: pointer;
-    transition: color 0.2s ease, transform 0.2s ease;
+    transition: color var(--transition-speed), transform var(--transition-speed);
 }
 
 .star.highlight {
     color: var(--highlight-text); /* Replace with your desired highlight color */
 }
 
-/* Add hover effect */
+
 .star:hover {
+    color: #ff9800;
     transform: scale(1.2);
 }
 
-/* Rating Stars */
+* Rating Stars */
 .add-review .rating-input {
     display: flex;
     gap: 5px;
@@ -386,58 +210,117 @@ h1, h2 {
     color: var(--highlight-text);
     transform: scale(1.2);
 }
-
-/* Submit Button */
-.add-review .submit-review {
-    padding: 10px 20px;
-    background-color: var(--btn-bg);
-    color: var(--primary-text);
-    border: none;
+/* Add Review Form */
+.add-review {
+    margin-top: 2rem;
+    background-color: var(--primary-bg);
     border-radius: var(--border-radius);
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    padding: 2rem;
 }
 
-.add-review .submit-review:hover {
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    color: var(--primary-text);
+    transition: border-color var(--transition-speed);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--highlight-text);
+    outline: none;
+}
+
+.submit-review {
+    background-color: var(--btn-bg);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color var(--transition-speed), transform var(--transition-speed);
+}
+
+.submit-review:hover {
     background-color: var(--btn-hover-bg);
     transform: scale(1.05);
 }
 
-.add-review .submit-review:active {
-    background-color: var(--btn-active-bg);
-    transform: scale(0.95);
+/* Modal Styles */
+.modal {
+    background-color: var(--modal-bg);
+    backdrop-filter: blur(8px);
 }
 
-/* Responsive Adjustments */
-@media screen and (max-width: 768px) {
-    .reviews,
-    .add-review {
-        padding: 15px;
+.modal-content {
+    max-width: 80vw;
+    max-height: 90vh;
+    overflow: auto;
+    padding: 2rem;
+    background-color: var(--secondary-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    color: var(--secondary-text);
+    cursor: pointer;
+    transition: color var(--transition-speed);
+}
+
+.close-button:hover {
+    color: var(--primary-text);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+    }
+
+    .poster {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .title-link {
+        font-size: 2rem;
+    }
+
+    .container {
+        padding: 1rem;
     }
 }
 
-@media screen and (max-width: 480px) {
-    .reviews h2,
-    .add-review h3 {
-        font-size: 18px;
-    }
-
-    .review .review-title,
-    .add-review label {
-        font-size: 16px;
-    }
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
 
+::-webkit-scrollbar-track {
+    background: var(--primary-bg);
+}
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-text);
 }

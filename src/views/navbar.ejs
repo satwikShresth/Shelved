@@ -1,123 +1,351 @@
 <nav class="navbar">
-    <div class="nav-links">
-        <a href="/"><img src="https://utfs.io/f/nB1xmZbE7IaTtHkSpMQLclgDtT3pJ7iPuR564romjYNUasXh" alt="Shelved logo" width="50px" height="50px" class="image"></a>
-        <a href="/p/discover">Discover</a>
-        <a href="/p/search">Search</a>
-    </div>
+  <div class="nav-links">
+      <a href="/" class="logo-link" aria-label="Home">
+          <img src="https://utfs.io/f/nB1xmZbE7IaTtHkSpMQLclgDtT3pJ7iPuR564romjYNUasXh" alt="Shelved logo" class="logo-image">
+      </a>
+      <div class="nav-items">
+          <a href="/p/discover" class="nav-item">
+              <span class="nav-text">Discover</span>
+              <span class="nav-indicator"></span>
+          </a>
+          <a href="/p/search" class="nav-item">
+              <span class="nav-text">Search</span>
+              <span class="nav-indicator"></span>
+          </a>
+      </div>
+  </div>
 
-    <div class="dropdown">
-        <a href="#" class="dropbtn"><%= username %></a>
-        <div class="dropdown-content">
-            <a href="#" id="logoutLink">Logout</a>
-            <a href="/p/profile">Profile</a>
-            <a href="/p/friends">Friends</a>
-        </div>
-    </div>
+  <div class="nav-right">
+      <div class="dropdown">
+          <button class="dropbtn">
+              <span class="user-avatar">
+                  <%= username.charAt(0).toUpperCase() %>
+              </span>
+              <span class="username"><%= username %></span>
+          </button>
+          <div class="dropdown-content">
+              <a href="/p/profile" class="dropdown-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  Profile
+              </a>
+              <a href="/p/friends" class="dropdown-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                  Friends
+              </a>
+              <button id="logoutBtn" class="dropdown-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                      <polyline points="16 17 21 12 16 7"></polyline>
+                      <line x1="21" y1="12" x2="9" y2="12"></line>
+                  </svg>
+                  Logout
+              </button>
+          </div>
+      </div>
+      <div class="github-container">
+          <%- include('components/github') %>
+      </div>
+  </div>
 </nav>
 
 <style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-    }
+:root {
+    --primary-color: #ff9800;
+    --primary-light: rgba(255, 152, 0, 0.1);
+    --background-color: #121212;
+    --navbar-bg: rgba(18, 18, 18, 0.98);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --text-color: #fff;
+    --navbar-height: 70px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
+body {
+    margin: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    background-color: var(--navbar-bg);
+    height: var(--navbar-height);
+    position: fixed;
+    width: 100%;
+    top: -5px;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    box-sizing: border-box;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+
+.nav-items {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.logo-link {
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.logo-image {
+    width: 40px;
+    height: 40px;
+    transition: transform var(--transition);
+}
+
+.logo-image:hover {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+/* Nav Items Styling */
+.nav-item {
+    position: relative;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    padding: 0.5rem 0;
+    transition: color var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nav-indicator {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background-color: var(--primary-color);
+    transition: width var(--transition);
+}
+
+.nav-item:hover .nav-indicator {
+    width: 100%;
+}
+
+.nav-item:hover {
+    color: var(--primary-color);
+}
+
+/* Dropdown Styling */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-right: -2rem; /* Compensate for navbar padding */
+}
+
+.dropbtn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.dropbtn:hover {
+    background: var(--primary-light);
+    border-color: var(--primary-color);
+}
+
+.user-avatar {
+    width: 28px;
+    height: 28px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.username {
+    font-weight: 500;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    min-width: 220px;
+    background-color: var(--navbar-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.25);
+    transform: translateY(10px);
+    transition: all var(--transition);
+    pointer-events: none;
+}
+
+.dropdown.active .dropdown-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all var(--transition);
+    background: none;
+    border: none;
+    width: 100%;
+    font-size: 0.9375rem;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background: var(--primary-light);
+    color: var(--primary-color);
+}
+
+.dropdown-item svg {
+    transition: stroke var(--transition);
+}
+
+.dropdown-item:hover svg {
+    stroke: var(--primary-color);
+}
+
+/* Show dropdown on hover */
+.dropdown.active .dropdown-content {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
     .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1em;
-        background-color: #1e1e1e;
-        border-bottom: 1px solid #333;
-        height: 60px;
-        box-sizing: border-box;
-        z-index: 1000;
+        padding: 0 1rem;
     }
 
     .nav-links {
-        display: flex;
-        align-items: center;
-        padding: 5px 0px 5px 0px;
+        gap: 2rem;
     }
 
-    .navbar a {
-        text-decoration: none;
-        padding: 0.5em 1em;
-        color: #ff9800;
-        font-weight: 500;
+    .nav-items {
+        gap: 1rem;
     }
 
-    .navbar a:hover {
-        text-decoration: underline;
-        color: #e68900;
-    }
-
-    .dropdown {
-        padding: 0.5em 1em;
-        position: relative;
-        display: inline-block;
+    .username {
+        display: none;
     }
 
     .dropbtn {
-        cursor: pointer;
-        color: #ff9800;
-        font-weight: 500;
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0 0.8rem;
     }
 
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        right: 0;
-        min-width: 120px;
-        background-color: #1e1e1e;
-        border: 1px solid #333;
-        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.6);
-        z-index: 1;
+    .nav-links {
+        gap: 1rem;
     }
 
-    .dropdown-content a {
-        padding: 0.5em 1em;
-        color: #ff9800;
-        text-decoration: none;
-        display: block;
-        font-weight: 400;
+    .logo-image {
+        width: 35px;
+        height: 35px;
     }
-
-    .dropdown-content a:hover {
-        background-color: #333;
-        text-decoration: underline;
-    }
-
-    .dropdown:hover .dropdown-content {
-        display: block;
-    }
-
-    .main-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        box-sizing: border-box;
-    }
+}
 </style>
 
 <script>
-    document.getElementById("logoutLink").addEventListener("click", async (event) => {
-        event.preventDefault();
-        try {
-            const response = await fetch("/api/auth/logout", {
-                method: "POST"
-            });
-            if (response.ok) {
-                const result = await response.json();
-                console.log(result.message);
-                window.location.href = "/login";
-            } else {
-                console.error("Logout failed");
-            }
-        } catch (error) {
-            console.error("Error:", error);
+document.addEventListener('DOMContentLoaded', () => {
+    const dropdown = document.querySelector('.dropdown');
+    const dropbtn = document.querySelector('.dropbtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    let isDropdownOpen = false;
+    
+    // Toggle dropdown on button click
+    dropbtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isDropdownOpen = !isDropdownOpen;
+        dropdown.classList.toggle('active');
+    });
+
+    // Close dropdown when clicking anywhere else on the page
+    document.addEventListener('click', (e) => {
+        if (isDropdownOpen && !dropdown.contains(e.target)) {
+            isDropdownOpen = false;
+            dropdown.classList.remove('active');
         }
     });
+
+    // Prevent dropdown from closing when clicking inside it
+    dropdown.addEventListener('click', (e) => {
+        if (e.target !== dropbtn) {
+            e.stopPropagation();
+        }
+    });
+
+    // Handle ESC key to close dropdown
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isDropdownOpen) {
+            isDropdownOpen = false;
+            dropdown.classList.remove('active');
+        }
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+        try {
+            const response = await fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                window.location.href = '/login';
+            } else {
+                console.error('Logout failed:', await response.text());
+            }
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
+    });
+});
 </script>

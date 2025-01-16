@@ -1,260 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title><%= data.name %> - Details</title>
-    <link rel="icon" type="image/png" href="https://utfs.io/f/nB1xmZbE7IaT9K774WfgTHkYyrSOCV8PU1nAKIwRo3027ali" />
-    <style>
+    <head>
+        <meta charset="UTF-8">
+        <title><%= data.name %> - Details</title>
+        <link rel="icon" type="image/png" href="https://utfs.io/f/nB1xmZbE7IaT9K774WfgTHkYyrSOCV8PU1nAKIwRo3027ali" />
+        <style>
         <%- include('static/css/media_page.css') %>
         <%- include('static/css/main.css') %>
-    </style>
-</head>
-<body>
+        </style>
+    </head>
+    <body>
 
-    <%- include('navbar', { username }) %>
+        <%- include('navbar', { username }) %>
 
-    <div class="container">
-        <div class="main-content">
-            <div class="details">
-                <header>
-                    <div class="header-content">
-                        <% if (data.poster_path) { %>
+        <div class="container">
+            <div class="main-content">
+                <div class="details">
+                    <header>
+                        <div class="header-content">
+                            <% if (data.poster_path) { %>
                             <% if (data.media_type === 'tv' || data.media_type === 'movie') { %>
                             <img src="https://image.tmdb.org/t/p/w500<%= data.poster_path %>" alt="<%= data.name %> Poster" class="poster clickable-image">
                             <%} else { %>
                             <img src="https://covers.openlibrary.org/b/id/<%=data.poster_path%>-M.jpg" alt="<%= data.name %> Poster" class="poster clickable-image">
                             <%} %>
-                        <% } else { %>
+                            <% } else { %>
                             <div class="no-image-poster">No Image Available</div>
-                        <% } %>
-                        <div class="header-text">
-                            <h1>
-                                <a href="<%= data.homepage %>" class="title-link" target="_blank"><%= data.title || data.name %></a>
-                            </h1>
+                            <% } %>
+                            <div class="header-text">
+                                <h1>
+                                    <a href="<%= data.homepage %>" class="title-link" target="_blank"><%= data.title || data.name %></a>
+                                </h1>
 
-                            <% if (data.tagline) { %>
+                                <% if (data.tagline) { %>
                                 <p class="tagline"><em><%= data.tagline %></em></p>
-                            <% } %>
+                                <% } %>
 
-                            <% if (data.vote_average && data.vote_count) { %>
+                                <% if (data.vote_average && data.vote_count) { %>
                                 <p class="rating">Rating: <%= data.vote_average %> / 10 (<%= data.vote_count %> votes)</p>
-                            <% } %>
+                                <% } %>
 
-                            <% if (data.status) { %>
+                                <% if (data.status) { %>
                                 <p class="status">Status: <%= data.status %></p>
-                            <% } %>
+                                <% } %>
 
-                            <% if (data.release_date) { %>
+                                <% if (data.release_date) { %>
                                 <p class="status">Released: <%= formatDate(data.release_date) %></p>
-                            <% } %>
+                                <% } %>
 
-                            <% if (data.genres && data.genres.length > 0) { %>
+                                <% if (data.genres && data.genres.length > 0) { %>
                                 <div class="horizontal-info">
                                     <div class="info-item">
                                         <span class="info-title">Genres:</span>
-                                            <ul class="info-list">
-                                                <% data.genres.forEach(function(genre){ %>
-                                                    <li><%= genre.name %></li>
-                                                <% }); %>
-                                            </ul>
+                                        <ul class="info-list">
+                                            <% data.genres.forEach(function(genre){ %>
+                                            <li><%= genre.name %></li>
+                                            <% }); %>
+                                        </ul>
                                     </div>
                                 </div>
-                            <% } %>
+                                <% } %>
 
-                            <!-- Created By -->
-                            <% if (data.created_by && data.created_by.length > 0) { %>
+                                <!-- Created By -->
+                                <% if (data.created_by && data.created_by.length > 0) { %>
                                 <div class="horizontal-info">
                                     <div class="info-item">
                                         <span class="info-title">Created By:</span>
-                                            <ul class="info-list">
-                                                <% data.created_by.forEach(function(creator){ %>
-                                                    <li><%= creator.name %></li>
-                                                <% }); %>
-                                            </ul>
+                                        <ul class="info-list">
+                                            <% data.created_by.forEach(function(creator){ %>
+                                            <li><%= creator.name %></li>
+                                            <% }); %>
+                                        </ul>
                                     </div>
                                 </div>
-                            <% } %>
+                                <% } %>
 
-                            <!-- Networks -->
-                            <% if (data.networks && data.networks.length > 0) { %>
+                                <!-- Networks -->
+                                <% if (data.networks && data.networks.length > 0) { %>
                                 <div class="horizontal-info">
                                     <div class="info-item">
                                         <span class="info-title">Networks:</span>
-                                            <ul class="info-list">
-                                                <% data.networks.forEach(function(network){ %>
-                                                    <li><%= network.name %></li>
-                                                <% }); %>
-                                            </ul>
+                                        <ul class="info-list">
+                                            <% data.networks.forEach(function(network){ %>
+                                            <li><%= network.name %></li>
+                                            <% }); %>
+                                        </ul>
                                     </div>
                                 </div>
-                            <% } %>
+                                <% } %>
 
-                            <!-- Produced by -->
-                            <% if (data.production_companies && data.production_companies.length > 0) { %>
+                                <!-- Produced by -->
+                                <% if (data.production_companies && data.production_companies.length > 0) { %>
                                 <div class="horizontal-info">
                                     <div class="info-item">
                                         <span class="info-title">Produced by:</span>
-                                            <ul class="info-list">
-                                                <% data.production_companies.forEach(function(company){ %>
-                                                    <li><%= company.name %></li>
-                                                <% }); %>
-                                            </ul>
+                                        <ul class="info-list">
+                                            <% data.production_companies.forEach(function(company){ %>
+                                            <li><%= company.name %></li>
+                                            <% }); %>
+                                        </ul>
                                     </div>
                                 </div>
-                            <% } %>
+                                <% } %>
 
-                            <!-- Overview Section -->
-                            <% if (data.overview) { %>
+                                <!-- Overview Section -->
+                                <% if (data.overview) { %>
                                 <section class="overview">
                                     <h2>Overview</h2>
                                     <p><%= data.overview %></p>
                                 </section>
-                            <% } %>
+                                <% } %>
+                            </div>
                         </div>
-                    </div>
-                </header>
+                    </header>
 
-                <!-- Seasons Section -->
-                <% if (data.seasons && data.seasons.length > 0) { %>
+                    <!-- Seasons Section -->
+                    <% if (data.seasons && data.seasons.length > 0) { %>
                     <section class="seasons">
                         <h2>Seasons</h2>
                         <div class="seasons-horizontal" >
                             <% data.seasons.forEach(function(season){ %>
-                                <div class="season">
-                                    <% if (season.poster_path) { %>
-                                        <img src="https://image.tmdb.org/t/p/w300<%= season.poster_path %>" alt="<%= season.name %> Poster" class="clickable-image">
-                                    <% } else { %>
-                                        <div class="no-image">No Image</div>
-                                    <% } %>
-                                    <h3><%= season.name %></h3>
-                                    <% if (season.air_date) { %>
-                                        <p><strong>Air Date:</strong> <%= formatDate(season.air_date) %></p>
-                                    <% } %>
-                                    <% if (season.episode_count !== undefined) { %>
-                                        <p><strong>Episodes:</strong> <%= season.episode_count %></p>
-                                    <% } %>
-                                </div>
+                            <div class="season">
+                                <% if (season.poster_path) { %>
+                                <img src="https://image.tmdb.org/t/p/w300<%= season.poster_path %>" alt="<%= season.name %> Poster" class="clickable-image">
+                                <% } else { %>
+                                <div class="no-image">No Image</div>
+                                <% } %>
+                                <h3><%= season.name %></h3>
+                                <% if (season.air_date) { %>
+                                <p><strong>Air Date:</strong> <%= formatDate(season.air_date) %></p>
+                                <% } %>
+                                <% if (season.episode_count !== undefined) { %>
+                                <p><strong>Episodes:</strong> <%= season.episode_count %></p>
+                                <% } %>
+                            </div>
                             <% }); %>
                         </div>
                     </section>
-                <% } %>
+                    <% } %>
 
-            </div>
+                </div>
 
-            <div class="reviews">
-                <h2>Reviews</h2>
+                <div class="reviews">
+                    <h2>Reviews</h2>
 
-                <% if (reviews && reviews.length > 0) { %>
+                    <% if (reviews && reviews.length > 0) { %>
                     <div class="review-list">
                         <% reviews.forEach(function(review) { %>
-                            <div class="review">
-                                <h3 class="review-title"><%= review.title %></h3>
-                                <p class="review-body"><%= review.body %></p>
-                                <p class="review-rating">
-                                    Rating: 
-                                    <% for (let i = 1; i <= 5; i++) { %>
-                                        <% if (i <= review.rating_id) { %>
-                                            &#9733; <!-- Filled Star -->
-                                        <% } else { %>
-                                            &#9734; <!-- Empty Star -->
-                                        <% } %>
-                                    <% } %>
-                                </p>
-                                <p class="review-user">By: <%= review.username %></p>
-                                <p class="review-date">Posted on: <%= formatDate(review.created_at) %></p>
-                            </div>
+                        <div class="review">
+                            <h3 class="review-title"><%= review.title %></h3>
+                            <p class="review-body"><%= review.body %></p>
+                            <p class="review-rating">
+                                Rating: 
+                                <% for (let i = 1; i <= 5; i++) { %>
+                                <% if (i <= review.rating_id) { %>
+                                &#9733; <!-- Filled Star -->
+                                <% } else { %>
+                                &#9734; <!-- Empty Star -->
+                                <% } %>
+                                <% } %>
+                            </p>
+                            <p class="review-user">By: <%= review.username %></p>
+                            <p class="review-date">Posted on: <%= formatDate(review.created_at) %></p>
+                        </div>
                         <% }); %>
                     </div>
-                <% } else { %>
+                    <% } else { %>
                     <p>No reviews yet. Be the first to add one!</p>
-                <% } %>
+                    <% } %>
 
-                <!-- Add New Review -->
-                <div class="add-review">
-                    <h3>Write a Review</h3>
-                    <form id="review-form">
-                        <!-- Title -->
-                        <div class="form-group">
-                            <label for="title">Title:</label>
-                            <input type="text" id="title" name="title" maxlength="255" placeholder="Enter a title" required>
-                        </div>
-
-                        <!-- Body -->
-                        <div class="form-group">
-                            <label for="body">Body:</label>
-                            <textarea id="body" name="body" maxlength="256" placeholder="Write your review here..." required></textarea>
-                        </div>
-
-                        <!-- Rating -->
-                        <div class="form-group">
-                            <label for="rating_id">Rating:</label>
-                            <div class="rating-input">
-                                <input type="radio" id="star-1" name="rating_id" value="1" required>
-                                <label for="star-1" class="star" data-value="1">&#9733;</label>
-                                <input type="radio" id="star-2" name="rating_id" value="2">
-                                <label for="star-2" class="star" data-value="2">&#9733;</label>
-                                <input type="radio" id="star-3" name="rating_id" value="3">
-                                <label for="star-3" class="star" data-value="3">&#9733;</label>
-                                <input type="radio" id="star-4" name="rating_id" value="4">
-                                <label for="star-4" class="star" data-value="4">&#9733;</label>
-                                <input type="radio" id="star-5" name="rating_id" value="5">
-                                <label for="star-5" class="star" data-value="5">&#9733;</label>
+                    <!-- Add New Review -->
+                    <div class="add-review">
+                        <h3>Write a Review</h3>
+                        <form id="review-form">
+                            <!-- Title -->
+                            <div class="form-group">
+                                <label for="title">Title:</label>
+                                <input type="text" id="title" name="title" maxlength="255" placeholder="Enter a title" required>
                             </div>
-                        </div>
 
-                        <!-- Submit Button -->
-                        <div class="form-group">
-                            <button type="submit" class="submit-review">Submit Review</button>
-                        </div>
-                    </form>
+                            <!-- Body -->
+                            <div class="form-group">
+                                <label for="body">Body:</label>
+                                <textarea id="body" name="body" maxlength="256" placeholder="Write your review here..." required></textarea>
+                            </div>
+
+                            <!-- Rating -->
+                            <div class="form-group">
+                                <label for="rating_id">Rating:</label>
+                                <div class="rating-input">
+                                    <input type="radio" id="star-1" name="rating_id" value="1" required>
+                                    <label for="star-1" class="star" data-value="1">&#9733;</label>
+                                    <input type="radio" id="star-2" name="rating_id" value="2">
+                                    <label for="star-2" class="star" data-value="2">&#9733;</label>
+                                    <input type="radio" id="star-3" name="rating_id" value="3">
+                                    <label for="star-3" class="star" data-value="3">&#9733;</label>
+                                    <input type="radio" id="star-4" name="rating_id" value="4">
+                                    <label for="star-4" class="star" data-value="4">&#9733;</label>
+                                    <input type="radio" id="star-5" name="rating_id" value="5">
+                                    <label for="star-5" class="star" data-value="5">&#9733;</label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="form-group">
+                                <button type="submit" class="submit-review">Submit Review</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal -->
-    <div id="image-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <img id="modal-image" src="" alt="Image" />
+        <!-- Modal -->
+        <div id="image-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <img id="modal-image" src="" alt="Image" />
+            </div>
         </div>
-    </div>
 
-    <script>
+        <script>
         <%- include('static/js/media_page.js') %>
 
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const reviewForm = document.querySelector('#review-form');
+            document.addEventListener('DOMContentLoaded', () => {
+                const reviewForm = document.querySelector('#review-form');
+                const stars = document.querySelectorAll('.star');
+                let selectedRating = 0;
 
-            reviewForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
+                // Function to update star colors
+                const updateStarColors = (hoveredValue, isHover = false) => {
+                    stars.forEach((s) => {
+                        const starValue = parseInt(s.getAttribute('data-value'), 10);
+                        if (starValue <= hoveredValue) {
+                            s.style.color = '#ff9800'; // Highlight color
+                        } else {
+                            // If we're hovering, only reset stars above hover value
+                            // If we're not hovering, reset to selected rating
+                            if (isHover && starValue <= selectedRating) {
+                                s.style.color = '#ff9800';
+                            } else {
+                                s.style.color = '#bbb';
+                            }
+                        }
+                    });
+                };
 
-                const formData = new FormData(reviewForm);
-                const data = Object.fromEntries(formData.entries());
-                console.log(data)
-
-                try {
-                    const response = await fetch('/p/api/content/reviews/add', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({content_id:<%= content_id %> ,...data}),
+                // Add hover effects
+                stars.forEach((star) => {
+                    star.addEventListener('mouseenter', () => {
+                        const value = parseInt(star.getAttribute('data-value'), 10);
+                        updateStarColors(value, true);
                     });
 
-                    if (response.ok) {
-                        window.location.reload();
-                    } else {
-                        const error = await response.json();
-                        console.error('Error:', error.message || 'Failed to submit the review');
-                        alert('Failed to submit the review. Please try again.');
+                    // When mouse leaves the rating container, reset to selected rating
+                    star.addEventListener('mouseleave', () => {
+                        updateStarColors(selectedRating);
+                    });
+
+                    // Click handler
+                    star.addEventListener('click', () => {
+                        selectedRating = parseInt(star.getAttribute('data-value'), 10);
+                        updateStarColors(selectedRating);
+
+                        // Update the radio button
+                        const radioInput = document.querySelector(`#star-${selectedRating}`);
+                        if (radioInput) {
+                            radioInput.checked = true;
+                        }
+                    });
+                });
+
+                // Add form submission handler
+                reviewForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+
+                    const formData = new FormData(reviewForm);
+                    const data = Object.fromEntries(formData.entries());
+                    console.log(data);
+
+                    try {
+                        const response = await fetch('/p/api/content/reviews/add', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                content_id: <%= content_id %>,
+                    ...data
+                            }),
+                        });
+
+                        if (response.ok) {
+                            window.location.reload();
+                        } else {
+                            const error = await response.json();
+                            console.error('Error:', error.message || 'Failed to submit the review');
+                            alert('Failed to submit the review. Please try again.');
+                        }
+                    } catch (error) {
+                        console.error('Error in submission:', error);
+                        alert('An error occurred. Please try again.');
                     }
-                } catch (error) {
-                    console.error('Error in submission:', error);
-                    alert('An error occurred. Please try again.');
+                });
+
+                // Add mouseleave handler for the entire rating container
+                const ratingInput = document.querySelector('.rating-input');
+                if (ratingInput) {
+                    ratingInput.addEventListener('mouseleave', () => {
+                        updateStarColors(selectedRating);
+                    });
                 }
             });
-        });
-
 
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -276,7 +332,7 @@
                 });
             });
         });
-    </script>
-</body>
+        </script>
+    </body>
 </html>
 

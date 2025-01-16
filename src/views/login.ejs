@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link rel="icon" type="image/png" href="https://utfs.io/f/nB1xmZbE7IaT9K774WfgTHkYyrSOCV8PU1nAKIwRo3027ali" />
-    <style>
-        /* Embedded CSS */
+    <head>
+        <meta charset="UTF-8">
+        <title>Login | Shelved</title>
+        <link rel="icon" type="image/png" href="https://utfs.io/f/nB1xmZbE7IaT9K774WfgTHkYyrSOCV8PU1nAKIwRo3027ali" />
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             display: flex;
             flex-direction: column;
@@ -13,103 +20,168 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #121212;
-            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            font-family: 'Poppins', sans-serif;
             color: #f5f5f5;
+            position: relative;
         }
 
         .login-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 2em;
-            background-color: #1e1e1e;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
-            width: 300px;
+            padding: 2.5em;
+            background: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            width: 340px;
             text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
         }
 
         h1 {
-            font-size: 2em;
+            font-size: 2.2em;
             margin-bottom: 1em;
-            color: #ff9800;
+            background: linear-gradient(45deg, #ff9800, #ff5722);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 600;
+        }
+
+        .form-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 1.5em;
         }
 
         label {
             display: block;
-            margin-top: 1em;
-            font-weight: bold;
-            color: #bbb;
+            margin-bottom: 0.5em;
+            font-weight: 500;
+            color: #ddd;
             text-align: left;
-            width: 100%;
+            font-size: 0.9em;
+            transition: color 0.3s ease;
         }
 
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            padding: 0.5em;
-            margin-top: 0.5em;
-            border: 1px solid #333;
-            border-radius: 4px;
+            padding: 0.8em 1em;
+            border: 2px solid #333;
+            border-radius: 8px;
             font-size: 1em;
-            background-color: #333;
+            background-color: rgba(51, 51, 51, 0.8);
             color: #f5f5f5;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #ff9800;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
         }
 
         button {
-            margin-top: 1.5em;
-            padding: 0.5em 1em;
-            background-color: #ff9800;
+            margin-top: 1em;
+            padding: 0.8em 1em;
+            background: linear-gradient(45deg, #ff9800, #ff5722);
             color: #fff;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 1em;
+            font-weight: 500;
             cursor: pointer;
             width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         button:hover {
-            background-color: #e68900;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
         }
 
-        p {
-            margin-top: 1em;
+        button:active {
+            transform: translateY(0);
+        }
+
+        .signup-text {
+            margin-top: 1.5em;
             font-size: 0.9em;
+            color: #bbb;
         }
 
-        a {
+        .signup-text a {
             color: #ff9800;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .signup-text a:hover {
+            color: #ff5722;
             text-decoration: none;
         }
 
-        a:hover {
-            text-decoration: underline;
-        }
-
-        img {
-            margin-bottom: 4em;
+        .logo {
+            margin-bottom: 3em;
             margin-top: 2em;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
         }
-    </style>
-</head>
-<body>
-    <img src="https://utfs.io/f/nB1xmZbE7IaTtHkSpMQLclgDtT3pJ7iPuR564romjYNUasXh" alt="Shelved logo" width="150px" height="150px" class="image">
-    <div class="login-container">
-        <h1>Login</h1>
-        <form id="loginForm">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <br>
-            <button type="submit">Login</button>
-        </form>
-        <p>Don't have an account? <a href="/signup">Sign up</a></p>
-    </div>
 
-    <script>
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        }
+
+        .login-container {
+            animation: fadeIn 0.6s ease-out;
+        }
+        </style>
+    </head>
+    <body>
+        <%- include('components/github') %>
+
+        <img src="https://utfs.io/f/nB1xmZbE7IaTtHkSpMQLclgDtT3pJ7iPuR564romjYNUasXh" alt="Shelved logo" width="150px" height="150px" class="logo">
+
+        <div class="login-container">
+            <h1>Login</h1>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <button type="submit">Sign In</button>
+            </form>
+            <p class="signup-text">Don't have an account? <a href="/signup">Sign up</a></p>
+        </div>
+
+        <script>
         document.getElementById("loginForm").addEventListener("submit", async (event) => {
             event.preventDefault();
 
@@ -120,12 +192,10 @@
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                            username : document.getElementById("username").value,
-                            password : document.getElementById("password").value
-                        })
+                        username: document.getElementById("username").value,
+                        password: document.getElementById("password").value
+                    })
                 });
-                console.log(response)
-                console.log(response.message)
 
                 if (response.ok) {
                     console.log("Login successful");
@@ -140,6 +210,6 @@
                 alert("An error occurred. Please try again.");
             }
         });
-    </script>
-</body>
+        </script>
+    </body>
 </html>
