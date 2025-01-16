@@ -1,6 +1,7 @@
 {
    "imports": {
       "axios": "npm:axios@^1.7.7",
+      "lru-cache": "npm:lru-cache@^11.0.2",
       "morgan": "npm:morgan@^1.10.0",
       "walk":"jsr:@std/fs/walk",
       "bcrypt": "https://deno.land/x/bcrypt@v0.3.0/mod.ts",

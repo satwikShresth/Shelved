@@ -3,33 +3,13 @@ services:
     image: postgres:latest
     env_file:
       - .env
-    ports:
-      - "5432:5432"
+    networks:
+        - internal
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
-
-  adminer:
-    image: adminer
-    restart: always
-    env_file:
-      - .env
-    depends_on:
-      - db
-    environment:
-      - ADMINER_DESIGN=${ADMINER_DESIGN}
-      - ADMINER_DEFAULT_DRIVER=pgsql
-      - ADMINER_DEFAULT_DB=${POSTGRES_DB} 
-      - ADMINER_DEFAULT_SERVER=${POSTGRES_SERVER}
-      - ADMINER_DEFAULT_USERNAME=${POSTGRES_USER}
-      - ADMINER_DEFAULT_PASSWORD=${POSTGRES_PASSWORD}
-    ports:
-      - "8080:8080"
-    configs:
-      - source: adminer-index.php
-        target: /var/www/html/index.php
 
   shelved:
     build:
@@ -60,25 +40,15 @@ services:
           action: rebuild
         - path: ./.env
           action: rebuild
-
+    networks:
+      - internal
     depends_on:
       db:
         condition: service_healthy
     ports:
       - "3000:3000"
 
-configs:
-  adminer-index.php:
-    content: |
-      <?php
-        if(!count($$_GET)) {
-          $$_POST['auth'] = [
-            'driver' => $$_ENV['ADMINER_DEFAULT_DRIVER'],
-            'server' => $$_ENV['ADMINER_DEFAULT_SERVER'],
-            'username' => $$_ENV['ADMINER_DEFAULT_USERNAME'],
-            'password' => $$_ENV['ADMINER_DEFAULT_PASSWORD'],
-            'db'    => $$_ENV['ADMINER_DEFAULT_DB'],
-          ];
-        }
-        include './adminer.php';
-      ?>
+
+networks:
+  internal:
+    name: internal_network

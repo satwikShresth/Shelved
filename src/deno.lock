@@ -10,6 +10,7 @@
     "npm:express@5.0.1": "5.0.1",
     "npm:knex@*": "3.1.0",
     "npm:knex@^3.1.0": "3.1.0",
+    "npm:lru-cache@^11.0.2": "11.0.2",
     "npm:morgan@^1.10.0": "1.10.0",
     "npm:pg@^8.13.1": "8.13.1",
     "npm:swagger-autogen@^2.23.7": "2.23.7",
@@ -468,6 +469,9 @@
     "lodash@4.17.21": {
       "integrity": "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
     },
+    "lru-cache@11.0.2": {
+      "integrity": "sha512-123qHRfJBmo2jXDbo/a5YOQrJoHF/GNQTLzQ5+IdK5pWpceK17yRc6ozlWd25FxvGKQbIUs91fDFkXmDHTKcyA=="
+    },
     "media-typer@0.3.0": {
       "integrity": "sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ=="
     },
@@ -877,6 +881,7 @@
       "npm:ejs@^3.1.10",
       "npm:express@5.0.1",
       "npm:knex@^3.1.0",
+      "npm:lru-cache@^11.0.2",
       "npm:morgan@^1.10.0",
       "npm:pg@^8.13.1",
       "npm:swagger-autogen@^2.23.7",
