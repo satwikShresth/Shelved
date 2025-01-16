@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
 import { authMiddleware } from 'middlewares/authMiddleware.js';
 
 import getLandingRouter from 'routers/landingRouter.js';
@@ -18,7 +19,36 @@ const port = 3000;
 const hostname = '0.0.0.0';
 const env = Deno.env.get('ENV');
 
+// Create rate limiter configurations
+const generalLimiter = rateLimit({
+   windowMs: 15 * 60 * 1000, // 15 minutes
+   max: 100, // Limit each IP to 100 requests per windowMs
+   message: 'Too many requests from this IP, please try again later',
+   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+
+// More strict limiter for authentication endpoints
+const authLimiter = rateLimit({
+   windowMs: 60 * 60 * 1000, // 1 hour
+   max: 5, // Limit each IP to 5 requests per windowMs
+   message: 'Too many authentication attempts, please try again later',
+   standardHeaders: true,
+   legacyHeaders: false,
+});
+
+// API endpoints limiter
+const apiLimiter = rateLimit({
+   windowMs: 15 * 60 * 1000, // 15 minutes
+   max: 50, // Limit each IP to 50 requests per windowMs
+   message: 'Too many API requests from this IP, please try again later',
+   standardHeaders: true,
+   legacyHeaders: false,
+});
+
 const app = express();
+
+app.use(generalLimiter);
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static('public'));
@@ -40,12 +70,14 @@ app.set('views', './views');
 
 //routes
 app.use('/', getLandingRouter());
-app.use('/api/auth', getAuthRouter());
+app.use('/api/auth', authLimiter, getAuthRouter());
 //routes protected
 app.use('/p/', authMiddleware);
 app.use('/p/', getHomeRouter());
 app.use('/p/', getSearchRouter());
 app.use('/p/', getFriendViewRouter());
+
+app.use('/p/api', apiLimiter);
 app.use('/p/api/friends', getFriendApiRouter());
 app.use('/p/api/shelf', getShelfRouter());
 app.use('/p/api/content', getContentRouter());
