@@ -19,28 +19,17 @@ const port = 3000;
 const hostname = '0.0.0.0';
 const env = Deno.env.get('ENV');
 
-// Create rate limiter configurations
-const generalLimiter = rateLimit({
-   windowMs: 15 * 60 * 1000, // 15 minutes
-   max: 100, // Limit each IP to 100 requests per windowMs
-   message: 'Too many requests from this IP, please try again later',
-   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-});
-
-// More strict limiter for authentication endpoints
 const authLimiter = rateLimit({
-   windowMs: 60 * 60 * 1000, // 1 hour
-   max: 5, // Limit each IP to 5 requests per windowMs
+   windowMs: 1 * 60 * 1000,
+   max: 20,
    message: 'Too many authentication attempts, please try again later',
    standardHeaders: true,
    legacyHeaders: false,
 });
 
-// API endpoints limiter
 const apiLimiter = rateLimit({
-   windowMs: 15 * 60 * 1000, // 15 minutes
-   max: 50, // Limit each IP to 50 requests per windowMs
+   windowMs: 1 * 60 * 1000,
+   max: 100,
    message: 'Too many API requests from this IP, please try again later',
    standardHeaders: true,
    legacyHeaders: false,
@@ -48,7 +37,6 @@ const apiLimiter = rateLimit({
 
 const app = express();
 
-app.use(generalLimiter);
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static('public'));
