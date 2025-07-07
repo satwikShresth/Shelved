@@ -10,28 +10,18 @@ COPY deno.* ./
 # Copy source code
 COPY . .
 
-# Compile the application into a single binary
-# Replace 'app.js' with your main entry point file
-RUN deno compile --allow-all --no-check --output=app app.js
+# RUN deno task migrate
+# RUN deno task seed
 
-# Runtime stage with minimal alpine image
-FROM alpine:latest
+# Compile the application into a single binary
+ENV DENO_DIR=/.deno_cache
+RUN deno compile --no-check -A -o shelved app/main.js  \
+    && chmod +x shelved 
 
 # Install runtime dependencies
+FROM denoland/deno:alpine
 RUN apk add --no-cache libstdc++ libgcc
-
-# Create app directory
 WORKDIR /app
-
-# Copy the compiled binary from builder stage
-COPY --from=builder /build/app ./app
-
-# Copy other necessary files (views, db, etc.)
-COPY --from=builder /build/views ./views
-COPY --from=builder /build/db ./db
-
-# Expose port
+COPY --from=builder /build/shelved /app/shelved
 EXPOSE 3000
-
-# Run the compiled binary directly
-CMD ["./app"]
+CMD ["/app/shelved"]
