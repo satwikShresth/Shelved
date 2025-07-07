@@ -37,6 +37,13 @@ const apiLimiter = rateLimit({
 
 const app = express();
 
+// Add this to your Express app setup
+app.set('trust proxy', true);
+
+// Or if you need more specific proxy trust settings:
+// app.set('trust proxy', 1); // Trust first proxy
+// or
+// app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']); // Trust specific ranges
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static('public'));

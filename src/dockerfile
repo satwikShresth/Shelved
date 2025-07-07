@@ -1,21 +1,26 @@
 FROM denoland/deno:alpine
 
-WORKDIR /src
-
+# Install runtime dependencies
 RUN apk add --no-cache libstdc++
 
-COPY ./app /src/app
+# Set working directory
+WORKDIR /src
 
-COPY ./deno.* /src/
-COPY ./*.js /src/
+# Copy dependency files first for better layer caching
+COPY deno.* ./
 
-COPY ./db /src/db
-COPY ./views /src/views
+# Cache dependencies by running deno cache on lock file
+# This will be cached unless deno.json/deno.lock changes
+RUN deno cache --lock=deno.lock deno.json 2>/dev/null || true
 
+# Copy application code
+COPY . .
 
-COPY ./entrypoint.sh /src/
-RUN chmod +x /src/entrypoint.sh
+# Make entrypoint executable
+RUN chmod +x entrypoint.sh
 
+# Expose port
 EXPOSE 3000
 
-ENTRYPOINT ["/src/entrypoint.sh"]
+# Use exec form for better signal handling
+ENTRYPOINT ["./entrypoint.sh"]
