@@ -12,7 +12,7 @@ COPY . .
 
 # Compile the application into a single binary
 # Replace 'app.js' with your main entry point file
-RUN deno compile --allow-all --output=app app.js
+RUN deno compile --allow-all --no-check --output=app app.js
 
 # Runtime stage with minimal alpine image
 FROM alpine:latest
