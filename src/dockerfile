@@ -1,26 +1,24 @@
-# Multi-stage build for compilation
-FROM denoland/deno:alpine AS builder
-
-# Set working directory
-WORKDIR /build
-
-# Copy dependency files first
-COPY deno.* ./
-
-# Copy source code
-COPY . .
-
-# Compile the application into a single binary
-ENV DENO_DIR=/.deno_cache
-RUN deno compile --no-check -A -o shelved app/main.js  \
-    && chmod +x shelved 
-
-# Install runtime dependencies
 FROM denoland/deno:alpine
-RUN apk add --no-cache libstdc++ libgcc
-WORKDIR /app
-COPY --from=builder /build/shelved /app/shelved
-COPY --from=builder /build/db /app/db
-COPY --from=builder /build/views /app/views
+
+WORKDIR /src
+
+RUN apk add --no-cache libstdc++
+
+COPY ./app /src/app
+
+COPY ./deno.* /src/
+COPY ./*.js /src/
+
+COPY ./db /src/db
+COPY ./views /src/views
+
+
+COPY ./entrypoint.sh /src/
+RUN chmod +x /src/entrypoint.sh
+
+ENV DENO_DIR=/.deno_cache
+RUN deno install --allow-scripts
+
 EXPOSE 3000
-CMD ["/app/shelved"]
+
+ENTRYPOINT ["/src/entrypoint.sh"]

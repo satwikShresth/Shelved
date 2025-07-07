@@ -31,6 +31,19 @@ export const development = {
   },
 };
 
+
+export const production = {
+  client: "pg",
+  connection: Deno.env.get("POSTGRES_URL"),
+  pool: {
+    min: 2,
+    max: 10,
+  },
+  migrations: {
+    tableName: "knex_migrations",
+  },
+};
+
 //staging: {
 //  client: "postgresql",
 //  connection: {
