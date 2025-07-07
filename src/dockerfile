@@ -10,8 +10,8 @@ COPY deno.* ./
 # Copy source code
 COPY . .
 
-# RUN deno task migrate
-# RUN deno task seed
+RUN deno task migrate
+RUN deno task seed
 
 # Compile the application into a single binary
 ENV DENO_DIR=/.deno_cache
