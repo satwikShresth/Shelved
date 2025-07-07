@@ -10,24 +10,6 @@ COPY deno.* ./
 # Copy source code
 COPY . .
 
-# Build-time arguments
-ARG POSTGRES_URL
-ARG PGDATA
-ARG ADMINER_DESIGN 
-ARG TMDB_API_KEY 
-ARG VITE_BLOB_STORAGE_BASE_URL
-
-
-ENV POSTGRES_URL=$POSTGRES_URL
-ENV PGDATA=$PGDATA
-ENV ADMINER_DESIGN=$ADMINER_DESIGN 
-ENV TMDB_API_KEY=$TMDB_API_KEY 
-ENV VITE_BLOB_STORAGE_BASE_URL=$VITE_BLOB_STORAGE_BASE_URL
-
-
-RUN deno task migrate
-RUN deno task seed
-
 # Compile the application into a single binary
 ENV DENO_DIR=/.deno_cache
 RUN deno compile --no-check -A -o shelved app/main.js  \
