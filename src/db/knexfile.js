@@ -21,13 +21,7 @@ export const local = {
 
 export const development = {
   client: "pg",
-  connection: {
-    database: Deno.env.get("POSTGRES_DB"),
-    host: Deno.env.get("POSTGRES_SERVER"),
-    port: Deno.env.get("POSTGRES_PORT"),
-    user: Deno.env.get("POSTGRES_USER"),
-    password: Deno.env.get("POSTGRES_PASSWORD"),
-  },
+  connection: Deno.env.get("POSTGRES_URL"),
   pool: {
     min: 2,
     max: 10,
