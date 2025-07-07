@@ -1,26 +1,37 @@
-FROM denoland/deno:alpine
-
-# Install runtime dependencies
-RUN apk add --no-cache libstdc++
+# Multi-stage build for compilation
+FROM denoland/deno:alpine AS builder
 
 # Set working directory
-WORKDIR /src
+WORKDIR /build
 
-# Copy dependency files first for better layer caching
+# Copy dependency files first
 COPY deno.* ./
 
-# Cache dependencies by running deno cache on lock file
-# This will be cached unless deno.json/deno.lock changes
-RUN deno cache --lock=deno.lock deno.json 2>/dev/null || true
-
-# Copy application code
+# Copy source code
 COPY . .
 
-# Make entrypoint executable
-RUN chmod +x entrypoint.sh
+# Compile the application into a single binary
+# Replace 'app.js' with your main entry point file
+RUN deno compile --allow-all --output=app app.js
+
+# Runtime stage with minimal alpine image
+FROM alpine:latest
+
+# Install runtime dependencies
+RUN apk add --no-cache libstdc++ libgcc
+
+# Create app directory
+WORKDIR /app
+
+# Copy the compiled binary from builder stage
+COPY --from=builder /build/app ./app
+
+# Copy other necessary files (views, db, etc.)
+COPY --from=builder /build/views ./views
+COPY --from=builder /build/db ./db
 
 # Expose port
 EXPOSE 3000
 
-# Use exec form for better signal handling
-ENTRYPOINT ["./entrypoint.sh"]
+# Run the compiled binary directly
+CMD ["./app"]
